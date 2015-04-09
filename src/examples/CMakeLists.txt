@@ -1,1 +1,1 @@
-add_executable(hello hello.cpp)
+add_executable(build_tree build_tree.cpp)
