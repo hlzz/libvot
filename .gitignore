@@ -27,5 +27,11 @@
 *.out
 *.app
 
+# text editor swp file
+*.swp
+
 # Build directory
 build/*
+
+# doc directory since it's constantly changing
+doc/*
