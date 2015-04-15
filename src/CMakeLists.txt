@@ -17,3 +17,6 @@ add_subdirectory(vocab_tree)
 
 # the executable files
 add_subdirectory(examples)
+
+# the image graph directory
+add_subdirectory(image_graph)

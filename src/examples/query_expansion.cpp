@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // query_expansion.cpp: query expansion on the image graph
 
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>

@@ -31,9 +31,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // build_tree.cpp: build a vocabulary tree of visual words
 
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdlib.h>
 
 #include "vocab_tree/vocab_tree.h"
 
@@ -48,5 +50,15 @@ int main(int argc, char **argv)
                "<restarts> <tree.out>\n", argv[0]);
         return 1;
     }
+
+    const char *sift_filenames = argv[1];
+    int sift_type = atoi(argv[2]);
+    int depth = atoi(argv[3]);
+    int branch_num = atoi(argv[4]);
+    int restarts = atoi(argv[5]);
+    const char *output_filename = argv[6];
+
+    vot::VocabTree vt;
+    vt.BuildTree(100, 128, depth, branch_num, NULL);
     return 0;
 }
