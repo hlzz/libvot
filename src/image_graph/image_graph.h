@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
-#include <assert.h>
+#include <cassert>
 
 namespace vot
 {
@@ -25,38 +25,20 @@ namespace vot
 	{
 	public:
         //! Brief construct ananymous graph without filenames 
-		ImageGraph(int size = 0)
-		{
-			size_ = size;
-		}
-
+		ImageGraph(int size);
 		ImageGraph(const std::vector<std::string> &image_filenames,
-			const std::vector<std::string> &sift_filenames,
-			std::vector<LinkNode> *adj_lists = NULL)
-		{
-			size_ = image_filenames.size();
-			image_filenames_ = image_filenames;
-			sift_filenames_ = sift_filenames;
-			assert(sift_filenames.size() == image_filenames.size());
-
-            adj_lists_ = adj_lists;
-		}
-
-		~ImageGraph() {}
-
-        bool SetAdjLists(std::vector<LinkNode> *adj_lists);
-
-		int NumConnectedComponents();
-
-        std::vector<int>* GraphPartition();
-
+			const std::vector<std::string> &sift_filenames);
+		void addEdge(int src, int dst, double score);
+		int NumConnectedComponents(int threshold = 0);
+        std::vector<std::vector<int> > KargerCut();
+        void Consolidate(int k);
         void ShowInfo();
 
 	private:
-		size_t size_;
+		int size_;
 		std::vector<std::string> image_filenames_;
 		std::vector<std::string> sift_filenames_;
-		std::vector<LinkNode> *adj_lists_;
+		std::vector<std::vector<LinkNode> > adj_lists_;
 	};
 }	// end of namespace vot
 

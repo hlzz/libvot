@@ -1,8 +1,6 @@
 #ifndef IO_UTILS_HEADER
 #define IO_UTILS_HEADER
 
-#include <cstdlib>
-
 namespace tw 
 {
     /**
