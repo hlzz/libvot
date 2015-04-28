@@ -3,6 +3,8 @@
 #include <queue>
 #include <cstdlib>
 #include <cmath>
+#include <cstring>
+#include <algorithm>
 #include "image_graph.h"
 #include "data_structures.h"
 
