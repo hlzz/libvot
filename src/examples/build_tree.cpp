@@ -35,12 +35,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include <stdlib.h>
 
-#include "vocab_tree/vocab_tree.h"
+#include "vocab_tree.h"
+#include "io_utils.h"
+#include "data_types.h"
 
-using std::cout;
-using std::endl;
+using namespace std;
 
 int main(int argc, char **argv)
 {
@@ -51,13 +53,39 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    const char *sift_filenames = argv[1];
+    //const char *sift_filenames = argv[1];
     int sift_type = atoi(argv[2]);
     int depth = atoi(argv[3]);
     int branch_num = atoi(argv[4]);
     int restarts = atoi(argv[5]);
     const char *output_filename = argv[6];
 
+    // read sift filenames and get the total number of sift keys
+    std::vector<std::string> sift_filenames;
+    tw::IO::ExtractLines(argv[1], sift_filenames);
+    int siftfile_num = sift_filenames.size();
+    std::vector<tw::SiftData> sift_data;
+
+    size_t total_keys = 0;
+    for(int i = 0; i < sift_filenames.size(); i++)
+    {
+        tw::SiftData temp_sift;
+        temp_sift.ReadSiftFile(sift_filenames[i]);
+
+        sift_data.push_back(temp_sift);
+        cout << "enter\n";
+        total_keys += temp_sift.getFeatureNum();
+    }
+
+    cout << "Total sift keys: " << total_keys << endl;
+
+
+
+
+    // allocate memory for sift keys
+
+
+    // build a vocabulary tree using sift keys
     vot::VocabTree vt;
     vt.BuildTree(100, 128, depth, branch_num, NULL);
     return 0;

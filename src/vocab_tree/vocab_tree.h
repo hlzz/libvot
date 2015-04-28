@@ -83,15 +83,16 @@ namespace vot
     class VocabTree
     {
         public:
-            VocabTree():database_image_num(0), dis_type(L2) {}
-
-            VocabTree(int depth_, int branch_num_, int dim_ = 128, DistanceType dis_type_ = L2):
-                branch_num(branch_num_), depth(depth_), dim(dim_), dis_type(dis_type_) {};
-
-            ~VocabTree() {}
+            // constructors and destructors
+            VocabTree();
+            VocabTree(int depth_, int branch_num_, int dim_ = 128, DistanceType dis_type_ = L2);
+            ~VocabTree();
 
             // member function 
-            bool BuildTree(int n, int dim, int dep, int bf, DTYPE **p);      //!< build a vocabulary tree from a set of features
+            bool BuildTree(int num_keys, int dim, int dep, int bf, DTYPE **p);      //!< build a vocabulary tree from a set of features
+            bool BuildImageDatabase();      //!< populate the images through the tree
+            bool Query();           //!< query a image against the database
+            bool WriteTree(const char *filename);       //!< save the vocabulary tree in a file
 
             // public data member 
             int branch_num;             //!< the branch number of a node

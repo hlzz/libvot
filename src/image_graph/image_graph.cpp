@@ -87,7 +87,7 @@ namespace vot
             {
                 int src = edges[edge_iter].first;
                 int dst = edges[edge_iter].second;
-                if(vertex_union.UnionSet(src, dst))
+                if(vertex_union.UnionSet(src, dst)) //contention operation
                     operation_count++;
                 edge_iter++;
             }
@@ -122,9 +122,9 @@ namespace vot
         return global_min_cut;
     }
 
-    void ImageGraph::Consolidate(int k)
+    bool ImageGraph::Consolidate(int k)
     {
-
+        return true;
     }
 
     void ImageGraph::ShowInfo()

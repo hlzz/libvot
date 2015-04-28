@@ -31,7 +31,7 @@ namespace vot
 		void addEdge(int src, int dst, double score);
 		int NumConnectedComponents(int threshold = 0);
         std::vector<std::vector<int> > KargerCut();
-        void Consolidate(int k);
+        bool Consolidate(int k);
         void ShowInfo();
 
 	private:

@@ -37,6 +37,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace vot
 {
+    VocabTree::VocabTree():database_image_num(0), dis_type(L2) {}
+
+    VocabTree::VocabTree(int depth_, int branch_num_, int dim_, DistanceType dis_type_): 
+    branch_num(branch_num_), depth(depth_), dim(dim_), dis_type(dis_type_) {};
+
+    VocabTree::~VocabTree() {}
+
     /** VocabTree Class Implementation */
     bool VocabTree::BuildTree(int n, int dim_, int dep, int bf, DTYPE **p)
     {
@@ -56,7 +63,6 @@ namespace vot
             std::cout << "[VocabTree Build] with depth " << dep << " and branch number " << bf << ".\n";
             std::cout << "[VocabTree Build] Approxiamately " << (float)dim * pow(bf, dep+1)/(1024 * 1024 * (bf-1)) << "mb memory will be used to load the tree.\n";
         }
-
 
         return 0;
     }
