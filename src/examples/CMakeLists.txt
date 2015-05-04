@@ -6,6 +6,6 @@
     #${CMAKE_CURRENT_SOURCE_DIR}/../utils)
 #include_directories(${LIBVOT_EXAMPLES_INCLUDES})
 
-add_executable(build_tree build_tree.cpp ../vocab_tree/vocab_tree.cpp ../utils/global_params.cpp ../utils/io_utils.cpp)
+add_executable(build_tree build_tree.cpp ../vocab_tree/vocab_tree.cpp ../vocab_tree/clustering.cpp ../utils/global_params.cpp ../utils/io_utils.cpp)
 add_executable(graph_partition graph_partition.cpp ../image_graph/image_graph.cpp ../utils/io_utils.cpp ../utils/global_params.cpp ../utils/data_structures.cpp)
 add_executable(query_expansion query_expansion.cpp)

@@ -1,34 +1,3 @@
-/*
-Copyright (c) 2015, Tianwei Shen
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of libvot nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-*/
-
 // build_tree.cpp: build a vocabulary tree of visual words
 
 #include <stdio.h>
@@ -36,13 +5,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <vector>
 #include <fstream>
+#include <cassert>
 #include <stdlib.h>
 
 #include "vocab_tree.h"
 #include "io_utils.h"
 #include "data_types.h"
+#include "global_params.h"
 
+//TODO(tianwei): figure out a way to do platform-dependent MAX_ARRAY_SIZE
+#define MAX_ARRAY_SIZE 8388608  // 2^23
 using namespace std;
+
+/* 
+sift_type: 0 - our own sift data format
+           1 - TODO(tianwei): vlfeat sift
+           2 - TODO(tianwei): lowe's sift type
+*/
 
 int main(int argc, char **argv)
 {
@@ -53,40 +32,92 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    //const char *sift_filenames = argv[1];
+    const char *sift_input_file = argv[1];
     int sift_type = atoi(argv[2]);
     int depth = atoi(argv[3]);
     int branch_num = atoi(argv[4]);
     int restarts = atoi(argv[5]);
     const char *output_filename = argv[6];
 
-    // read sift filenames and get the total number of sift keys
+    // read sift filenames, get the total number of sift keys, and allocate memory
     std::vector<std::string> sift_filenames;
-    tw::IO::ExtractLines(argv[1], sift_filenames);
+    tw::IO::ExtractLines(sift_input_file, sift_filenames);
     int siftfile_num = sift_filenames.size();
+    size_t total_keys = 0;
     std::vector<tw::SiftData> sift_data;
 
-    size_t total_keys = 0;
-    for(int i = 0; i < sift_filenames.size(); i++)
+    if(sift_type == 0)
     {
-        tw::SiftData temp_sift;
-        temp_sift.ReadSiftFile(sift_filenames[i]);
+        sift_data.resize(siftfile_num);
 
-        sift_data.push_back(temp_sift);
-        cout << "enter\n";
-        total_keys += temp_sift.getFeatureNum();
+        for(int i = 0; i < sift_filenames.size(); i++)
+        {
+            sift_data[i].ReadSiftFile(sift_filenames[i]);
+            total_keys += sift_data[i].getFeatureNum();
+        }
+        cout << "[Build Tree] Total sift keys (Type SIFT5.0): " << total_keys << endl;
+    }
+    else if(sift_type == 1)
+    {
+
     }
 
-    cout << "Total sift keys: " << total_keys << endl;
+    size_t len = (size_t) total_keys * FDIM;
+    int num_arrays = len / MAX_ARRAY_SIZE + ((len % MAX_ARRAY_SIZE) == 0 ? 0 : 1);
 
+    // allocate a big chunk of memory to each array
+    cout << "[Build Tree] Allocate " << len << " bytes memory into " << num_arrays << " arrays\n";
+    DTYPE **mem = new DTYPE *[num_arrays];       
+    size_t remain_length = len;
+    for(int i = 0; i < num_arrays; i++)
+    {
+        size_t len_curr = remain_length > MAX_ARRAY_SIZE ? MAX_ARRAY_SIZE : remain_length;
+        mem[i] = new DTYPE [len_curr];
+        remain_length -= len_curr;
+    }
+    assert(remain_length == 0);
 
-
-
-    // allocate memory for sift keys
-
+    // allocate a pointer array to sift data
+    DTYPE **mem_pointer = new DTYPE *[total_keys];
+    size_t off = 0;
+    size_t curr_key = 0;
+    int curr_array = 0;
+    for(int i = 0; i < siftfile_num; i++)
+    {
+        int num_keys = sift_data[i].getFeatureNum();
+        if(num_keys > 0)
+        {
+            DTYPE *dp = sift_data[i].getDesPointer();
+            for(int j = 0; j < num_keys; j++)
+            {
+                for(int k = 0; k < FDIM; k++)
+                {
+                    mem[curr_array][off+k] = dp[j * FDIM + k];
+                }
+                mem_pointer[curr_key] = mem[curr_array] + off;
+                curr_key++;
+                off += FDIM;
+                if(off == MAX_ARRAY_SIZE)
+                {
+                    off = 0;
+                    curr_array++;
+                }
+            }
+        }
+    }
 
     // build a vocabulary tree using sift keys
     vot::VocabTree vt;
-    vt.BuildTree(100, 128, depth, branch_num, NULL);
+    if(vt.BuildTree(total_keys, FDIM, depth, branch_num, mem_pointer))
+        vt.WriteTree(output_filename);
+    vt.ClearTree();
+
+    // free memory
+    delete [] mem_pointer;
+    for(int i = 0; i < num_arrays; i++)
+    {
+        delete [] mem[i];
+    }
+    delete [] mem;
     return 0;
 }

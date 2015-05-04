@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <string>
 #include <vector>
+#include <limits>
 
 #include "image_graph/image_graph.h"
 
@@ -46,7 +47,7 @@ int main(int argc, char **argv)
     if (argc < 3) 
     {
         printf("Usage: %s <sift_key_file_names.in> <adjacent_list> [sift_type:0] \n", argv[0]);
-        return 1;
+        exit(-1);
     }
     if(argc >= 4)
         int sift_type = std::atoi(argv[3]);

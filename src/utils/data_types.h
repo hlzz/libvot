@@ -9,6 +9,8 @@
 
 #include "global_params.h"
 
+//TODO(tianwei): there is a bug in SiftData class. can't push_back a temp SiftData object into a vector
+
 namespace tw
 {
 
