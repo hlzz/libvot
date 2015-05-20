@@ -25,10 +25,9 @@ sift_type: 0 - our own sift data format
 
 int main(int argc, char **argv)
 {
-    if (argc != 7) 
+    if (argc != 6) 
     {
-        printf("Usage: %s <sift_key_file_names.in> <sift_type> <depth> <branch_num> "
-               "<restarts> <tree.out>\n", argv[0]);
+        printf("Usage: %s <sift_key_file_names.in> <sift_type> <depth> <branch_num> <tree.out>\n", argv[0]);
         return 1;
     }
 
@@ -36,8 +35,7 @@ int main(int argc, char **argv)
     int sift_type = atoi(argv[2]);
     int depth = atoi(argv[3]);
     int branch_num = atoi(argv[4]);
-    int restarts = atoi(argv[5]);
-    const char *output_filename = argv[6];
+    const char *output_filename = argv[5];
 
     // read sift filenames, get the total number of sift keys, and allocate memory
     std::vector<std::string> sift_filenames;
@@ -57,9 +55,10 @@ int main(int argc, char **argv)
         }
         cout << "[Build Tree] Total sift keys (Type SIFT5.0): " << total_keys << endl;
     }
-    else if(sift_type == 1)
+    else //if(sift_type == 1)
     {
-
+        cout << "[Build Tree] Sift type is wrong (should be 0). Exit...\n";
+        exit(-1);
     }
 
     size_t len = (size_t) total_keys * FDIM;

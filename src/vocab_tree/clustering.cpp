@@ -48,7 +48,7 @@ namespace tw
 	size_t ComputeAssignment(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment, double &error)
 	{			
 		size_t change_num = 0;
-		for(int i = 0; i < num; i++)
+		for(size_t i = 0; i < num; i++)
 		{
 			double min_dis = std::numeric_limits<double>::max();
 			int min_idx = -1;
@@ -104,6 +104,22 @@ namespace tw
 		delete [] counts;
 	}
 
+	double ComputeError(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment)
+	{
+		double error = 0;
+		for(int i = 0; i < num; i++)
+		{
+			int c = assignment[i];
+			for(int j = 0; j < dim; j++)
+			{
+				double d = means[c*dim+j] - p[i][j];
+				error += d * d;
+			}
+		}
+
+		return error;
+	}
+
 	double Kmeans(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment)
 	{
 		if(num < k)
@@ -128,12 +144,6 @@ namespace tw
 			return -1;
 		}
 
-		// initial assignment
-		for(int i = 0; i < num; i++)
-		{	
-			assignment_curr[i] = -1;	
-		}
-
 		while(total_iter--)
 		{
 			double dis = 0;
@@ -142,6 +152,10 @@ namespace tw
 			{
 				CopyDes2Double(means_curr + i * dim, p[initial_idx[i]], dim);
 			}
+
+			// initial assignment
+			for(int i = 0; i < num; i++)
+				assignment_curr[i] = -1;	
 
 			size_t change_num = ComputeAssignment(num, dim, k, p, means_curr, assignment_curr, dis);
 			double change_pct = (double) change_num / num;
@@ -170,6 +184,6 @@ namespace tw
 		delete [] initial_idx;
 		delete [] assignment_curr;
 
-		return 0;
+		return ComputeError(num, dim, k, p, means, assignment);
 	}
 }

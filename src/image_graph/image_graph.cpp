@@ -36,9 +36,14 @@ namespace vot
     int ImageGraph::NumConnectedComponents(int threshold)
     {
         bool is_visited[size_];
-        memset(is_visited, false, sizeof(size_));
-        int numCC = 0;
-        for(int i = 0; i < size_; i++)
+        //memset(is_visited, false, sizeof(size_)); // this is buggy
+        for(size_t i = 0; i < size_; i++)
+        {
+            is_visited[i] = false;
+        }
+
+        size_t numCC = 0;
+        for(size_t i = 0; i < size_; i++)
         {
             if(!is_visited[i])
             {
@@ -49,7 +54,7 @@ namespace vot
                 int component_size = 1;
                 while(!index_queue.empty())
                 {
-                    int curr = index_queue.front();    
+                    size_t curr = index_queue.front();    
                     index_queue.pop();
                     for(int i = 0; i < adj_lists_[curr].size(); i++)
                     {

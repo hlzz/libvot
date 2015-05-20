@@ -73,7 +73,7 @@ namespace vot
         if(root != NULL)
         {
             root->ClearNode(branch_num);
-            root = NULL;
+            delete root;
         } 
         return true;
     }
@@ -90,12 +90,14 @@ namespace vot
     /** TreeLeafNode Class Implementation */
     bool TreeLeafNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign)
     {
+        /*
         std::cout << "depth " << depth_curr << '\n';
         for(int i = 0; i < dim; i++)
         {
             std::cout << (double)des[i] << " ";
         }
         std::cout << '\n';
+        */
         return true;
     }
 
@@ -147,7 +149,7 @@ namespace vot
         }
         mean_distance /= bf;
         if(GlobalParam::Verbose)
-            std::cout << "[RecursiveBuild] Average distance of node to clusters: " << mean_distance << "\n";
+            std::cout << "[RecursiveBuild] Group/Center error: " << error/num_keys << "/" << mean_distance << "\n";
 
         // count the number of sift keys fallen into a interior node, stop split the node if there are too few keys.
         children = new TreeNode* [bf];
