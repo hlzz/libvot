@@ -5,6 +5,9 @@
 #include "vocab_tree.h"
 #include "clustering.h"
 
+using std::cout;
+using std::endl;
+
 namespace vot
 {
     /** VocabTree Class Implementation */
@@ -12,14 +15,61 @@ namespace vot
 
     VocabTree::VocabTree(int depth_, int branch_num_, int dim_, DistanceType dis_type_): 
     branch_num(branch_num_), depth(depth_), dim(dim_), dis_type(dis_type_) {};
-
  
-    VocabTree::~VocabTree() 
+    VocabTree::~VocabTree() {}  // do nothing since root is undetermined
+
+    TreeInNode::~TreeInNode()
     {
-        if(root != NULL)
-            delete root;
+        if(children != NULL)
+        {
+            delete [] children;
+            children = NULL;
+        }
     }
 
+    TreeLeafNode::~TreeLeafNode()
+    {
+        inv_list.clear();
+    }
+
+    // destruct this vocabulary tree
+    bool VocabTree::ClearTree()
+    {
+        if(root != NULL)
+        {
+            root->ClearNode(branch_num);
+        } 
+
+        std::cout << "[VocabTree] Successfully clearing the tree\n";
+        return true;
+    }
+
+    bool TreeInNode::ClearNode(int bf)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+                children[i]->ClearNode(bf);
+        }
+        delete this;
+        return true;
+    }
+
+    bool TreeLeafNode::ClearNode(int bf)
+    {
+        delete this;
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+    // Build Tree
     bool VocabTree::BuildTree(int num_keys, int dim_, int dep, int bf, DTYPE **p)
     {
         if(dep < 1)     // the root of the tree is depth 0
@@ -60,70 +110,6 @@ namespace vot
 
         std::cout << "[VocabTree Build] Finish building vocabulary tree!\n";
         return true;
-    }
-
-    bool VocabTree::WriteTree(const char *filename)
-    {
-        return true;
-    }
-
-    // destruct this vocabulary tree
-    bool VocabTree::ClearTree()
-    {
-        if(root != NULL)
-        {
-            root->ClearNode(branch_num);
-            delete root;
-        } 
-        return true;
-    }
-
-
-
-
-
-
-
-
-
-
-    /** TreeLeafNode Class Implementation */
-    bool TreeLeafNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign)
-    {
-        /*
-        std::cout << "depth " << depth_curr << '\n';
-        for(int i = 0; i < dim; i++)
-        {
-            std::cout << (double)des[i] << " ";
-        }
-        std::cout << '\n';
-        */
-        return true;
-    }
-
-    bool TreeLeafNode::ClearNode(int bf)
-    {
-        delete this;
-        return true;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /** TreeInNode Class Implementation */
-    TreeInNode::~TreeInNode()
-    {
-        if(children != NULL)
-            delete [] children;
     }
 
     bool TreeInNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign)
@@ -219,14 +205,34 @@ namespace vot
         return true;
     }
 
-    bool TreeInNode::ClearNode(int bf)
+    bool TreeLeafNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign)
     {
-        for(int i = 0; i < bf; i++)
-        {
-            if(children[i] != NULL)
-                children[i]->ClearNode(bf);
-        }
-        delete this;
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Write the tree
+    bool VocabTree::WriteTree(const char *filename)
+    {
         return true;
     }
 

@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    if (argc != 6) 
+    if (argc != 4) 
     {
         printf("Usage: %s <sift_key_file_names.in> <sift_type> <tree.out>\n", argv[0]);
         return 1;
@@ -29,6 +29,10 @@ int main(int argc, char **argv)
     int siftfile_num = sift_filenames.size();
     size_t total_keys = 0;
     std::vector<tw::SiftData> sift_data;
+    for(int i = 0; i < sift_filenames.size(); i++)
+    {
+    	cout << sift_filenames[i] << endl;
+    }
 
     if(sift_type == 0)
     {

@@ -23,7 +23,11 @@ namespace vot
             TreeNode():des(NULL)  {}
             virtual ~TreeNode()
             {
-                if(des != NULL) delete [] des;
+                if(des != NULL) 
+                {
+                    delete [] des;
+                    des = NULL;
+                }
             }
             // pure virtual function that will be implemented in derived classes
             virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p , double *means, int *assign) = 0;
@@ -40,7 +44,7 @@ namespace vot
     {
         public:
             TreeLeafNode() {}
-            virtual ~TreeLeafNode() {}
+            virtual ~TreeLeafNode();
             virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p , double *means, int *assign);
             virtual bool ClearNode(int bf);
 
