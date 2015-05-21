@@ -109,8 +109,19 @@ int main(int argc, char **argv)
     vot::VocabTree vt;
     if(vt.BuildTree(total_keys, FDIM, depth, branch_num, mem_pointer))
         vt.WriteTree(output_filename);
-    vt.ClearTree();
 
+    vot::VocabTree vt1;
+    vt1.ReadTree(output_filename);
+    if(vt1.Compare(vt))
+    {
+        cout << "[VocabTree IO test] vt and vt1 are the same\n";
+    }
+    else
+    {
+        cout << "[vocabTree IO test] vt and vt1 are different\n";
+    }
+
+    vt.ClearTree();
     // free memory
     delete [] mem_pointer;
     for(int i = 0; i < num_arrays; i++)

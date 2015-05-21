@@ -11,12 +11,12 @@ using std::endl;
 namespace vot
 {
     /** VocabTree Class Implementation */
-    VocabTree::VocabTree():database_image_num(0), dis_type(L2), root(NULL) {}
+    VocabTree::VocabTree():database_image_num(0), num_nodes(0), dis_type(L2), root(NULL) {}
 
     VocabTree::VocabTree(int depth_, int branch_num_, int dim_, DistanceType dis_type_): 
-    branch_num(branch_num_), depth(depth_), dim(dim_), dis_type(dis_type_) {};
+    branch_num(branch_num_), depth(depth_), dim(dim_), dis_type(dis_type_), num_nodes(0) {};
  
-    VocabTree::~VocabTree() {}  // do nothing since root is undetermined
+    VocabTree::~VocabTree() {root = NULL;}  // do nothing since root is undetermined
 
     TreeInNode::~TreeInNode()
     {
@@ -32,7 +32,14 @@ namespace vot
         inv_list.clear();
     }
 
-    // destruct this vocabulary tree
+
+
+
+    //////////////////////////////////////////////////////////////////////////////
+    //                                                                          //
+    //                     Vocabulary Tree Clear Funtions                       //
+    //                                                                          //
+    //////////////////////////////////////////////////////////////////////////////
     bool VocabTree::ClearTree()
     {
         if(root != NULL)
@@ -64,12 +71,11 @@ namespace vot
 
 
 
-
-
-
-
-
-    // Build Tree
+    //////////////////////////////////////////////////////////////////////////////
+    //                                                                          //
+    //                     Vocabulary Tree Build Module                         //
+    //                                                                          //
+    //////////////////////////////////////////////////////////////////////////////
     bool VocabTree::BuildTree(int num_keys, int dim_, int dep, int bf, DTYPE **p)
     {
         if(dep < 1)     // the root of the tree is depth 0
@@ -216,24 +222,263 @@ namespace vot
 
 
 
+    //////////////////////////////////////////////////////////////////////////////
+    //                                                                          //
+    //                     Vocabulary Tree IO Module                            //
+    //                                                                          //
+    //////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Write the tree
-    bool VocabTree::WriteTree(const char *filename)
+    bool VocabTree::WriteTree(const char *filename) const
     {
+        if(root == NULL)
+            return false;
+        FILE *f = fopen(filename, "wb");
+        if(f == NULL)
+        {
+            std::cout << "[VocabTree] Error opening file " << filename << " for writing tree\n" << std::endl;
+            return false;
+        }
+
+        // write header parameters
+        fwrite(&branch_num, sizeof(int), 1, f);
+        fwrite(&depth, sizeof(int), 1, f);
+        fwrite(&dim, sizeof(int), 1, f);
+
+        // write node information recursively
+        root->WriteNode(f, branch_num, dim);
+        fclose(f);
+
         return true;
     }
+
+    bool TreeInNode::WriteNode(FILE *f, int branch_num, int dim) const
+    {
+        // write the current node's information
+        char *has_children = new char [branch_num];
+        char is_internal = 1;
+        fwrite(&is_internal, sizeof(char), 1, f);
+        fwrite(des, sizeof(DTYPE), dim, f);
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] == NULL)
+            {
+                has_children[i] = 0;
+            }
+            else
+            {
+                has_children[i] = 1;
+            }
+        }
+        fwrite(has_children, sizeof(char), branch_num, f);
+        delete [] has_children;
+
+        // recursively write children's information
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] != NULL)
+            {
+                children[i]->WriteNode(f, branch_num, dim);
+            }
+        }
+        return true;
+    }
+
+    bool TreeLeafNode::WriteNode(FILE *f, int branch_num, int dim) const
+    {
+        char is_internal = 0;
+        fwrite(&is_internal, sizeof(char), 1, f);
+        fwrite(des, sizeof(DTYPE), dim, f);
+        fwrite(&weight, sizeof(float), 1, f);
+
+        int num_images = (size_t) inv_list.size();
+        fwrite(&num_images, sizeof(int), 1, f);
+        for(size_t i = 0; i < num_images; i++)
+        {
+            int img = inv_list[i].index;    // WARNING: the original type is size_t
+            int count = inv_list[i].count;
+            fwrite(&img, sizeof(int), 1, f);    // to save space we use int
+            fwrite(&count, sizeof(int), 1, f);
+        }
+
+        return true;
+    }
+
+    // Read a vocabulary tree
+    bool VocabTree::ReadTree(const char *filename)
+    {
+        if(root != NULL)
+            ClearTree();
+        FILE *f = fopen(filename, "r");
+        if(f == NULL)
+        {
+            std::cout << "[VocabTree] Error opening file " << filename << " for reading tree\n" << std::endl;
+            return false;
+        }
+
+        // write header parameters
+        fread(&branch_num, sizeof(int), 1, f);
+        fread(&depth, sizeof(int), 1, f);
+        fread(&dim, sizeof(int), 1, f);
+
+        char is_internal;
+        fread(&is_internal, sizeof(char), 1, f);
+
+        root = new TreeInNode();
+        root->ReadNode(f, branch_num, dim);
+
+        fclose(f);
+        return true;
+    }
+
+    bool TreeInNode::ReadNode(FILE *f, int branch_num, int dim)
+    {
+        des = new DTYPE [dim];
+        fread(des, sizeof(DTYPE), dim, f);
+        char *has_children = new char [branch_num];
+        fread(has_children, sizeof(char), branch_num, f);
+
+        children = new TreeNode *[branch_num];
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(has_children[i] == 0)
+            {
+                children[i] = NULL;
+            }
+            else
+            {
+                char is_internal;
+                fread(&is_internal, sizeof(DTYPE), 1, f);
+                if(is_internal)
+                {
+                    children[i] = new TreeInNode();
+                }
+                else
+                {
+                    children[i] = new TreeLeafNode();
+                }
+                children[i]->ReadNode(f, branch_num, dim);
+            }
+        }
+
+        delete [] has_children;
+
+        return true;
+    }
+
+    bool TreeLeafNode::ReadNode(FILE *f, int branch_num, int dim)
+    {
+        des = new DTYPE [dim];
+        fread(des, sizeof(DTYPE), dim, f);
+        fread(&weight, sizeof(float), 1, f);
+        int num_images;
+        fread(&num_images, sizeof(int), 1, f);
+
+        inv_list.resize(num_images);
+        for(int i = 0; i < num_images; i++)
+        {
+            int img, count;
+            fread(&img, sizeof(int), 1, f);
+            fread(&count, sizeof(int), 1, f);
+            inv_list[i] = ImageCount(img, count);
+        }
+        return true;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+    //                                                                          //
+    //                     Vocabulary Tree Utilities(Test)                      //
+    //                                                                          //
+    //////////////////////////////////////////////////////////////////////////////
+
+    size_t TreeInNode::CountNodes(int branch_num) const
+    {
+        size_t num_nodes = 0;
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] != NULL)
+                num_nodes += children[i]->CountNodes(branch_num);
+        }
+        return num_nodes + 1;
+    }
+
+    size_t TreeLeafNode::CountNodes(int branch_num) const
+    {return 1;}
+
+    size_t TreeInNode::CountLeaves(int branch_num) const
+    {
+        size_t num_leaves = 0;
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] != NULL)
+                num_leaves += children[i]->CountLeaves(branch_num);
+        }
+        return num_leaves;
+    }
+
+    size_t TreeLeafNode::CountLeaves(int branch_num) const
+    {return 1;}
+
+    bool VocabTree::Compare(VocabTree & v) const
+    {
+        if(v.dim != dim || v.depth != depth || v.branch_num != branch_num)
+        {
+            return false;
+        }
+
+        size_t node_count = root->CountNodes(branch_num);
+        size_t other_node_count = v.root->CountNodes(branch_num);
+        if(node_count != other_node_count)
+        {
+            return false;
+        }
+
+        size_t leave_count = root->CountLeaves(branch_num);
+        size_t other_leave_count = v.root->CountLeaves(branch_num);
+        if(leave_count != other_leave_count)
+        {
+            return false;
+        }
+
+        return root->Compare(v.root, branch_num, dim);
+    }
+
+    bool TreeInNode::Compare(TreeNode *in, int branch_num, int dim) const 
+    {
+        TreeInNode *other_node = dynamic_cast<TreeInNode*>(in);
+        for(int i = 0; i < dim; i++)
+        {
+            if(des[i] != other_node->des[i])
+                return false;
+        }
+
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] == NULL)
+            {
+                if(other_node->children[i] != NULL)
+                    return false;
+            }
+            else
+            {
+                if(other_node->children[i] == NULL)
+                    return false;
+                children[i]->Compare(other_node->children[i], branch_num, dim);
+            }
+        }
+        return true;
+    }
+
+    bool TreeLeafNode::Compare(TreeNode *leaf, int branch_num, int dim) const
+    {
+        TreeLeafNode *other_leaf = dynamic_cast<TreeLeafNode*>(leaf);
+        for(int i = 0; i < dim; i++)
+        {
+            if(des[i] != other_leaf->des[i])
+                return false;
+        }
+        if(inv_list.size() != other_leaf->inv_list.size())    // shallow comparison
+            return false;
+        return true;
+    } 
 
 }   // end of namespace vot
