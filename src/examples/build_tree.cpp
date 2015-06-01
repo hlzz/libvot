@@ -47,7 +47,6 @@ int main(int argc, char **argv)
     if(sift_type == 0)
     {
         sift_data.resize(siftfile_num);
-
         for(int i = 0; i < sift_filenames.size(); i++)
         {
             sift_data[i].ReadSiftFile(sift_filenames[i]);

@@ -2,6 +2,8 @@
 #include <limits>
 #include <cassert>
 #include <cmath>
+#include <cstring>
+#include <cstdlib>
 
 #include "clustering.h"
 #include "global_params.h"

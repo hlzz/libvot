@@ -86,24 +86,41 @@ public:
         FILE *fd;
         if((fd = fopen(szFileName.c_str(), "rb")) == NULL)
         {
-            std::cout << "Can't read sift file " << szFileName << '\n';
+            std::cout << "[ReadSiftFile] Can't read sift file " << szFileName << '\n';
             return false;
         }
-        fread(&name_, sizeof(int), 1, fd);
-        fread(&version_, sizeof(int), 1, fd);
+        int f = fread(&name_, sizeof(int), 1, fd);
+        int g = fread(&version_, sizeof(int), 1, fd);
+        if(f != 1 || g != 1)
+        {
+        	std::cout << "[ReadSiftFile] Reading error\n";
+        	return false;
+        }
 
         if(name_ == ('S'+ ('I'<<8)+('F'<<16)+('T'<<24)))
         {
-            fread(&npoint_, sizeof(int), 1, fd);
-            fread(&nLocDim_, sizeof(int), 1, fd);
-            fread(&nDesDim_, sizeof(int), 1, fd);
+        	int a, b, c;
+            a = fread(&npoint_, sizeof(int), 1, fd);
+            b = fread(&nLocDim_, sizeof(int), 1, fd);
+            c = fread(&nDesDim_, sizeof(int), 1, fd);
+            if(a != 1 || b != 1 || c!= 1)
+            {
+            	std::cout << "[ReadSiftFile] Reading error\n";
+            	return false;
+            }
 
             lp_ = new LTYPE [npoint_ * nLocDim_];          //restoring location data
             dp_ = new DTYPE [npoint_ * nDesDim_];          //restoring descriptor data
             if(npoint_ >= 0 && nLocDim_ > 0 && nDesDim_ == 128)
             {
-                fread(lp_, sizeof(LTYPE), nLocDim_ * npoint_, fd);
-                fread(dp_, sizeof(DTYPE), nDesDim_ * npoint_, fd);
+            	int d, e;
+                d = fread(lp_, sizeof(LTYPE), nLocDim_ * npoint_, fd);
+                e = fread(dp_, sizeof(DTYPE), nDesDim_ * npoint_, fd);
+                if(d != nLocDim_ * npoint_ || e != nDesDim_ * npoint_)
+                {
+	            	std::cout << "[ReadSiftFile] Reading error\n";
+	            	return false;
+                }
                 fclose(fd);
             }
             else

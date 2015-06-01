@@ -311,17 +311,22 @@ namespace vot
         FILE *f = fopen(filename, "r");
         if(f == NULL)
         {
-            std::cout << "[VocabTree] Error opening file " << filename << " for reading tree\n" << std::endl;
+            std::cout << "[ReadTree] Error opening file " << filename << " for reading tree\n" << std::endl;
             return false;
         }
 
         // write header parameters
-        fread(&branch_num, sizeof(int), 1, f);
-        fread(&depth, sizeof(int), 1, f);
-        fread(&dim, sizeof(int), 1, f);
-
         char is_internal;
-        fread(&is_internal, sizeof(char), 1, f);
+        int a, b, c, d;
+        a = fread(&branch_num, sizeof(int), 1, f);
+        b = fread(&depth, sizeof(int), 1, f);
+        c = fread(&dim, sizeof(int), 1, f);
+        d = fread(&is_internal, sizeof(char), 1, f);
+        if(a != 1 || b != 1 || c != 1 || d != 1)
+        {
+            std::cout << "[ReadTree] Reading Error\n";
+            return false;
+        }
 
         root = new TreeInNode();
         root->ReadNode(f, branch_num, dim);
@@ -336,9 +341,19 @@ namespace vot
     bool TreeInNode::ReadNode(FILE *f, int branch_num, int dim)
     {
         des = new DTYPE [dim];
-        fread(des, sizeof(DTYPE), dim, f);
+        int a = fread(des, sizeof(DTYPE), dim, f);
+        if(a != dim)
+        {
+            std::cout << "[ReadNode] Reading error\n";
+            return false;
+        }
         char *has_children = new char [branch_num];
-        fread(has_children, sizeof(char), branch_num, f);
+        int b = fread(has_children, sizeof(char), branch_num, f);
+        if(b != branch_num)
+        {
+            std::cout << "[ReadNode] Reading error\n";
+            return false;
+        }
 
         children = new TreeNode *[branch_num];
         for(int i = 0; i < branch_num; i++)
@@ -350,7 +365,12 @@ namespace vot
             else
             {
                 char is_internal;
-                fread(&is_internal, sizeof(DTYPE), 1, f);
+                int c = fread(&is_internal, sizeof(DTYPE), 1, f);
+                if(c != 1)
+                {
+                    std::cout << "[ReadNode] Reading error\n";
+                    return false;
+                }
                 if(is_internal)
                 {
                     children[i] = new TreeInNode();
@@ -371,17 +391,32 @@ namespace vot
     bool TreeLeafNode::ReadNode(FILE *f, int branch_num, int dim)
     {
         des = new DTYPE [dim];
-        fread(des, sizeof(DTYPE), dim, f);
-        fread(&weight, sizeof(float), 1, f);
+        int a = fread(des, sizeof(DTYPE), dim, f);
+        if(a != dim)
+        {
+            std::cout << "[ReadNode] Reading error\n";
+            return false;
+        }
         int num_images;
-        fread(&num_images, sizeof(int), 1, f);
+        int b = fread(&weight, sizeof(float), 1, f);
+        int c = fread(&num_images, sizeof(int), 1, f);
+        if(b != 1 || c != 1)
+        {
+            std::cout << "[ReadNode] Reading error\n";
+            return false;
+        }
 
         inv_list.resize(num_images);
         for(int i = 0; i < num_images; i++)
         {
             int img, count;
-            fread(&img, sizeof(int), 1, f);
-            fread(&count, sizeof(int), 1, f);
+            int d = fread(&img, sizeof(int), 1, f);
+            int e = fread(&count, sizeof(int), 1, f);
+            if(d != 1 || e != 1)
+            {
+                std::cout << "[ReadNode] Reading error\n";
+                return false;
+            }
             inv_list[i] = ImageCount(img, count);
         }
         return true;
