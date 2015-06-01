@@ -39,16 +39,12 @@ public:
         nLocDim_(obj.nLocDim_), nDesDim_(obj.nDesDim_)
     {
         //copy feature descriptors
-        DTYPE *dp_origin = dp_;
         dp_ = new DTYPE [obj.npoint_];
         memcpy(dp_, obj.dp_, sizeof(DTYPE)*obj.npoint_);
-        delete [] dp_origin;
 
         //copy location descriptors
-        LTYPE *lp_origin = lp_;
         lp_ = new LTYPE [obj.npoint_];
         memcpy(lp_, obj.lp_, sizeof(LTYPE)*obj.npoint_);
-        delete [] lp_origin;
     }
 
     // copy assignment operator
@@ -61,16 +57,12 @@ public:
         nDesDim_ = rhs.nDesDim_;
 
         //copy feature descriptors
-        DTYPE *dp_origin = dp_;
         dp_ = new DTYPE [rhs.npoint_];
         memcpy(dp_, rhs.dp_, sizeof(DTYPE)*rhs.npoint_);
-        delete [] dp_origin;
 
         //copy location descriptors
-        LTYPE *lp_origin = lp_;
         lp_ = new LTYPE [rhs.npoint_];
         memcpy(lp_, rhs.lp_, sizeof(LTYPE)*rhs.npoint_);
-        delete [] lp_origin;
 
         return *this;
     }

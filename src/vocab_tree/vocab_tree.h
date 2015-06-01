@@ -5,6 +5,7 @@
 #include <cstdlib>
 
 #include "utils/global_params.h"
+#include "data_types.h"
 
 namespace vot
 {
@@ -114,6 +115,9 @@ namespace vot
             bool ReadTree(const char *filename);            //!< read a vocabulary tree from a file
             bool ClearTree();                   //!< release the memory
             bool Compare(VocabTree &v) const; //!< compare two vocabulary tree and returns whether they are the same
+            bool AddImage2Tree(tw::SiftData &sift);          //!< add an image into the database
+            void Show() const;      //!< a test function
+
 
             // public data member 
             int branch_num;             //!< the branch number of a node

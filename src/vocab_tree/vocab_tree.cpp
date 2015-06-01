@@ -326,7 +326,10 @@ namespace vot
         root = new TreeInNode();
         root->ReadNode(f, branch_num, dim);
 
+        //char end = fgetc(f);
+        //cout << (end == EOF) << endl;
         fclose(f);
+        num_nodes = root->CountNodes(branch_num);
         return true;
     }
 
@@ -389,6 +392,12 @@ namespace vot
     //                     Vocabulary Tree Utilities(Test)                      //
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
+
+    void VocabTree::Show() const
+    {
+        std::cout << "[VocabTree] depth/branch_num: " << depth << "/" << branch_num << std::endl;
+        std::cout << "[VocabTree] #nodes " << num_nodes << std::endl;
+    }
 
     size_t TreeInNode::CountNodes(int branch_num) const
     {
@@ -480,5 +489,16 @@ namespace vot
             return false;
         return true;
     } 
+
+    //////////////////////////////////////////////////////////////////////////////
+    //                                                                          //
+    //                     Vocabulary Tree Build Database                       //
+    //                                                                          //
+    //////////////////////////////////////////////////////////////////////////////
+
+    bool VocabTree::AddImage2Tree(tw::SiftData &sift)
+    {
+        return true;
+    }
 
 }   // end of namespace vot
