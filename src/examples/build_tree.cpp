@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     if (argc != 6) 
     {
         printf("Usage: %s <sift_key_file_names.in> <sift_type> <depth> <branch_num> <tree.out>\n", argv[0]);
-        return 1;
+        return -1;
     }
 
     const char *sift_input_file = argv[1];

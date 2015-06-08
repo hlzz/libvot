@@ -50,6 +50,7 @@ int main(int argc, char **argv)
     }
 
     // TODO(tianwei): a filter key step
+    // add image into the database using the inverted list
     vot::VocabTree tree;
     tree.ReadTree(input_tree);
     std::cout << "[BuildDB] Successfully read vocabulary tree file " << input_tree << std::endl;
@@ -58,6 +59,6 @@ int main(int argc, char **argv)
     {
         tree.AddImage2Tree(sift_data[i]);
     } 
-    
+
 	return 0;
 }

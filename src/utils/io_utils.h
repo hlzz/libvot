@@ -1,6 +1,8 @@
 #ifndef IO_UTILS_HEADER
 #define IO_UTILS_HEADER
 
+#include <vector>
+
 namespace tw 
 {
     /**

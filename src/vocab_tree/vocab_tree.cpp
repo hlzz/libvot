@@ -533,6 +533,7 @@ namespace vot
 
     bool VocabTree::AddImage2Tree(tw::SiftData &sift)
     {
+
         return true;
     }
 
