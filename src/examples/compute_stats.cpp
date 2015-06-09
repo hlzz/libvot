@@ -2,22 +2,25 @@
 This program is use to compare the image search result with the ground truth match
 Tianwei <shentianweipku@gmail.com>
 */
+
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <Eigen/Dense>
 
 #include "io_utils.h"
 
 using namespace std;
+using Eigen::MatrixXd;
 
 int main(int argc, char **argv)
 {
 	if(argc != 4)
 	{
-		printf("Usage: %s <sift_file> <groud_truth_match> <match_file>\n\n", argv[0]);
-		printf("Each line of the ground_truth_match file consists of a 5-tuple of the form <pmatch, fmatch, hmatch, index1, index2>\n\n");
+		printf("Usage: %s <sift_file> <groud_truth_match> <match_file>\n", argv[0]);
+		printf("Each line of the ground_truth_match file consists of a 5-tuple of the form <pmatch, fmatch, hmatch, index1, index2>\n");
 		printf("Each line of the match_file conssits of a 2-tuple of the form <index1, index2>\n");
 		return -1;
 	}
@@ -63,7 +66,6 @@ int main(int argc, char **argv)
 			// note that index1 < index2
 			true_matches[index1].push_back(index2);
 			ground_truth_count++;
-		//cout << index1 << " " << index2 << " " << ground_truth_count << endl;
 		}
 	}
 	fin.close();
@@ -102,7 +104,16 @@ int main(int argc, char **argv)
 	// output the result
 	double precision = (double) hit_count / match_count;
 	double recall = (double) hit_count / ground_truth_count;
-	cout << "hit / ground_truth / match: " << hit_count << " " << ground_truth_count << " " << match_count << "\n";
+	cout << "hit / match / ground_truth: " << hit_count << " " << match_count << " " << ground_truth_count << "\n";
 	cout << "precision / recall: " << precision << " " << recall << "\n";
+
+	// SVD of ground truth match matrix
+	MatrixXd m(2, 2);
+	m(0, 0) = 1;
+	m(1, 0) = 2.5;
+	m(0, 1) = 1;
+	m(1, 1) = 2;
+	cout << m << endl;
+
 	return 0;
 }
