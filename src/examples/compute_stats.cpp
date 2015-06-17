@@ -8,12 +8,29 @@ Tianwei <shentianweipku@gmail.com>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <cmath>
+#include <cassert>
+#include <cstdlib>
+
 #include <Eigen/Dense>
+#include <Eigen/SVD>
 
 #include "io_utils.h"
 
 using namespace std;
-using Eigen::MatrixXd;
+
+float Fnorm(Eigen::MatrixXf &f)
+{
+	float norm = 0;
+	for(int i = 0; i < f.rows(); i++)
+	{
+		for(int j = 0; j < f.cols(); j++)
+		{
+			norm += f(i, j) * f(i, j);
+		}
+	}
+	return sqrt(norm);
+}
 
 int main(int argc, char **argv)
 {
@@ -107,13 +124,116 @@ int main(int argc, char **argv)
 	cout << "hit / match / ground_truth: " << hit_count << " " << match_count << " " << ground_truth_count << "\n";
 	cout << "precision / recall: " << precision << " " << recall << "\n";
 
-	// SVD of ground truth match matrix
-	MatrixXd m(2, 2);
-	m(0, 0) = 1;
-	m(1, 0) = 2.5;
-	m(0, 1) = 1;
-	m(1, 1) = 2;
-	cout << m << endl;
 
+    //////////////////////////////////////////////////////////////////////////////
+    //                                                                          //
+    //                     Singular Value Thresholding							//
+    //                                                                          //
+    //////////////////////////////////////////////////////////////////////////////
+
+	Eigen::MatrixXf gt_mat = Eigen::MatrixXf::Constant(image_num, image_num, -1);
+	for(int i = 0; i < image_num; i++)
+	{
+		for(int j = 0; j < true_matches[i].size(); j++)
+		{
+			gt_mat(i, true_matches[i][j]) = 1;
+			gt_mat(true_matches[i][j], i) = 1;
+		}
+	}
+
+	// random sampling ground truth and form the sample matrix M
+	Eigen::MatrixXf sample_mt = Eigen::MatrixXf::Constant(image_num, image_num, 0);
+
+	const float sample_ratio = 0.02;
+	const int sample_size = image_num * sample_ratio;
+	vector<vector<int> > sample_set;
+	sample_set.resize(image_num);
+
+	// sample without replacement
+	for(int i = 0; i < image_num; i++)
+	{
+		for(int j = 0; j < sample_size; j++)
+		{
+			int curr_idx = rand() % image_num;
+			int k;
+			for(k = 0; k < j; k++)
+			{
+				if(curr_idx == sample_set[i][k]) 
+				{
+					j--; k = -1;
+					break;
+				}
+			}
+			if(k != -1)
+				sample_set[i].push_back(curr_idx);
+		}
+		assert(sample_set[i] == sample_size);
+	}
+
+	int count = 0;
+	for(int i = 0; i < image_num; i++)
+	{
+		for(int j = 0; j < sample_size; j++)
+		{
+			sample_mt(i, sample_set[i][j]) = gt_mat(i, sample_set[i][j]);
+			sample_mt(sample_set[i][j], i) = gt_mat(i, sample_set[i][j]); 
+			if(gt_mat(i, sample_set[i][j]) == 1)
+			{
+				count++;
+			}
+		}
+	}
+	float step_size = 1.2 / sample_ratio;
+	float tolerance = 1e-4;	
+	float tau = 100000;
+	int max_iter = 30;
+
+	int k0 = tau / (step_size * Fnorm(sample_mt));
+	//cout << tau << " " << step_size << " " << Fnorm(sample_mt) << " " << k0 <<endl;
+	//Eigen::MatrixXf Y = 
+	Eigen::MatrixXf X = Eigen::MatrixXf::Constant(image_num, image_num, 0);
+	Eigen::MatrixXf Y = k0 * step_size * sample_mt;
+	int r0 = 0;
+	for(int k = 0; k < max_iter; k++)
+	{
+		cout << "iteration " << k  << ": " << endl;
+		Eigen::JacobiSVD<Eigen::MatrixXf> svd(sample_mt, Eigen::ComputeThinU | Eigen::ComputeThinV);
+		// Eigen::MatrixXf U = svd.matrixU();
+		// Eigen::MatrixXf V = svd.matrixV();
+		// cout << svd.singularValues() << endl;
+	}
+
+
+	// Eigen::FullPivLU<Eigen::MatrixXf> lu_decomp(gt_mat);
+	// lu_decomp.setThreshold(1e-5);
+	// cout << lu_decomp.rank() << endl;
+
+	// Eigen::JacobiSVD<Eigen::MatrixXf> svd(gt_mat, Eigen::ComputeThinU | Eigen::ComputeThinV);
+	// Eigen::MatrixXf U = svd.matrixU();
+	// Eigen::MatrixXf V = svd.matrixV();
+	// cout << svd.singularValues() << endl;
+	// float umax = -1, vmax = -1;
+	// int usize = gt_mat.rows();
+	// int vsize = gt_mat.cols();
+	// for(int i = 0; i < usize; i++)
+	// {
+	// 	for(int j = 0; j < usize; j++)
+	// 	{
+	// 		if(umax < U(i, j))
+	// 			umax = U(i, j);
+	// 	}
+	// }
+
+	// for(int i = 0; i < vsize; i++)
+	// {
+	// 	for(int j = 0; j < vsize; j++)
+	// 	{
+	// 		if(vmax < V(i, j))
+	// 			vmax = V(i, j);
+	// 	}
+	// }
+
+	// cout << "umax: " << umax << endl;
+	// cout << "vmax: " << vmax << endl;
 	return 0;
 }

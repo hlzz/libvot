@@ -1,0 +1,205 @@
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <Eigen/Dense>
+#include <random>
+
+#include "io_utils.h"
+
+using namespace std;
+using namespace Eigen;
+
+float Fnorm(Eigen::MatrixXf &f)
+{
+	float norm = 0;
+	for(int i = 0; i < f.rows(); i++)
+	{
+		for(int j = 0; j < f.cols(); j++)
+		{
+			norm += f(i, j) * f(i, j);
+		}
+	}
+	return sqrt(norm);
+}
+
+double Fnorm(Eigen::MatrixXd &d)
+{
+	double norm = 0;
+	for(int i = 0; i < d.rows(); i++)
+	{
+		for(int j = 0; j < d.cols(); j++)
+		{
+			norm += d(i, j) * d(i, j);
+		}
+	}
+	return sqrt(norm);
+}
+
+// sample_set.size() = d.rows();
+Eigen::MatrixXd MatrixProjection(Eigen::MatrixXd &d, std::vector<std::vector<int> > sample_set)
+{
+	Eigen::MatrixXd pd = Eigen::MatrixXd::Constant(d.rows(), d.cols(), 0);
+	for(int i = 0; i < d.rows(); i++)
+	{
+		for(int j = 0; j < sample_set[i].size(); j++)
+		{
+			pd(i, sample_set[i][j]) = d(i, sample_set[i][j]);
+		}
+	}
+	return pd;
+}
+
+int main(int argc, char ** argv)
+{
+	if(argc != 2)
+	{
+		cout << "Usage: " << argv[0] << " <mat_file>\n";
+		exit(-1);
+	}
+	const char *mat_file = argv[1];
+
+	// here we assume that the input matrix is a square matrix
+	vector<string> mat_string;
+	tw::IO::ExtractLines(mat_file, mat_string);
+	int mat_size = mat_string.size();
+	MatrixXd input_mat = MatrixXd::Constant(mat_size, mat_size, 0);
+	for(int i = 0; i < mat_size; i++)
+	{
+		stringstream ss;
+		ss << mat_string[i];
+		float temp;
+		for(int j = 0; j < mat_size; j++)
+		{
+			ss >> temp;
+			input_mat(i, j) = temp;
+		}
+	}
+
+	MatrixXd sample_mat = MatrixXd::Constant(mat_size, mat_size, 0);
+	const float sample_ratio = 0.4;
+	const int sample_size = mat_size * sample_ratio;
+	vector<vector<int> > sample_set;
+	sample_set.resize(mat_size);
+
+	// sample without replacement
+	default_random_engine e(0);
+	uniform_int_distribution<int> uni_rand(0, mat_size-1);
+	for(int i = 0; i < mat_size; i++)
+	{
+		for(int j = 0; j < sample_size; j++)
+		{
+			int curr_sample = uni_rand(e);
+			int k;
+			for(k = 0; k < j; k++)
+			{
+				if(curr_sample == sample_set[i][k])
+				{
+					j--; k = -1;
+					break;
+				}
+			}
+			if(k != -1)
+			{
+				sample_set[i].push_back(curr_sample);
+			}
+		}
+	}
+
+	for(int i = 0; i < mat_size; i++)
+	{
+		for(int j = 0; j < sample_set[i].size(); j++)
+		{
+			sample_mat(i, sample_set[i][j]) = input_mat(i, sample_set[i][j]);
+		}
+	}
+
+cout << sample_mat << endl;
+
+	// singular value thresholding	
+	float step_size = 1.5;//1.2 * mat_size / sample_ratio;
+	float tau = 30;
+	int k0 = tau / (step_size * Fnorm(sample_mat)) + 1;
+	int max_iter = 200;
+	MatrixXd Y = k0 * step_size * sample_mat;
+	MatrixXd X;
+	double stop_threshold = 1e-4;
+	for(int i = 0; i < max_iter; i++)
+	{
+		JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
+		MatrixXd U = svd.matrixU();	
+		MatrixXd V = svd.matrixV();	
+		VectorXd singular_vector = svd.singularValues();	
+		MatrixXd S = MatrixXd::Constant(mat_size, mat_size, 0);
+		for(int i = 0; i < mat_size; i++)
+		{
+			if(singular_vector[i] > tau)
+			{
+				S(i, i) = singular_vector[i] - tau;
+			}
+		}
+		X = U * S * V.transpose();
+
+		// compute error
+		MatrixXd residual_mat = X - sample_mat;
+		MatrixXd residual_proj = MatrixProjection(residual_mat, sample_set);
+		double error = Fnorm(residual_proj);
+		double sample_mat_norm = Fnorm(sample_mat);
+		if(error / sample_mat_norm < stop_threshold)
+		{
+			cout << "break at iter " << i << endl;
+			break;
+		}
+
+		// refresh Y
+		for(int i = 0; i < sample_mat.rows(); i++)
+		{
+			for(int j = 0; j < sample_set[i].size(); j++)
+			{
+				Y(i, sample_set[i][j]) = Y(i, sample_set[i][j]) + step_size * (sample_mat(i, sample_set[i][j]) - X(i, sample_set[i][j]));
+			}
+		}
+	}
+	//cout << X << endl;
+	// compute completion error
+	float completion_error = 0;
+	float max_error = 0;
+	float error_bound = 10;
+	int within_bound_count = 0;
+	for(int i = 0; i < mat_size; i++)
+	{
+		for(int j = 0; j < mat_size; j++)
+		{
+			completion_error += (X(i, j) - input_mat(i, j)) * (X(i, j) - input_mat(i, j));
+			if(max_error < abs(X(i, j) - input_mat(i, j)) )
+			{
+				max_error = abs(X(i, j) - input_mat(i, j));
+			}
+			if(abs(X(i, j) - input_mat(i, j)) < error_bound)
+			{
+				within_bound_count++;
+			}
+		}
+	}
+	cout << "completion_error " << completion_error << endl;
+	cout << "max_error " << max_error << endl;
+	cout << "within_bound_count " << within_bound_count << endl;
+	/*
+	for(int i = 0; i < X.rows(); i++)
+	{
+		for(int j = 0; j < X.cols(); j++)
+		{
+			if(X(i, j) > 0)
+			{
+				X(i, j) = 1;
+			}
+			else
+			{
+				X(i, j) = -1;
+			}
+		}
+	}
+	*/
+	//cout << X << endl;
+
+	return 0;
+}

@@ -17,3 +17,9 @@ add_executable(query_expansion query_expansion.cpp)
 add_executable(sequence_match sequence_match.cpp ../utils/io_utils.cpp)
 
 add_executable(compute_stats compute_stats.cpp ../utils/io_utils.cpp)
+
+add_executable(svt svt.cpp ../utils/io_utils.cpp)
+set_property(TARGET svt PROPERTY CXX_STANDARD 11)
+set_property(TARGET svt PROPERTY CXX_STANDARD_REQUIRED on)
+
+add_executable(euclidean_matrix euclidean_matrix.cpp ../utils/io_utils.cpp)
