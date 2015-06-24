@@ -36,8 +36,10 @@ int main(int argc, char **argv)
 	point2d points[MATRIX_SIZE];
 	for(int i = 0; i < MATRIX_SIZE; i++)
 	{
-		points[i].x = rand() % 100;	
-		points[i].y = rand() % 100;
+		points[i].x = rand() % 1000;	
+		points[i].x /= 1000;
+		points[i].y = rand() % 1000;
+		points[i].y /= 1000;
 	}
 
 	Eigen::MatrixXf distance_matrix(MATRIX_SIZE, MATRIX_SIZE);

@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 {
     if(argc != 5) 
     {
-        printf("Usage: %s <sift_key_file_names.in> <tree.in> <sift_type> <tree.out>\n", argv[0]);
+        printf("Usage: %s <sift_list> <tree.in> <sift_type> <tree.out>\n", argv[0]);
         return 1;
     }
 

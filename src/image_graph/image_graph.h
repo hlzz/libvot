@@ -24,18 +24,27 @@ namespace vot
 	class ImageGraph 
 	{
 	public:
-        //! Brief construct ananymous graph without filenames 
+        //! Brief construct ananymous image graph without filenames 
 		ImageGraph(int size);
-		ImageGraph(const std::vector<std::string> &image_filenames,
-			const std::vector<std::string> &sift_filenames);
+		//! Brief construct a image graph with filenames
+		ImageGraph(const std::vector<std::string> &image_filenames, const std::vector<std::string> &sift_filenames);
 		void addEdge(int src, int dst, double score);
+		void addEdge(vot::LinkNode n);
 		int NumConnectedComponents(int threshold = 0);
         std::vector<std::vector<int> > KargerCut();
         bool Consolidate(int k);
+        bool QueryExpansionSub(int src, int tgt, 
+        					   double score, 
+        					   bool **visit_mat, 
+        					   std::vector<std::vector<vot::LinkNode> > &expansion_lists, 
+        					   int level);
+        std::vector<std::vector<vot::LinkNode> > QueryExpansion(std::vector<std::vector<vot::LinkNode> > &expansion_lists, 
+                                                                bool **visit_mat,
+                                                                int level);
         void ShowInfo();
 
 	private:
-		int size_;
+		size_t size_;
 		std::vector<std::string> image_filenames_;
 		std::vector<std::string> sift_filenames_;
 		std::vector<std::vector<LinkNode> > adj_lists_;

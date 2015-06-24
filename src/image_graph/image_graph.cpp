@@ -33,6 +33,12 @@ namespace vot
         adj_lists_[src].push_back(vot::LinkNode(src, dst, score));
     }
 
+    void ImageGraph::addEdge(vot::LinkNode n)
+    {
+        // Note: here it doesn't check repitition
+        adj_lists_[n.src].push_back(n);
+    }
+
     int ImageGraph::NumConnectedComponents(int threshold)
     {
         bool is_visited[size_];
@@ -132,6 +138,50 @@ namespace vot
     bool ImageGraph::Consolidate(int k)
     {
         return true;
+    }
+
+    bool ImageGraph::QueryExpansionSub(int src, int tgt, double score, bool **visit_mat, std::vector<std::vector<vot::LinkNode> > &expansion_lists, int level)
+    {
+        if(level < 1) {return false;}
+        int size_k = adj_lists_[tgt].size();
+        for(int k = 0; k < size_k; k++)
+        {
+            vot::LinkNode temp(src, adj_lists_[tgt][k].dst, score * adj_lists_[tgt][k].score);
+            if(!visit_mat[src][temp.dst])
+            {
+                expansion_lists[src].push_back(temp);
+                visit_mat[src][temp.dst] = true;
+                QueryExpansionSub(src, temp.dst, temp.score, visit_mat, expansion_lists, level-1);
+            }
+        }
+        return true; 
+    }
+
+    std::vector<std::vector<vot::LinkNode> > ImageGraph::QueryExpansion(std::vector<std::vector<vot::LinkNode> > &expansion_lists, 
+                                                                        bool **visit_mat,
+                                                                        int level)
+    {        
+        const int MAX_LEVEL = 5;
+        if(level < 1 || level > 5)
+        {
+            std::cout << "[QueryExpansion] Error: exceed the maximum expansion level (5)\n";
+            return expansion_lists;
+        }
+
+        expansion_lists.resize(size_);
+
+        for(int i = 0; i < size_; i++)
+        {
+            int size_i = adj_lists_[i].size();
+            for(int j = 0; j < size_i; j++)
+            {
+                expansion_lists[i].push_back(adj_lists_[i][j]);
+                visit_mat[i][adj_lists_[i][j].dst] = true;
+                QueryExpansionSub(i, adj_lists_[i][j].dst, adj_lists_[i][j].score, visit_mat, expansion_lists, level - 1);
+            }
+        }
+
+        return expansion_lists;
     }
 
     void ImageGraph::ShowInfo()

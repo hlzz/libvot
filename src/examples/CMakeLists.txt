@@ -12,7 +12,7 @@ add_executable(build_db build_db.cpp ../utils/io_utils.cpp ../vocab_tree/vocab_t
 
 add_executable(graph_partition graph_partition.cpp ../image_graph/image_graph.cpp ../utils/io_utils.cpp ../utils/global_params.cpp ../utils/data_structures.cpp)
 
-add_executable(query_expansion query_expansion.cpp)
+add_executable(query_expansion query_expansion.cpp ../utils/io_utils.cpp ../image_graph/image_graph.cpp ../utils/data_structures.cpp)
 
 add_executable(sequence_match sequence_match.cpp ../utils/io_utils.cpp)
 

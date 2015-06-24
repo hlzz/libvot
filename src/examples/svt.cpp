@@ -117,7 +117,7 @@ cout << sample_mat << endl;
 
 	// singular value thresholding	
 	float step_size = 1.5;//1.2 * mat_size / sample_ratio;
-	float tau = 30;
+	float tau = 5 * mat_size;
 	int k0 = tau / (step_size * Fnorm(sample_mat)) + 1;
 	int max_iter = 200;
 	MatrixXd Y = k0 * step_size * sample_mat;
@@ -180,9 +180,14 @@ cout << sample_mat << endl;
 			}
 		}
 	}
+	MatrixXd error_mat = X - input_mat;
+	float relative_error = Fnorm(error_mat) / Fnorm(input_mat);
 	cout << "completion_error " << completion_error << endl;
 	cout << "max_error " << max_error << endl;
 	cout << "within_bound_count " << within_bound_count << endl;
+	cout << "relative_error " << relative_error << endl;
+
+
 	/*
 	for(int i = 0; i < X.rows(); i++)
 	{
