@@ -25,3 +25,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR/cmake}")
 
 # The source files
 add_subdirectory(src)
+
+# add gtest 1.7.0
+add_subdirectory(gtest-1.7.0)
+add_subdirectory(test)

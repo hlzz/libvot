@@ -1,3 +1,6 @@
+// Singular Value Threshold
+// Tianwei Shen, 2015
+
 #include <iostream>
 #include <vector>
 #include <sstream>

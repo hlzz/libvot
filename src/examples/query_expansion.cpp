@@ -172,20 +172,6 @@ int main(int argc, char **argv)
 
         if(index1 < index2)
         {
-            // match_count++;
-            // visit_mat[index1][index2] = true;
-            // for(int i = 0; i < true_matches[index1].size(); i++)
-            // {
-            //     assert(index1 == true_matches[index1][i].src);
-            //     if(true_matches[index1][i].dst == index2)
-            //     {
-            //         hit_count++;
-            //         image_graph.addEdge(true_matches[index1][i]);
-            //         //match_matrix(index1, index2) = true_matches[index1][i].g_match;
-            //         //match_matrix(index2, index1) = match_matrix(index1, index2);
-            //         break;
-            //     }
-            // }
             rank_list[index1].push_back(index2);
         }
     }

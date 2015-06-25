@@ -6,7 +6,7 @@
 #include <cstring>
 #include <algorithm>
 #include "image_graph.h"
-#include "data_structures.h"
+#include "../utils/data_structures.h"
 
 using std::cout;
 using std::endl;
