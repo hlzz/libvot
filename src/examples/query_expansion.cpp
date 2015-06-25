@@ -46,11 +46,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace std;
 
+bool MatchJump(int state, int tolerance)
+{
+    if(state >= tolerance)
+        return true;
+    else 
+        return false;
+}
+
 int main(int argc, char **argv)
 {
-    if(argc != 5)
+    if(argc < 4)
     {
-        printf("Usage: %s <sift_file> <groud_truth_match> <match_file> <query_expansion_level>\n", argv[0]);
+        printf("Usage: %s <sift_file> <groud_truth_match> <match_file> [query_expansion_level] [qe_inlier_threshold]\n", argv[0]);
         printf("Each line of the ground_truth_match file consists of a 5-tuple of the form <pmatch, fmatch, hmatch, index1, index2>\n");
         printf("Each line of the match_file conssits of a 2-tuple of the form <index1, index2>\n");
         return -1;
@@ -59,7 +67,13 @@ int main(int argc, char **argv)
     const char *sift_file = argv[1];
     const char *ground_truth_match = argv[2];
     const char *match_file = argv[3];
-    const int query_level = atoi(argv[4]);
+    int query_level = 2;
+    int qe_inlier_thresh = 150;
+
+    if(argc == 5)
+        query_level = atoi(argv[4]);
+    if(argc == 6)
+        qe_inlier_thresh = atoi(argv[5]);
 
     const int inlier_thresh = 20;
     const int min_finlier = 5;
@@ -85,12 +99,12 @@ int main(int argc, char **argv)
     int nmatch, finlier, hinlier;
     size_t ground_truth_count = 0;
 
-    float max_dist = log(min_finlier/C) * log(min_finlier/C); 
-    Eigen::MatrixXf distance_matrix = Eigen::MatrixXf::Constant(image_num, image_num, max_dist);
-    for(int i = 0; i < image_num; i++)
-    {
-        distance_matrix(i, i) = 0;
-    }
+    // float max_dist = log(min_finlier/C) * log(min_finlier/C); 
+    // Eigen::MatrixXf distance_matrix = Eigen::MatrixXf::Constant(image_num, image_num, max_dist);
+    // for(int i = 0; i < image_num; i++)
+    // {
+    //     distance_matrix(i, i) = 0;
+    // }
 
     while(!fin.eof())
     {
@@ -138,6 +152,9 @@ int main(int argc, char **argv)
         memset(visit_mat[i], false, sizeof(bool)*image_num);
     }
 
+    // read the original rank list of vocabulary tree
+    vector<vector<size_t> > rank_list;
+    rank_list.resize(image_num);
     ifstream fin1(match_file);
     if(!fin1.is_open())
     {
@@ -155,23 +172,55 @@ int main(int argc, char **argv)
 
         if(index1 < index2)
         {
-            match_count++;
-            visit_mat[index1][index2] = true;
-            for(int i = 0; i < true_matches[index1].size(); i++)
-            {
-                assert(index1 == true_matches[index1][i].src);
-                if(true_matches[index1][i].dst == index2)
-                {
-                    hit_count++;
-                    image_graph.addEdge(true_matches[index1][i]);
-                    //match_matrix(index1, index2) = true_matches[index1][i].g_match;
-                    //match_matrix(index2, index1) = match_matrix(index1, index2);
-                    break;
-                }
-            }
+            // match_count++;
+            // visit_mat[index1][index2] = true;
+            // for(int i = 0; i < true_matches[index1].size(); i++)
+            // {
+            //     assert(index1 == true_matches[index1][i].src);
+            //     if(true_matches[index1][i].dst == index2)
+            //     {
+            //         hit_count++;
+            //         image_graph.addEdge(true_matches[index1][i]);
+            //         //match_matrix(index1, index2) = true_matches[index1][i].g_match;
+            //         //match_matrix(index2, index1) = match_matrix(index1, index2);
+            //         break;
+            //     }
+            // }
+            rank_list[index1].push_back(index2);
         }
     }
     fin1.close();
+
+    // select the useful first layer connection
+    for(int i = 0; i < image_num; i++)
+    {
+        int jump_state = 0;     // a state related to whether to jump of out the current match
+        for(int j = 0; j < rank_list[i].size(); j++)
+        {
+            // if the previous one is a true match, then continue; Otherwise stop matching for this image
+            match_count++;
+            visit_mat[i][rank_list[i][j]] = true;
+
+            // this searches in the ground-truth match list, which simulates the matching process
+            int k = 0;
+            for(; k < true_matches[i].size(); k++)
+            {
+                if(true_matches[i][k].dst == rank_list[i][j])
+                {
+                    hit_count++; 
+                    image_graph.addEdge(true_matches[i][k]);
+                    jump_state = 0;
+                    break;
+                }
+            }
+            if(k == true_matches[i].size())     // no match for this image pair
+            {
+                jump_state++;
+            }
+            if(MatchJump(jump_state, 1))
+                break;
+        }
+    }
 
     // output the result
     double precision = (double) hit_count / match_count;
@@ -179,13 +228,12 @@ int main(int argc, char **argv)
     cout << "hit / match / ground_truth: " << hit_count << " " << match_count << " " << ground_truth_count << "\n";
     cout << "precision / recall: " << precision << " " << recall << "\n";
 
-    // Eigen::JacobiSVD<Eigen::MatrixXf> svd(match_matrix, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    // Eigen::FullPivLU<Eigen::MatrixXf> lu_decomp(match_matrix);
-    // cout << lu_decomp.rank() << endl;
+    // iterative query expansion
+    for(int iter = 0; iter < 2; iter++)
+    {
 
-    // query expansion
     vector<vector<vot::LinkNode> > expansion_lists;
-    image_graph.QueryExpansion(expansion_lists, visit_mat, query_level);
+    image_graph.QueryExpansion(expansion_lists, visit_mat, query_level, qe_inlier_thresh);
 
     // recompute precision and recall after query expansion
     match_count = 0;
@@ -202,20 +250,19 @@ int main(int argc, char **argv)
                     if(true_matches[i][k].dst == j)
                     {
                         hit_count++;
+                        image_graph.addEdge(true_matches[i][k]);
                         break;
                     }
                 }
             }
         }
     }
-    // int count = 0;
-    // for(int i = 0; i < expansion_lists.size(); i++)
-    //     count += expansion_lists[i].size();
-    // cout << "count " << count << endl;
     precision = (double) hit_count / match_count;
     recall = (double) hit_count / ground_truth_count;
     cout << "hit / match / ground_truth: " << hit_count << " " << match_count << " " << ground_truth_count << "\n";
     cout << "precision / recall: " << precision << " " << recall << "\n";
+
+    }
 
     // release the memory
     for(int i = 0; i < image_num; i++)

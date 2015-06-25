@@ -37,10 +37,12 @@ namespace vot
         					   double score, 
         					   bool **visit_mat, 
         					   std::vector<std::vector<vot::LinkNode> > &expansion_lists, 
-        					   int level);
+        					   int level,
+        					   int inlier_threshold);
         std::vector<std::vector<vot::LinkNode> > QueryExpansion(std::vector<std::vector<vot::LinkNode> > &expansion_lists, 
                                                                 bool **visit_mat,
-                                                                int level);
+                                                                int level,
+                                                                int inlier_threshold = 150);
         void ShowInfo();
 
 	private:

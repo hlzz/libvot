@@ -140,18 +140,22 @@ namespace vot
         return true;
     }
 
-    bool ImageGraph::QueryExpansionSub(int src, int tgt, double score, bool **visit_mat, std::vector<std::vector<vot::LinkNode> > &expansion_lists, int level)
+    bool ImageGraph::QueryExpansionSub(int src, int tgt, 
+                                       double score, bool **visit_mat, 
+                                       std::vector<std::vector<vot::LinkNode> > &expansion_lists, 
+                                       int level, 
+                                       int inlier_threshold)
     {
         if(level < 1) {return false;}
         int size_k = adj_lists_[tgt].size();
         for(int k = 0; k < size_k; k++)
         {
             vot::LinkNode temp(src, adj_lists_[tgt][k].dst, score * adj_lists_[tgt][k].score);
-            if(!visit_mat[src][temp.dst])
+            if(!visit_mat[src][temp.dst] && adj_lists_[tgt][k].g_match > inlier_threshold)
             {
                 expansion_lists[src].push_back(temp);
                 visit_mat[src][temp.dst] = true;
-                QueryExpansionSub(src, temp.dst, temp.score, visit_mat, expansion_lists, level-1);
+                QueryExpansionSub(src, temp.dst, temp.score, visit_mat, expansion_lists, level-1, inlier_threshold);
             }
         }
         return true; 
@@ -159,7 +163,8 @@ namespace vot
 
     std::vector<std::vector<vot::LinkNode> > ImageGraph::QueryExpansion(std::vector<std::vector<vot::LinkNode> > &expansion_lists, 
                                                                         bool **visit_mat,
-                                                                        int level)
+                                                                        int level,
+                                                                        int inlier_threshold)
     {        
         const int MAX_LEVEL = 5;
         if(level < 1 || level > 5)
@@ -177,7 +182,8 @@ namespace vot
             {
                 expansion_lists[i].push_back(adj_lists_[i][j]);
                 visit_mat[i][adj_lists_[i][j].dst] = true;
-                QueryExpansionSub(i, adj_lists_[i][j].dst, adj_lists_[i][j].score, visit_mat, expansion_lists, level - 1);
+                if(adj_lists_[i][j].g_match > inlier_threshold)
+                    QueryExpansionSub(i, adj_lists_[i][j].dst, adj_lists_[i][j].score, visit_mat, expansion_lists, level - 1, inlier_threshold);
             }
         }
 
