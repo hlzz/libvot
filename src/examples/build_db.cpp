@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 {
     if(argc != 5) 
     {
-        printf("Usage: %s <sift_list> <tree.in> <sift_type> <tree.out>\n", argv[0]);
+        printf("Usage: %s <sift_list> <tree.out> <sift_type> <db.out>\n", argv[0]);
         return 1;
     }
 
@@ -24,6 +24,8 @@ int main(int argc, char **argv)
     const char *input_tree = argv[2];
     int sift_type = atoi(argv[3]);
     const char *output_filename = argv[4];
+    int thread_num = 1;
+    int start_id = 0;
 
     // read sift filenames, get the total number of sift keys, and allocate memory
     std::vector<std::string> sift_filenames;
@@ -55,10 +57,18 @@ int main(int argc, char **argv)
     tree.ReadTree(input_tree);
     std::cout << "[BuildDB] Successfully read vocabulary tree file " << input_tree << std::endl;
     tree.Show();
+    tree.SetConstantWeight();
     for(int i = 0; i < siftfile_num; i++)
     {
-        tree.AddImage2Tree(sift_data[i]);
+        double mag = tree.AddImage2Tree(start_id + i, sift_data[i], thread_num);
+        cout << "[BuildDB] Add image #" << start_id + i << " to database, image vector magnitude " << mag << endl;
     } 
+    tree.ComputeTFIDFWeight(siftfile_num);
+    tree.NormalizeDatabase(start_id, siftfile_num);
+
+    std::cout << "[BuildDB] Write vocabulary tree (with image database) to " << output_filename << std::endl;
+    tree.WriteTree(output_filename);
+    tree.ClearTree();
 
 	return 0;
 }

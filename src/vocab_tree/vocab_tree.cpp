@@ -8,6 +8,17 @@
 using std::cout;
 using std::endl;
 
+float l2sq(DTYPE *a, DTYPE *b, int dim)
+{
+    float dist = 0.0;
+    for(int i = 0; i < dim; i++)
+    {
+        int d = (int)a[i] - (int)b[i];
+        dist += d*d;
+    }
+    return dist;
+}
+
 namespace vot
 {
     /** VocabTree Class Implementation */
@@ -68,7 +79,23 @@ namespace vot
         return true;
     }
 
+    bool TreeInNode::ClearScores(int bf)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+            {
+                children[i]->ClearScores(bf);
+            }
+        }
+        return true;
+    }
 
+    bool TreeLeafNode::ClearScores(int bf)
+    {
+        score = 0.0;
+        return true;
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////
@@ -294,10 +321,10 @@ namespace vot
         fwrite(&num_images, sizeof(int), 1, f);
         for(size_t i = 0; i < num_images; i++)
         {
-            int img = inv_list[i].index;    // WARNING: the original type is size_t
+            int img = inv_list[i].index;
             int count = inv_list[i].count;
-            fwrite(&img, sizeof(int), 1, f);    // to save space we use int
-            fwrite(&count, sizeof(int), 1, f);
+            fwrite(&img, sizeof(size_t), 1, f);
+            fwrite(&count, sizeof(float), 1, f);
         }
 
         return true;
@@ -410,8 +437,8 @@ namespace vot
         for(int i = 0; i < num_images; i++)
         {
             int img, count;
-            int d = fread(&img, sizeof(int), 1, f);
-            int e = fread(&count, sizeof(int), 1, f);
+            int d = fread(&img, sizeof(size_t), 1, f);
+            int e = fread(&count, sizeof(float), 1, f);
             if(d != 1 || e != 1)
             {
                 std::cout << "[ReadNode] Reading error\n";
@@ -531,10 +558,253 @@ namespace vot
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
 
-    bool VocabTree::AddImage2Tree(tw::SiftData &sift)
+    double VocabTree::AddImage2Tree(size_t image_index, tw::SiftData &sift, int thread_num)
     {
+        int sift_num = sift.getFeatureNum();
+        DTYPE *v = sift.getDesPointer();
+        root->ClearScores(branch_num);
+        size_t off = 0;
+        if(thread_num == 1)     // single-thread version
+        {
+            for(int i = 0; i < sift_num; i++)
+            {
+                root->DescendFeature(v+off, image_index, branch_num, dim, true);
+                off += dim;
+            }
+        }
+
+        else        // TODO(tianwei): multi-thread version
+        {
+
+        }
+
+        double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
+        database_image_num++;
+        switch(dis_type)
+        {
+            case L1:
+                return mag;
+            case L2:
+                return sqrt(mag);
+            default:
+                std::cout << "[ComputeImageVectorMagnitude] Wrong distance type\n";
+                return 0;
+        }
+    }
+
+    size_t TreeInNode::DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    {
+        int best_idx = 0;
+        float min_distance = ULONG_MAX;
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] != NULL)
+            {
+                float curr_dist = l2sq(v, children[i]->des, dim);
+                if(curr_dist < min_distance)
+                {
+                    min_distance = curr_dist;
+                    best_idx = i;
+                }
+            }
+        }
+
+        size_t ret = children[best_idx]->DescendFeature(v, image_index, branch_num, dim, add);
+        return ret;        
+    }
+
+    size_t TreeLeafNode::DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    {
+        score += weight;
+        if(add)     // add this image to inverted list
+        {
+            int curr_image_num = (size_t) inv_list.size();
+            if(curr_image_num == 0)
+                inv_list.push_back(ImageCount(image_index, (float)weight));
+            else
+            {
+                if(inv_list[curr_image_num-1].index == image_index)
+                {
+                    inv_list[curr_image_num-1].count += weight;
+                }
+                else
+                {
+                    inv_list.push_back(ImageCount(image_index, weight));
+                }
+            }
+        }
+        return id;
+    }
+
+    double TreeInNode::ComputeImageVectorMagnitude(int bf, DistanceType dt)
+    {
+        double dist = 0.0;
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+                dist += children[i]->ComputeImageVectorMagnitude(bf, dt);
+        }
+        return dist;
+    }
+
+    double TreeLeafNode::ComputeImageVectorMagnitude(int bf, DistanceType dt)
+    {
+        switch(dt)
+        {
+            case L1:
+                return score;
+            case L2:
+                return score * score;
+            default:
+                return 0.0;
+        }
+        return 0;
+    }
+
+    bool VocabTree::SetConstantWeight()
+    {
+        if(root != NULL)
+        {
+            root->SetConstantWeight(branch_num);
+        }
+        return true;
+    }
+
+    bool TreeInNode::SetConstantWeight(int bf)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+            {
+                children[i]->SetConstantWeight(bf);
+            }
+        }
+        return true;
+    }
+
+    bool TreeLeafNode::SetConstantWeight(int bf)
+    {
+        weight = 1.0;
+        return true;
+    }
+
+    bool VocabTree::ComputeTFIDFWeight(size_t image_num)
+    {
+        if(root != NULL)
+            root->ComputeTFIDFWeight(branch_num, image_num);
+        return true;
+    }
+
+    bool TreeInNode::ComputeTFIDFWeight(int bf, size_t n)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+                children[i]->ComputeTFIDFWeight(bf, n);
+        }
+        return true;
+    }
+
+    bool TreeLeafNode::ComputeTFIDFWeight(int bf, size_t n)
+    {
+        size_t len = inv_list.size();
+        if(len > 0)
+        {
+            weight = log((double)n / (double)len);
+        }
+        else 
+        {
+            weight = 0;
+        }
+
+        // pre-apply weight-adjustment to inverted list score
+        for(int i = 0; i < len; i++)
+        {
+            inv_list[i].count *= weight;
+        }
 
         return true;
+    }
+
+    bool VocabTree::NormalizeDatabase(size_t start_id, size_t image_num)
+    {
+        std::vector<float> database_mag(image_num);
+        database_mag.resize(image_num);
+        for(size_t i = 0; i < image_num; i++)
+        {
+            database_mag[i] = 0;
+        }
+
+        root->ComputeDatabaseMagnitude(branch_num, dis_type, start_id, database_mag);
+        // TODO(tianwei): figure out what is the proper way of normalizing the vocabulary tree
+        // if(dis_type == L2)  // take sqrt of the magnitude
+        // {
+        //     for(size_t i = 0; i < image_num; i++)
+        //     {
+        //         database_mag[i] = sqrt(database_mag[i]);
+        //     }
+        // }
+
+        for(size_t i = 0; i < image_num; i++)
+        {
+            std::cout << "[NormalizeDatabase] Normalized image #" << start_id+i << " vector magnitude " << database_mag[i] << std::endl;
+        }
+        return root->NormalizeDatabase(branch_num, start_id, database_mag);
+    }
+
+    bool TreeInNode::ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_t start_id, std::vector<float> &database_mag)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+                children[i]->ComputeDatabaseMagnitude(bf, dis_type, start_id, database_mag);
+        }
+        return true; 
+    }
+
+    bool TreeLeafNode::ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_t start_id, std::vector<float> &database_mag)
+    {
+        size_t len = inv_list.size();
+        for(size_t i = 0; i < len; i++)
+        {
+            size_t index = inv_list[i].index - start_id;
+            assert(index < database_mag.size());
+            switch(dis_type)
+            {
+                case L1:
+                    database_mag[index] += inv_list[i].count;
+                    break;
+                case L2:
+                    database_mag[index] += inv_list[i].count * inv_list[i].count;
+                    break;
+                default:
+                    std::cout << "[ComputeDatabaseMagnitude] Error distance type\n";
+                    return false;
+            }
+        }
+        return true; 
+    }
+
+    bool TreeInNode::NormalizeDatabase(int bf, size_t start_id, std::vector<float> &database_mag)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+                children[i]->NormalizeDatabase(bf, start_id, database_mag);
+        }
+        return true; 
+    }
+
+    bool TreeLeafNode::NormalizeDatabase(int bf, size_t start_id, std::vector<float> &database_mag)
+    {
+        size_t len = inv_list.size();
+        for(size_t i = 0; i < len; i++)
+        {
+            size_t index = inv_list[i].index - start_id;
+            assert(index < database_mag.size());
+            inv_list[i].count /= database_mag[index];
+        }
+        return true; 
     }
 
 }   // end of namespace vot
