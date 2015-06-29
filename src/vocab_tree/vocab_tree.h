@@ -52,13 +52,16 @@ namespace vot
             virtual size_t CountLeaves(int branch_num) const = 0;
             virtual bool Compare(TreeNode *in, int branch_num, int dim) const = 0;
             virtual bool ClearScores(int bf) = 0;             //!< refresh the temporary score for this tree
-            // function for build image database
             virtual size_t DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true) = 0;
             virtual double ComputeImageVectorMagnitude(int bf, DistanceType dt) = 0;
             virtual bool SetConstantWeight(int bf) = 0;   //!< set a constant weight to the leaf nodes
             virtual bool ComputeTFIDFWeight(int bf, size_t n) = 0;  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
             virtual bool ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_t start_id, std::vector<float> &database_mag) = 0; //!< compute the vector magnitude of all images in the database
             virtual bool NormalizeDatabase(int bf, size_t start_id, std::vector<float> &database_mag) = 0;   //!< normalize the inverted list score by the magnitude of image vector
+            // member functions for querying database
+            virtual bool IndexLeaves(int branch_num) = 0;
+            virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor) = 0;     //!< fill the query vector
+            virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores) = 0;       //!< score each image in the database
 
             DTYPE *des; //!< the descriptor vector
             size_t id; //!< the id of the node 
@@ -87,6 +90,10 @@ namespace vot
             virtual bool ComputeTFIDFWeight(int bf, size_t n);  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
             virtual bool ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_t start_id, std::vector<float> &database_mag); //!< compute the vector magnitude of all images in the database
             virtual bool NormalizeDatabase(int bf, size_t start_id, std::vector<float> &database_mag);   //!< normalize the inverted list score by the magnitude of image vector
+            // member functions for querying database
+            virtual bool IndexLeaves(int branch_num);
+            virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor);     //!< fill the query vector
+            virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores);       //!< score each image in the database
 
             TreeNode **children;
     };
@@ -114,8 +121,12 @@ namespace vot
             virtual bool ComputeTFIDFWeight(int bf, size_t n);  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
             virtual bool ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_t start_id, std::vector<float> &database_mag); //!< compute the vector magnitude of all images in the database
             virtual bool NormalizeDatabase(int bf, size_t start_id, std::vector<float> &database_mag);   //!< normalize the inverted list score by the magnitude of image vector
+            // member functions for querying database
+            virtual bool IndexLeaves(int branch_num);
+            virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor);     //!< fill the query vector
+            virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores);       //!< score each image in the database
 
-            float score;            //!< temporary score
+            float score;            //!< temporary score, for querying and computing magnitude use
             float weight;           //!< weight for this node
             std::vector<ImageCount> inv_list;
     };
@@ -143,12 +154,14 @@ namespace vot
             bool SetConstantWeight();   //!< set a constant weight to the leaf nodes
             bool ComputeTFIDFWeight(size_t image_num);  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
             bool NormalizeDatabase(size_t start_id, size_t image_num);    //!< normalize the inverted list score by the magnitude of image vector
+            // member function for querying database
+            bool Query(tw::SiftData &sift, float *scores);   //!< query database and return the scores
 
             // public data member 
             int branch_num;             //!< the branch number of a node
             int depth;                  //!< the depth of the tree
-            int database_image_num;     //!< the number of the database images
             int dim;                    //!< the dimension of the descriptor
+            size_t database_image_num;  //!< the number of the database images
             size_t num_nodes;           //!< the number of nodes in the tree
             DistanceType dis_type;      //!< the distance type
             TreeNode *root;             //!< the root of the tree

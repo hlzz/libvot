@@ -15,6 +15,12 @@ namespace tw
 		size_t size;
 	};
 
+	struct IndexedFloat
+	{
+		float value;
+		size_t index;	
+	};
+
 }	// end of namespace tw
 
 

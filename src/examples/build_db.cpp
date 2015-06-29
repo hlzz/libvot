@@ -14,18 +14,21 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    if(argc != 5) 
+    if(argc < 4) 
     {
-        printf("Usage: %s <sift_list> <tree.out> <sift_type> <db.out>\n", argv[0]);
+        printf("Usage: %s <sift_list> <tree.out> <db.out> [sift_type]\n", argv[0]);
         return 1;
     }
 
     const char *sift_input_file = argv[1];
     const char *input_tree = argv[2];
-    int sift_type = atoi(argv[3]);
-    const char *output_filename = argv[4];
+    const char *output_filename = argv[3];
+    int sift_type = 0;
     int thread_num = 1;
     int start_id = 0;
+
+    if(argc > 4)
+        sift_type = atoi(argv[4]);
 
     // read sift filenames, get the total number of sift keys, and allocate memory
     std::vector<std::string> sift_filenames;

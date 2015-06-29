@@ -270,6 +270,8 @@ namespace vot
         fwrite(&branch_num, sizeof(int), 1, f);
         fwrite(&depth, sizeof(int), 1, f);
         fwrite(&dim, sizeof(int), 1, f);
+        fwrite(&database_image_num, sizeof(size_t), 1, f);
+        //fwrite(&num_nodes, sizeof(size_t), 1, f);
 
         // write node information recursively
         root->WriteNode(f, branch_num, dim);
@@ -321,8 +323,8 @@ namespace vot
         fwrite(&num_images, sizeof(int), 1, f);
         for(size_t i = 0; i < num_images; i++)
         {
-            int img = inv_list[i].index;
-            int count = inv_list[i].count;
+            size_t img = inv_list[i].index;
+            float count = inv_list[i].count;
             fwrite(&img, sizeof(size_t), 1, f);
             fwrite(&count, sizeof(float), 1, f);
         }
@@ -344,12 +346,14 @@ namespace vot
 
         // write header parameters
         char is_internal;
-        int a, b, c, d;
+        int a, b, c, d, e;
         a = fread(&branch_num, sizeof(int), 1, f);
         b = fread(&depth, sizeof(int), 1, f);
         c = fread(&dim, sizeof(int), 1, f);
+        e = fread(&database_image_num, sizeof(size_t), 1, f);
+        //f = fread(&num_nodes, sizeof(size_t), 1, f);
         d = fread(&is_internal, sizeof(char), 1, f);
-        if(a != 1 || b != 1 || c != 1 || d != 1)
+        if(a != 1 || b != 1 || c != 1 || d != 1 || e != 1)
         {
             std::cout << "[ReadTree] Reading Error\n";
             return false;
@@ -436,7 +440,8 @@ namespace vot
         inv_list.resize(num_images);
         for(int i = 0; i < num_images; i++)
         {
-            int img, count;
+            size_t img;
+            float count;
             int d = fread(&img, sizeof(size_t), 1, f);
             int e = fread(&count, sizeof(float), 1, f);
             if(d != 1 || e != 1)
@@ -457,8 +462,9 @@ namespace vot
 
     void VocabTree::Show() const
     {
-        std::cout << "[VocabTree] depth/branch_num: " << depth << "/" << branch_num << std::endl;
-        std::cout << "[VocabTree] #nodes " << num_nodes << std::endl;
+        std::cout << "[VocabTree] depth/branch_num: " << depth << "/" << branch_num << '\n';
+        std::cout << "[VocabTree] #nodes " << num_nodes << '\n';
+        std::cout << "[VocabTree] #images " << database_image_num << '\n';
     }
 
     size_t TreeInNode::CountNodes(int branch_num) const
@@ -737,13 +743,13 @@ namespace vot
 
         root->ComputeDatabaseMagnitude(branch_num, dis_type, start_id, database_mag);
         // TODO(tianwei): figure out what is the proper way of normalizing the vocabulary tree
-        // if(dis_type == L2)  // take sqrt of the magnitude
-        // {
-        //     for(size_t i = 0; i < image_num; i++)
-        //     {
-        //         database_mag[i] = sqrt(database_mag[i]);
-        //     }
-        // }
+        if(dis_type == L2)  // take sqrt of the magnitude
+        {
+            for(size_t i = 0; i < image_num; i++)
+            {
+                database_mag[i] = sqrt(database_mag[i]);
+            }
+        }
 
         for(size_t i = 0; i < image_num; i++)
         {
@@ -805,6 +811,110 @@ namespace vot
             inv_list[i].count /= database_mag[index];
         }
         return true; 
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+    //                                                                          //
+    //                     Vocabulary Tree Match Module                         //
+    //                                                                          //
+    //////////////////////////////////////////////////////////////////////////////
+    size_t leaves_count = 0;    // global leaf counter 
+    bool VocabTree::Query(tw::SiftData &sift, float *scores)
+    {
+        root->ClearScores(branch_num);
+        int sift_num = sift.getFeatureNum();
+        DTYPE *v = sift.getDesPointer();
+        size_t off = 0;
+        for(int i = 0; i < sift_num; i++)
+        {
+            root->DescendFeature(v+off, 0, branch_num, dim, false);
+            off += dim;
+        }
+
+        double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
+        if(dis_type == L2)
+            mag = sqrt(mag);
+
+        leaves_count = 0;       // reset the leaf counter to 0
+        root->IndexLeaves(branch_num);
+        size_t num_leaves = root->CountLeaves(branch_num);
+
+        float *query_vector = new float [num_leaves];
+        root->FillQueryVector(query_vector, branch_num, 1.0 / mag);
+        root->ScoreQuery(query_vector, branch_num, dis_type, scores);
+
+        return true;
+    }
+
+    bool TreeInNode::IndexLeaves(int bf)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+                children[i]->IndexLeaves(bf);
+        }
+        return true;
+    }
+
+    bool TreeLeafNode::IndexLeaves(int bf)
+    {
+        id = leaves_count++;
+        return true;
+    }
+
+    bool TreeInNode::FillQueryVector(float *q, int bf, float normalize)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+            {
+                children[i]->FillQueryVector(q, bf, normalize); 
+            }
+        }
+        return true;
+    }
+
+    bool TreeLeafNode::FillQueryVector(float *q, int bf, float normalize)
+    {
+        q[id] = score * normalize;
+        return true;
+    }
+
+    bool TreeInNode::ScoreQuery(float *q, int bf, DistanceType dt, float *scores)
+    {
+        for(int i = 0; i < bf; i++)
+        {
+            if(children[i] != NULL)
+            {
+                children[i]->ScoreQuery(q, bf, dt, scores);
+            }
+        }
+        return true;
+    }
+
+    bool TreeLeafNode::ScoreQuery(float *q, int bf, DistanceType dt, float *scores)
+    {
+        if(q[id] == 0.0)
+            return true;
+        int len = inv_list.size();
+
+        for(int i = 0; i < len; i++)
+        {
+            size_t idx = inv_list[i].index;
+            switch(dt)
+            {
+                case L1:
+                    scores[idx] += q[id] > inv_list[i].count ? inv_list[i].count : q[id];
+                    break;
+                case L2:
+                    scores[idx] += q[id] * inv_list[i].count;
+                    break;
+                default:
+                    std::cout << "[ScoreQuery] Error distacne type\n";
+            }
+        }
+
+        return  true;
     }
 
 }   // end of namespace vot
