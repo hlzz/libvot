@@ -148,7 +148,7 @@ namespace vot
 
     bool TreeInNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign)
     {
-        if(GlobalParam::Verbose)
+        if(GlobalParam::Verbose && depth_curr < 3)
             std::cout << "[RecursiveBuild] K-means in depth " << depth_curr << "\n";
 
         double error = tw::Kmeans(num_keys, dim, bf, p, means, assign);
@@ -168,7 +168,7 @@ namespace vot
             }
         }
         mean_distance /= bf;
-        if(GlobalParam::Verbose)
+        if(GlobalParam::Verbose && depth_curr < 3)
             std::cout << "[RecursiveBuild] Group/Center error: " << error/num_keys << "/" << mean_distance << "\n";
 
         // count the number of sift keys fallen into a interior node, stop split the node if there are too few keys.
