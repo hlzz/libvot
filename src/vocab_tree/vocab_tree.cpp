@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
+#include <climits>
 
 #include "vocab_tree.h"
 #include "clustering.h"

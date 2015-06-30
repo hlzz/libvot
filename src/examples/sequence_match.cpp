@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     if(fp == NULL)
    	{
    		printf("Reading error\n");
-   		exit(-1);
+   		return -1;
    	}
 
     for(int i = 0; i < image_num; i++)
