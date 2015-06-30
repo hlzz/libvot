@@ -25,17 +25,20 @@ sift_type: 0 - our own sift data format
 
 int main(int argc, char **argv)
 {
-    if (argc != 6) 
+    if (argc < 5) 
     {
-        printf("Usage: %s <sift_list> <sift_type> <depth> <branch_num> <tree.out>\n", argv[0]);
+        printf("Usage: %s <sift_list> <depth> <branch_num> <tree.out> [sift_type]\n", argv[0]);
         return -1;
     }
 
     const char *sift_input_file = argv[1];
-    int sift_type = atoi(argv[2]);
-    int depth = atoi(argv[3]);
-    int branch_num = atoi(argv[4]);
-    const char *output_filename = argv[5];
+    int depth = atoi(argv[2]);
+    int branch_num = atoi(argv[3]);
+    const char *output_filename = argv[4];
+    int sift_type = 0;
+
+    if(argc > 5)
+        sift_type = atoi(argv[5]);
 
     // read sift filenames, get the total number of sift keys, and allocate memory
     std::vector<std::string> sift_filenames;

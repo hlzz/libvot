@@ -9,8 +9,6 @@
 
 #include "global_params.h"
 
-//TODO(tianwei): there is a bug in SiftData class. can't push_back a temp SiftData object into a vector
-
 namespace tw
 {
 
@@ -30,6 +28,9 @@ public:
     {
         name_ = 'S' + ('I' << 8) + ('F' << 16) + ('T' << 24);
         version_ = 'V' + ('5' << 8) + ('.' << 16) + ('0' << 24);
+        npoint_ = 0;
+        nLocDim_ = 5;
+        nDesDim_ = 128;
         dp_ = NULL; lp_ = NULL;
     }
 
