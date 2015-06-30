@@ -23,7 +23,7 @@ float l2sq(DTYPE *a, DTYPE *b, int dim)
 namespace vot
 {
     /** VocabTree Class Implementation */
-    VocabTree::VocabTree():database_image_num(0), num_nodes(0), dis_type(L2), root(NULL) {}
+    VocabTree::VocabTree():database_image_num(0), num_nodes(0), dis_type(L1), root(NULL) {}
 
     VocabTree::VocabTree(int depth_, int branch_num_, int dim_, DistanceType dis_type_): 
     branch_num(branch_num_), depth(depth_), dim(dim_), dis_type(dis_type_), num_nodes(0) {};
@@ -725,7 +725,7 @@ namespace vot
         }
 
         // pre-apply weight-adjustment to inverted list score
-        for(int i = 0; i < len; i++)
+        for(size_t i = 0; i < len; i++)
         {
             inv_list[i].count *= weight;
         }

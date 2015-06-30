@@ -47,7 +47,6 @@ int main(int argc, char **argv)
     tree->ReadTree(image_db);
     std::cout << "[BuildDB] Successfully read vocabulary tree (with image database) file " << image_db << std::endl;
     tree->Show();
-    tree->SetConstantWeight();
 
     // read query image sift data
     std::vector<std::string> sift_filenames;
@@ -76,11 +75,11 @@ int main(int argc, char **argv)
     if(thread_num == 1)
     {
     	float *scores = new float [db_image_num];
-    	memset(scores, 0.0, sizeof(float) * db_image_num);
     	tw::IndexedFloat *indexed_scores = new tw::IndexedFloat [db_image_num];
 
     	for(int i = 0; i < siftfile_num; i++)
     	{
+    		memset(scores, 0.0, sizeof(float) * db_image_num);
     		tree->Query(sift_data[i], scores);
     		for(int j = 0; j < db_image_num; j++)
     		{
