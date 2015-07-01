@@ -44,7 +44,7 @@ namespace vot
                 }
             }
             // pure virtual function that will be implemented in derived classes
-            virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p , double *means, int *assign) = 0;
+            virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p , double *means, int *assign, int thread_num = 1) = 0;
             virtual bool ClearNode(int bf) = 0;
             virtual bool WriteNode(FILE *f, int branch_num, int dim) const = 0;
             virtual bool ReadNode(FILE *f, int branch_num, int dim) = 0;
@@ -75,7 +75,7 @@ namespace vot
         public:
             TreeInNode():children(NULL) {}
             virtual ~TreeInNode();
-            virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign);
+            virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int thread_num = 1);
             virtual bool ClearNode(int bf);
             virtual bool WriteNode(FILE *f, int branch_num, int dim) const;
             virtual bool ReadNode(FILE *f, int branch_num, int dim);
@@ -106,7 +106,7 @@ namespace vot
         public:
             TreeLeafNode():score(0.0), weight(0.0) {}
             virtual ~TreeLeafNode();
-            virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p , double *means, int *assign);
+            virtual bool RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p , double *means, int *assign, int thread_num = 1);
             virtual bool ClearNode(int bf);
             virtual bool WriteNode(FILE *f, int branch_num, int dim) const;
             virtual bool ReadNode(FILE *f, int branch_num, int dim);
@@ -143,7 +143,7 @@ namespace vot
             ~VocabTree();
 
             // member function for building vocabulary tree
-            bool BuildTree(int num_keys, int dim, int depth, int bf, DTYPE **p);      //!< build a vocabulary tree from a set of features
+            bool BuildTree(int num_keys, int dim, int depth, int bf, DTYPE **p, int thread_num = 1);      //!< build a vocabulary tree from a set of features
             bool WriteTree(const char *filename) const;       //!< save the vocabulary tree in a file
             bool ReadTree(const char *filename);            //!< read a vocabulary tree from a file
             bool ClearTree();                   //!< release the memory

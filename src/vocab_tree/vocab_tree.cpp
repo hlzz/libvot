@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
-#include <climits>
+#include <limits>
 
 #include "vocab_tree.h"
 #include "clustering.h"
@@ -104,7 +104,7 @@ namespace vot
     //                     Vocabulary Tree Build Module                         //
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
-    bool VocabTree::BuildTree(int num_keys, int dim_, int dep, int bf, DTYPE **p)
+    bool VocabTree::BuildTree(int num_keys, int dim_, int dep, int bf, DTYPE **p, int thread_num)
     {
         if(dep < 1)     // the root of the tree is depth 0
         {
@@ -136,7 +136,7 @@ namespace vot
         for(int i = 0; i < dim; i++)
             root->des[i] = 0;
 
-        if(!root->RecursiveBuild(num_keys, dim, depth, 0, branch_num, p, means, assign))
+        if(!root->RecursiveBuild(num_keys, dim, depth, 0, branch_num, p, means, assign, thread_num))
             return false;
 
         delete [] means;
@@ -146,12 +146,12 @@ namespace vot
         return true;
     }
 
-    bool TreeInNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign)
+    bool TreeInNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int thread_num)
     {
         if(GlobalParam::Verbose && depth_curr < 3)
             std::cout << "[RecursiveBuild] K-means in depth " << depth_curr << "\n";
 
-        double error = tw::Kmeans(num_keys, dim, bf, p, means, assign);
+        double error = tw::Kmeans(num_keys, dim, bf, p, means, assign, thread_num);
         if(std::abs(error + 1) < 10e-6)
         {
             std::cerr << "[Error] Error in TreeInNode::RecursiveBuild\n";
@@ -193,8 +193,6 @@ namespace vot
             }
             else
             {
-                if(GlobalParam::Verbose)
-                    std::cout << "[RecursiveBuild] No keys in this node\n";
                 children[i] = NULL;
             }
         }
@@ -231,7 +229,7 @@ namespace vot
         {
             if(children[i] != NULL)
             {
-                children[i]->RecursiveBuild(counts[i], dim, depth, depth_curr+1, bf, p+offset, means, assign+offset);
+                children[i]->RecursiveBuild(counts[i], dim, depth, depth_curr+1, bf, p+offset, means, assign+offset, thread_num);
             }
         }
 
@@ -239,7 +237,7 @@ namespace vot
         return true;
     }
 
-    bool TreeLeafNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign)
+    bool TreeLeafNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int thread_num)
     {
         return true;
     }
@@ -602,7 +600,7 @@ namespace vot
     size_t TreeInNode::DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
     {
         int best_idx = 0;
-        float min_distance = ULONG_MAX;
+        float min_distance = std::numeric_limits<float>::max();
         for(int i = 0; i < branch_num; i++)
         {
             if(children[i] != NULL)

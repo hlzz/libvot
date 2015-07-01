@@ -83,27 +83,27 @@ int main(int argc, char **argv)
     	float *scores = new float [db_image_num];
     	tw::IndexedFloat *indexed_scores = new tw::IndexedFloat [db_image_num];
 
-    	for(int i = 0; i < siftfile_num; i++)
-    	{
+        for(int i = 0; i < siftfile_num; i++)
+        {
             cout << "[VocabMatch] Querying image #" << i << " to database\n";
-    		memset(scores, 0.0, sizeof(float) * db_image_num);
-    		tree->Query(sift_data[i], scores);
-    		for(int j = 0; j < db_image_num; j++)
-    		{
-    			indexed_scores[j].value = scores[j];
-    			indexed_scores[j].index = j;
-    		}
-    		qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
-    		for(int j = 0; j < db_image_num; j++)
-    		{
-    			//cout << indexed_scores[j].value << " " << indexed_scores[j].index << endl; 
+            memset(scores, 0.0, sizeof(float) * db_image_num);
+            tree->Query(sift_data[i], scores);
+            for(int j = 0; j < db_image_num; j++)
+            {
+                indexed_scores[j].value = scores[j];
+                indexed_scores[j].index = j;
+            }
+            qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
+            for(int j = 0; j < db_image_num; j++)
+            {
                 fprintf(match_file, "%d %zd %0.4f\n", i, indexed_scores[j].index, indexed_scores[j].value);
-    		}
-    	}
+            }
+        }
 
-    	delete [] scores;
-    	delete [] indexed_scores;
+        delete [] scores;
+        delete [] indexed_scores;
     }
+
     else 	// TODO(tianwei):multi-thread version
     {}
     fclose(match_file);

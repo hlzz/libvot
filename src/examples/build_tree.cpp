@@ -27,7 +27,7 @@ int main(int argc, char **argv)
 {
     if (argc < 5) 
     {
-        printf("Usage: %s <sift_list> <depth> <branch_num> <tree.out> [sift_type]\n", argv[0]);
+        printf("Usage: %s <sift_list> <depth> <branch_num> <tree.out> [sift_type] [thread_num]\n", argv[0]);
         return -1;
     }
 
@@ -36,9 +36,12 @@ int main(int argc, char **argv)
     int branch_num = atoi(argv[3]);
     const char *output_filename = argv[4];
     int sift_type = 0;
+    int thread_num = 1;
 
     if(argc > 5)
         sift_type = atoi(argv[5]);
+    if(argc > 6)
+        thread_num = atoi(argv[6]);
 
     // read sift filenames, get the total number of sift keys, and allocate memory
     std::vector<std::string> sift_filenames;
@@ -109,7 +112,7 @@ int main(int argc, char **argv)
 
     // build a vocabulary tree using sift keys
     vot::VocabTree vt;
-    if(vt.BuildTree(total_keys, FDIM, depth, branch_num, mem_pointer))
+    if(vt.BuildTree(total_keys, FDIM, depth, branch_num, mem_pointer, thread_num))
         vt.WriteTree(output_filename);
 
     vot::VocabTree vt1;

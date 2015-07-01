@@ -1,9 +1,12 @@
 #include <iostream>
 #include <limits>
 #include <cassert>
+#include <vector>
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
+#include <thread>
+#include <algorithm>
 
 #include "clustering.h"
 #include "global_params.h"
@@ -47,16 +50,16 @@ namespace tw
 		return dis;
 	}
 
-	size_t ComputeAssignment(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment, double &error)
-	{			
-		size_t change_num = 0;
+	void MultiComputeAssignment(size_t num, int dim, int k, DTYPE **des, double *means, int *assignment, double *error_out, size_t *changed_num)
+	{
+		double error = 0.0;
 		for(size_t i = 0; i < num; i++)
 		{
 			double min_dis = std::numeric_limits<double>::max();
 			int min_idx = -1;
 			for(int j = 0; j < k; j++)
 			{
-				double dis_tmp = DisDes2Double(means + j * dim, p[i], dim);
+				double dis_tmp = DisDes2Double(means + j * dim, des[i], dim);
 
 				if(min_dis > dis_tmp)
 				{
@@ -64,12 +67,89 @@ namespace tw
 					min_idx = j;
 				}
 			}
+			error += min_dis;
 			if(assignment[i] != min_idx)
 			{
 				assignment[i] = min_idx;
-				change_num++;
+				(*changed_num)++;
 			}
 		}
+		*error_out = error;
+	}
+
+	/**
+	 * @brief Compute new assignment for each feature points
+	 * @param num - the total number of feature points
+	 * @param dim - the dimension of the feature points
+	 * @param k - the number of clusters
+	 * @param p - the address to the feature points
+	 * @param means - the descriptors of the clusters
+	 * @param assignment - the input and output assignments
+	 * @param error - total error of the new assignment
+	 * @param thread_num - thread number
+	 * @return
+	 */
+	size_t ComputeAssignment(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment, double &error_out, int thread_num)
+	{			
+		size_t change_num = 0;
+		double error = 0.0;
+		if(thread_num == 1 || num < thread_num * 100)		// single-thread
+		{
+			for(size_t i = 0; i < num; i++)
+			{
+				double min_dis = std::numeric_limits<double>::max();
+				int min_idx = -1;
+				for(int j = 0; j < k; j++)
+				{
+					double dis_tmp = DisDes2Double(means + j * dim, p[i], dim);
+
+					if(min_dis > dis_tmp)
+					{
+						min_dis = dis_tmp;
+						min_idx = j;
+					}
+				}
+				error += min_dis;
+				if(assignment[i] != min_idx)
+				{
+					assignment[i] = min_idx;
+					change_num++;
+				}
+			}
+		}
+		else		// multi-thread
+		{
+	        std::vector<std::thread> threads;
+	        size_t num_points = num /thread_num;
+	        size_t count = 0;
+	        size_t *changes= new size_t [thread_num];
+	        double *error_vec = new double [thread_num];
+	        for(int i = 0; i < thread_num; i++)
+	        {
+	        	changes[i] = 0;
+	        	error_vec[i] = 0.0;
+	        }
+
+	        for(int i = 0; i < thread_num; i++)
+	        {
+	        	size_t total_num = 0;
+	        	if(i == thread_num - 1)
+	        		total_num = num - (thread_num - 1) * num_points;
+	        	else
+	        		total_num = num_points;
+	        	threads.push_back(std::thread(MultiComputeAssignment, total_num, dim, k, p+count, means, assignment+count, &error_vec[i], &changes[i]));
+	        	count += num_points;
+	        }
+	        std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+	        for(int i = 0; i < thread_num; i++)
+	        {
+	        	change_num += changes[i];
+	        	error += error_vec[i];
+	      	}
+		}
+		error_out = error;
+		//std::cout << change_num << " " << error << std::endl;
+
 		return change_num;
 	}
 
@@ -122,7 +202,7 @@ namespace tw
 		return error;
 	}
 
-	double Kmeans(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment)
+	double Kmeans(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment, int thread_num)
 	{
 		if(num < k)
 		{
@@ -133,8 +213,8 @@ namespace tw
 		double *means_curr;
 		size_t *initial_idx;
 		int *assignment_curr;
-		double change_pct_threshold = 0.005;	// VocabTree2 parameter
-		int total_iter = 5;
+		double change_pct_threshold = 0.05;	
+		int total_iter = 1;
 
 		means_curr = new double [k * dim];
 		initial_idx = new size_t [k];
@@ -159,7 +239,7 @@ namespace tw
 			for(int i = 0; i < num; i++)
 				assignment_curr[i] = -1;	
 
-			size_t change_num = ComputeAssignment(num, dim, k, p, means_curr, assignment_curr, dis);
+			size_t change_num = ComputeAssignment(num, dim, k, p, means_curr, assignment_curr, dis, thread_num);
 			double change_pct = (double) change_num / num;
 			assert(change_num == num);
 
@@ -169,7 +249,7 @@ namespace tw
 				ComputeMeans(num, dim, k, p, assignment_curr, means_curr);
 
 				// recompute assignments
-				change_num = ComputeAssignment(num, dim, k, p, means_curr, assignment_curr, dis);
+				change_num = ComputeAssignment(num, dim, k, p, means_curr, assignment_curr, dis, thread_num);
 				change_pct = (double) change_num / num;
 			}
 
