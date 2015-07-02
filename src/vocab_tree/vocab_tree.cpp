@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cassert>
 #include <limits>
+#include <thread>
 
 #include "vocab_tree.h"
 #include "clustering.h"
@@ -104,7 +105,7 @@ namespace vot
     //                     Vocabulary Tree Build Module                         //
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
-    bool VocabTree::BuildTree(int num_keys, int dim_, int dep, int bf, DTYPE **p, int thread_num)
+    bool VocabTree::BuildTree(size_t num_keys, int dim_, int dep, int bf, DTYPE **p, int thread_num)
     {
         if(dep < 1)     // the root of the tree is depth 0
         {
@@ -146,7 +147,15 @@ namespace vot
         return true;
     }
 
-    bool TreeInNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int thread_num)
+    void MultiRecursiveBuild(TreeNode *children, size_t num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int sub_thread_num)
+    {
+        if(children != NULL)
+        {
+            children->RecursiveBuild(num_keys, dim, depth, depth_curr, bf, p, means, assign, sub_thread_num);
+        }
+    }
+
+    bool TreeInNode::RecursiveBuild(size_t num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int thread_num)
     {
         if(GlobalParam::Verbose && depth_curr < 3)
             std::cout << "[RecursiveBuild] K-means in depth " << depth_curr << "\n";
@@ -224,21 +233,53 @@ namespace vot
         assert(start_idx == num_keys);
 
         // recursively build the tree in the children nodes
-        size_t offset = 0;
-        for(int i = 0; i < bf; i++)
+        if(thread_num == 1 || thread_num < bf)      // single-thread
         {
-            if(children[i] != NULL)
+            size_t offset = 0;
+            for(int i = 0; i < bf; i++)
             {
-                children[i]->RecursiveBuild(counts[i], dim, depth, depth_curr+1, bf, p+offset, means, assign+offset, thread_num);
+                if(children[i] != NULL)
+                {
+                    children[i]->RecursiveBuild(counts[i], dim, depth, depth_curr+1, bf, p+offset, means, assign+offset, thread_num);
+                }
+                offset += counts[i];
             }
-            offset += counts[i];
+        }
+        else        // multi-thread
+        {
+            std::vector<std::thread> threads;
+            int subtree_threads = thread_num / bf;
+            size_t offset = 0;
+            double *sub_means[bf];
+            for(int i = 0; i < bf; i++)
+            {
+                int sub_thread_num = 0;
+                if(i == bf - 1)
+                {
+                    sub_thread_num = thread_num - (bf - 1) * subtree_threads;
+                }
+                else
+                {
+                    sub_thread_num = subtree_threads;
+                }
+                sub_means[i] = new double [bf * dim];
+                memcpy(sub_means[i], means, sizeof(double) * bf * dim);
+                threads.push_back(std::thread(MultiRecursiveBuild, children[i], counts[i], dim, depth, depth_curr+1, bf, p+offset, sub_means[i], assign+offset, sub_thread_num));
+
+                offset += counts[i];
+            }
+            std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+            for(int i = 0; i < bf; i++)
+            {
+                delete [] sub_means[i];
+            }
         }
 
         delete [] counts;
         return true;
     }
 
-    bool TreeLeafNode::RecursiveBuild(int num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int thread_num)
+    bool TreeLeafNode::RecursiveBuild(size_t num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int thread_num)
     {
         return true;
     }

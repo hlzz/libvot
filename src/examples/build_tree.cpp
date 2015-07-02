@@ -88,11 +88,11 @@ int main(int argc, char **argv)
     int curr_array = 0;
     for(int i = 0; i < siftfile_num; i++)
     {
-        int num_keys = sift_data[i].getFeatureNum();
+        size_t num_keys = sift_data[i].getFeatureNum();
         if(num_keys > 0)
         {
             DTYPE *dp = sift_data[i].getDesPointer();
-            for(int j = 0; j < num_keys; j++)
+            for(size_t j = 0; j < num_keys; j++)
             {
                 for(int k = 0; k < FDIM; k++)
                 {
