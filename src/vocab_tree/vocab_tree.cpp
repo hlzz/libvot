@@ -3,6 +3,7 @@
 #include <cassert>
 #include <limits>
 #include <thread>
+#include <algorithm>
 
 #include "vocab_tree.h"
 #include "clustering.h"
@@ -611,19 +612,19 @@ namespace vot
         DTYPE *v = sift.getDesPointer();
         root->ClearScores(branch_num);
         size_t off = 0;
-        if(thread_num == 1)     // single-thread version
-        {
+        //if(thread_num == 1)     // single-thread version
+        //{
             for(int i = 0; i < sift_num; i++)
             {
                 root->DescendFeature(v+off, image_index, branch_num, dim, true);
                 off += dim;
             }
-        }
+        //}
 
-        else        // TODO(tianwei): multi-thread version
-        {
+        // else        // TODO(tianwei): multi-thread version
+        // {
 
-        }
+        // }
 
         double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
         database_image_num++;
