@@ -164,6 +164,8 @@ namespace vot
 	    std::cout << "[BuildDB] Write vocabulary tree (with image database) to " << output_filename << '\n';
 	    tree.WriteTree(output_filename);
 	    tree.ClearTree();
+	    
+	    return true;
 	}
 
 	int CompareIndexedFloat(const void *a, const void *b)
