@@ -231,6 +231,7 @@ namespace vot
             {
                 children[i]->RecursiveBuild(counts[i], dim, depth, depth_curr+1, bf, p+offset, means, assign+offset, thread_num);
             }
+            offset += counts[i];
         }
 
         delete [] counts;

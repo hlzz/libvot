@@ -103,9 +103,7 @@ int main(int argc, char **argv)
         delete [] scores;
         delete [] indexed_scores;
     }
-
-    else 	// TODO(tianwei):multi-thread version
-    {}
+    else {}	// TODO(tianwei):multi-thread version
     fclose(match_file);
 
     // release memory
