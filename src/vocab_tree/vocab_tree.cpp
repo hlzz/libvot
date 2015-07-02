@@ -408,6 +408,10 @@ namespace vot
         //cout << (end == EOF) << endl;
         fclose(f);
         num_nodes = root->CountNodes(branch_num);
+        num_leaves = IndexLeaves();
+        size_t num_leaves1 = root->CountLeaves(branch_num);
+        assert(num_leaves1 == num_leaves);
+
         return true;
     }
 
@@ -863,29 +867,54 @@ namespace vot
     size_t leaves_count = 0;    // global leaf counter 
     bool VocabTree::Query(tw::SiftData &sift, float *scores)
     {
-        root->ClearScores(branch_num);
+        float *q = new float [num_leaves];
+        for(size_t i = 0; i < num_leaves; i++)
+        {
+            q[i] = 0.0;
+        }
+
         int sift_num = sift.getFeatureNum();
         DTYPE *v = sift.getDesPointer();
         size_t off = 0;
         for(int i = 0; i < sift_num; i++)
         {
-            root->DescendFeature(v+off, 0, branch_num, dim, false);
+            root->MultiDescendFeature(q, v+off, 0, branch_num, dim);
             off += dim;
         }
 
-        double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
+        //double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
+        double mag = 0.0;
+        switch(dis_type)
+        {
+            case L1:
+            for(size_t i = 0; i < num_leaves; i++)
+                mag += q[i];
+            break;
+            case L2:
+            for(size_t i = 0; i < num_leaves; i++)
+                mag += q[i] * q[i];
+            break;
+            default:
+                std::cout << "[Error] Unknow distance type in query database\n";
+                return false;
+        }
         if(dis_type == L2)
             mag = sqrt(mag);
 
-        leaves_count = 0;       // reset the leaf counter to 0
-        root->IndexLeaves(branch_num);
-        size_t num_leaves = root->CountLeaves(branch_num);
-
-        float *query_vector = new float [num_leaves];
-        root->FillQueryVector(query_vector, branch_num, 1.0 / mag);
-        root->ScoreQuery(query_vector, branch_num, dis_type, scores);
+        for(size_t i = 0; i < num_leaves; i++)
+        {
+            q[i] /= mag;
+        }
+        root->ScoreQuery(q, branch_num, dis_type, scores);
 
         return true;
+    }
+
+    size_t VocabTree::IndexLeaves()
+    {
+        leaves_count = 0;
+        root->IndexLeaves(branch_num);
+        return leaves_count;
     }
 
     bool TreeInNode::IndexLeaves(int bf)
@@ -957,6 +986,33 @@ namespace vot
         }
 
         return  true;
+    }    
+
+    size_t TreeInNode::MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim)
+    {
+        int best_idx = 0;
+        float min_distance = std::numeric_limits<float>::max();
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] != NULL)
+            {
+                float curr_dist = l2sq(v, children[i]->des, dim);
+                if(curr_dist < min_distance)
+                {
+                    min_distance = curr_dist;
+                    best_idx = i;
+                }
+            }
+        }
+
+        size_t ret = children[best_idx]->MultiDescendFeature(q, v, image_index, branch_num, dim);
+        return ret;        
+    }
+
+    size_t TreeLeafNode::MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim)
+    {
+        q[id] += weight;
+        return id;
     }
 
 }   // end of namespace vot

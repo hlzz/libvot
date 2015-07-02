@@ -5,7 +5,10 @@
 #include <fstream>
 #include <cassert>
 #include <unordered_map>
+#include <algorithm>
 #include <sstream>
+#include <thread>
+#include <mutex>
 
 #include "vot_pipeline.h"
 #include "vocab_tree.h"
@@ -179,6 +182,36 @@ namespace vot
 			return -1;
 	}
 
+	std::mutex match_file_mutex;
+	void MultiQueryDatabase(vot::VocabTree *tree, 
+							std::vector<tw::SiftData> *sift_data, 
+							size_t first_index,
+							size_t num_images, 
+							float *scores, 
+							tw::IndexedFloat *indexed_scores, 
+							FILE *match_file)
+	{
+		size_t db_image_num = tree->database_image_num;
+		for(size_t i = first_index; i < first_index + num_images; i++)
+		{
+			std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
+			memset(scores, 0.0, sizeof(float) * db_image_num);
+			tree->Query((*sift_data)[i], scores);
+			for(size_t j = 0; j < db_image_num; j++)
+			{
+				indexed_scores[j].value = scores[j];
+				indexed_scores[j].index = j;
+			}
+			qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
+			match_file_mutex.lock();
+			for(size_t j = 0; j < db_image_num; j++)
+			{
+				fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j].index, indexed_scores[j].value);
+			}
+			match_file_mutex.unlock();
+		}
+	}
+
 	bool QueryDatabase(const char *image_db, 
 					   const char *query_sift_list, 
 					   const char *match_output, 
@@ -200,7 +233,7 @@ namespace vot
 		{
 			sift_data.resize(siftfile_num);
 
-			for(int i = 0; i < sift_filenames.size(); i++)
+			for(size_t i = 0; i < sift_filenames.size(); i++)
 			{
 				sift_data[i].ReadSiftFile(sift_filenames[i]);
 				total_keys += sift_data[i].getFeatureNum();
@@ -219,32 +252,61 @@ namespace vot
 	    	std::cout << "[VocabMatch] Fail to open the match file.\n";
 	    }
 	    size_t db_image_num = tree->database_image_num;
-	    // if(thread_num == 1)
-	    // {
-	    float *scores = new float [db_image_num];
-	    tw::IndexedFloat *indexed_scores = new tw::IndexedFloat [db_image_num];
-
-	    for(int i = 0; i < siftfile_num; i++)
+	    if(thread_num == 1)
 	    {
-	    	std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
-	    	memset(scores, 0.0, sizeof(float) * db_image_num);
-	    	tree->Query(sift_data[i], scores);
-	    	for(int j = 0; j < db_image_num; j++)
-	    	{
-	    		indexed_scores[j].value = scores[j];
-	    		indexed_scores[j].index = j;
-	    	}
-	    	qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
-	    	for(int j = 0; j < db_image_num; j++)
-	    	{
-	    		fprintf(match_file, "%d %zd %0.4f\n", i, indexed_scores[j].index, indexed_scores[j].value);
-	    	}
-	    }
+		    float *scores = new float [db_image_num];
+		    tw::IndexedFloat *indexed_scores = new tw::IndexedFloat [db_image_num];
 
-	    delete [] scores;
-	    delete [] indexed_scores;
-	    // }
-	    // else {}	// TODO(tianwei):multi-thread version
+		    for(size_t i = 0; i < siftfile_num; i++)
+		    {
+		    	std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
+		    	memset(scores, 0.0, sizeof(float) * db_image_num);
+		    	tree->Query(sift_data[i], scores);
+		    	for(size_t j = 0; j < db_image_num; j++)
+		    	{
+		    		indexed_scores[j].value = scores[j];
+		    		indexed_scores[j].index = j;
+		    	}
+		    	qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
+		    	for(size_t j = 0; j < db_image_num; j++)
+		    	{
+		    		fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j].index, indexed_scores[j].value);
+		    	}
+		    }
+
+		    delete [] scores;
+		    delete [] indexed_scores;
+	    }
+	    else 	// TODO(tianwei):multi-thread version
+	    {
+	    	std::vector<std::thread> threads;
+	    	float **scores = new float* [thread_num];
+	    	tw::IndexedFloat **indexed_scores = new tw::IndexedFloat* [thread_num];
+	    	for(int i = 0; i < thread_num; i++)
+	    	{
+	    		scores[i] = new float [db_image_num];
+	    		indexed_scores[i] = new tw::IndexedFloat [db_image_num];
+	    	}
+
+	    	size_t off = 0;
+	    	for(int i = 0; i < thread_num; i++)
+	    	{
+	    		size_t thread_image = siftfile_num / thread_num;
+	    		if(i == thread_num - 1)
+	    			thread_image = siftfile_num - (thread_num - 1) * thread_image;
+		    	threads.push_back(std::thread(MultiQueryDatabase, tree, &sift_data, off, thread_image, scores[i], indexed_scores[i], match_file));
+		    	off += thread_image;
+	    	}
+	    	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+	    	// release memory
+	    	for(int i = 0; i < thread_num; i++)
+	    	{
+	    		delete [] scores[i];
+	    		delete [] indexed_scores[i];
+	    	}
+	    	delete [] scores;
+	    	delete [] indexed_scores;
+	    }	
 	    fclose(match_file);
 
 	    // release memory
@@ -266,7 +328,8 @@ namespace vot
 	        std::cout << "[FilterMatchList] Fail to open the vocabulary tree match output\n";
 	        return false;
 	    }
-	    else {
+	    else 
+	    {
 	        std::cout << "[FilterMatchList] Read the vocabulary tree match file: " << match_list << '\n';
 	    }
 

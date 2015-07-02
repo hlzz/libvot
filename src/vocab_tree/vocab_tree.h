@@ -62,6 +62,7 @@ namespace vot
             virtual bool IndexLeaves(int branch_num) = 0;
             virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor) = 0;     //!< fill the query vector
             virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores) = 0;       //!< score each image in the database
+            virtual size_t MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim) = 0;    //!< used for query database
 
             DTYPE *des; //!< the descriptor vector
             size_t id; //!< the id of the node 
@@ -94,6 +95,7 @@ namespace vot
             virtual bool IndexLeaves(int branch_num);
             virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor);     //!< fill the query vector
             virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores);       //!< score each image in the database
+            virtual size_t MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim);    //!< used for query database
 
             TreeNode **children;
     };
@@ -125,6 +127,7 @@ namespace vot
             virtual bool IndexLeaves(int branch_num);
             virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor);     //!< fill the query vector
             virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores);       //!< score each image in the database
+            virtual size_t MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim);    //!< used for query database
 
             float score;            //!< temporary score, for querying and computing magnitude use
             float weight;           //!< weight for this node
@@ -156,6 +159,7 @@ namespace vot
             bool NormalizeDatabase(size_t start_id, size_t image_num);    //!< normalize the inverted list score by the magnitude of image vector
             // member function for querying database
             bool Query(tw::SiftData &sift, float *scores);   //!< query database and return the scores
+            size_t IndexLeaves(); //!< index the leaf nodes
 
             // public data member 
             int branch_num;             //!< the branch number of a node
@@ -163,6 +167,7 @@ namespace vot
             int dim;                    //!< the dimension of the descriptor
             size_t database_image_num;  //!< the number of the database images
             size_t num_nodes;           //!< the number of nodes in the tree
+            size_t num_leaves;          //!< the number of leaf nodes in the tree
             DistanceType dis_type;      //!< the distance type
             TreeNode *root;             //!< the root of the tree
     };
