@@ -145,6 +145,7 @@ namespace vot
         delete [] assign;
 
         std::cout << "[VocabTree Build] Finish building vocabulary tree!\n";
+
         return true;
     }
 
@@ -275,6 +276,13 @@ namespace vot
                 delete [] sub_means[i];
             }
         }
+        // if(depth_curr < 2)
+        // {
+        //     for(int i = 0; i < bf; i++)
+        //     {
+        //         std::cout << "children " << i << " counts: " << counts[i] << std::endl;
+        //     }
+        // }
 
         delete [] counts;
         return true;
@@ -609,6 +617,21 @@ namespace vot
     //                     Vocabulary Tree Build Database                       //
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
+    void MultiAddImage(TreeNode *root, 
+                       DTYPE *v, 
+                       size_t image_index, 
+                       int num_feature,
+                       int branch_num, 
+                       int dim, 
+                       bool add)
+    {
+        size_t off = 0;
+        for(int i = 0; i < num_feature; i++)
+        {
+            root->DescendFeatureLock(v+off, image_index, branch_num, dim, true);
+            off += dim;
+        }
+    }
 
     double VocabTree::AddImage2Tree(size_t image_index, tw::SiftData &sift, int thread_num)
     {
@@ -616,19 +639,28 @@ namespace vot
         DTYPE *v = sift.getDesPointer();
         root->ClearScores(branch_num);
         size_t off = 0;
-        //if(thread_num == 1)     // single-thread version
-        //{
+        if(thread_num == 1)     // single-thread version
+        {
             for(int i = 0; i < sift_num; i++)
             {
                 root->DescendFeature(v+off, image_index, branch_num, dim, true);
                 off += dim;
             }
-        //}
+        }
 
-        // else        // TODO(tianwei): multi-thread version
-        // {
-
-        // }
+        else        // TODO(tianwei): multi-thread version
+        {
+            std::vector<std::thread> threads;
+            for(int i = 0; i < thread_num; i++)
+            {
+                int thread_feature_num = sift_num / thread_num;
+                if(i == thread_num - 1)
+                    thread_feature_num = sift_num - (thread_num - 1) * thread_feature_num;
+                threads.push_back(std::thread(MultiAddImage, root, v+off, image_index, thread_feature_num, branch_num, dim, true));
+                off += dim * thread_feature_num;
+            }
+            std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+        }
 
         double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
         database_image_num++;
@@ -642,6 +674,7 @@ namespace vot
                 std::cout << "[ComputeImageVectorMagnitude] Wrong distance type\n";
                 return 0;
         }
+        return 0;
     }
 
     size_t TreeInNode::DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
@@ -670,7 +703,7 @@ namespace vot
         score += weight;
         if(add)     // add this image to inverted list
         {
-            int curr_image_num = (size_t) inv_list.size();
+            size_t curr_image_num = (size_t) inv_list.size();
             if(curr_image_num == 0)
                 inv_list.push_back(ImageCount(image_index, (float)weight));
             else
@@ -685,6 +718,52 @@ namespace vot
                 }
             }
         }
+        return id;
+    }
+
+    size_t TreeInNode::DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    {
+        int best_idx = 0;
+        float min_distance = std::numeric_limits<float>::max();
+        for(int i = 0; i < branch_num; i++)
+        {
+            if(children[i] != NULL)
+            {
+                float curr_dist = l2sq(v, children[i]->des, dim);
+                if(curr_dist < min_distance)
+                {
+                    min_distance = curr_dist;
+                    best_idx = i;
+                }
+            }
+        }
+
+        size_t ret = children[best_idx]->DescendFeatureLock(v, image_index, branch_num, dim, add);
+        return ret;        
+    }
+
+    size_t TreeLeafNode::DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    {
+        add_lock.lock();
+        score += weight;
+        if(add)     // add this image to inverted list
+        {
+            size_t curr_image_num = (size_t) inv_list.size();
+            if(curr_image_num == 0)
+                inv_list.push_back(ImageCount(image_index, (float)weight));
+            else
+            {
+                if(inv_list[curr_image_num-1].index == image_index)
+                {
+                    inv_list[curr_image_num-1].count += weight;
+                }
+                else
+                {
+                    inv_list.push_back(ImageCount(image_index, weight));
+                }
+            }
+        }
+        add_lock.unlock();
         return id;
     }
 
