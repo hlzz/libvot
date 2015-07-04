@@ -618,6 +618,7 @@ namespace vot
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
     void MultiAddImage(TreeNode *root, 
+                       float *scores, 
                        DTYPE *v, 
                        size_t image_index, 
                        int num_feature,
@@ -628,27 +629,33 @@ namespace vot
         size_t off = 0;
         for(int i = 0; i < num_feature; i++)
         {
-            root->DescendFeatureLock(v+off, image_index, branch_num, dim, true);
+            root->DescendFeature(scores, v+off, image_index, branch_num, dim, true);
             off += dim;
         }
     }
 
     double VocabTree::AddImage2Tree(size_t image_index, tw::SiftData &sift, int thread_num)
     {
+        float *q = new float [num_leaves];
+        for(size_t i = 0; i < num_leaves; i++)
+        {
+            q[i] = 0.0;
+        }
+
         int sift_num = sift.getFeatureNum();
         DTYPE *v = sift.getDesPointer();
-        root->ClearScores(branch_num);
+        
         size_t off = 0;
         if(thread_num == 1)     // single-thread version
         {
             for(int i = 0; i < sift_num; i++)
             {
-                root->DescendFeature(v+off, image_index, branch_num, dim, true);
+                root->DescendFeature(q, v+off, image_index, branch_num, dim, true);
                 off += dim;
             }
         }
 
-        else        // TODO(tianwei): multi-thread version
+        else
         {
             std::vector<std::thread> threads;
             for(int i = 0; i < thread_num; i++)
@@ -656,7 +663,7 @@ namespace vot
                 int thread_feature_num = sift_num / thread_num;
                 if(i == thread_num - 1)
                     thread_feature_num = sift_num - (thread_num - 1) * thread_feature_num;
-                threads.push_back(std::thread(MultiAddImage, root, v+off, image_index, thread_feature_num, branch_num, dim, true));
+                threads.push_back(std::thread(MultiAddImage, root, q, v+off, image_index, thread_feature_num, branch_num, dim, true));
                 off += dim * thread_feature_num;
             }
             std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
@@ -674,10 +681,9 @@ namespace vot
                 std::cout << "[ComputeImageVectorMagnitude] Wrong distance type\n";
                 return 0;
         }
-        return 0;
     }
 
-    size_t TreeInNode::DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    size_t TreeInNode::DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
     {
         int best_idx = 0;
         float min_distance = std::numeric_limits<float>::max();
@@ -694,13 +700,14 @@ namespace vot
             }
         }
 
-        size_t ret = children[best_idx]->DescendFeature(v, image_index, branch_num, dim, add);
-        return ret;        
+        size_t ret = children[best_idx]->DescendFeature(q, v, image_index, branch_num, dim, add);
+        return ret;
     }
 
-    size_t TreeLeafNode::DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    size_t TreeLeafNode::DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
     {
-        score += weight;
+        add_lock.lock();
+        q[id] += weight;
         if(add)     // add this image to inverted list
         {
             size_t curr_image_num = (size_t) inv_list.size();
@@ -718,6 +725,7 @@ namespace vot
                 }
             }
         }
+        add_lock.unlock();
         return id;
     }
 
@@ -957,11 +965,10 @@ namespace vot
         size_t off = 0;
         for(int i = 0; i < sift_num; i++)
         {
-            root->MultiDescendFeature(q, v+off, 0, branch_num, dim);
+            root->DescendFeature(q, v+off, 0, branch_num, dim, false);
             off += dim;
         }
 
-        //double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
         double mag = 0.0;
         switch(dis_type)
         {

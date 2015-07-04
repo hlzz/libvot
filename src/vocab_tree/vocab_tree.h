@@ -54,7 +54,7 @@ namespace vot
             virtual bool Compare(TreeNode *in, int branch_num, int dim) const = 0;
             virtual bool ClearScores(int bf) = 0;             //!< refresh the temporary score for this tree
             // function for build image database
-            virtual size_t DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true) = 0;
+            virtual size_t DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true) = 0;
             virtual size_t DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true) = 0;
             virtual double ComputeImageVectorMagnitude(int bf, DistanceType dt) = 0;
             virtual bool SetConstantWeight(int bf) = 0;   //!< set a constant weight to the leaf nodes
@@ -88,7 +88,7 @@ namespace vot
             virtual bool Compare(TreeNode *in, int branch_num, int dim) const;
             virtual bool ClearScores(int bf);             //!< refresh the temporary score for this tree
             // function for build image database
-            virtual size_t DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
+            virtual size_t DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
             virtual size_t DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
             virtual double ComputeImageVectorMagnitude(int bf, DistanceType dt);
             virtual bool SetConstantWeight(int bf);   //!< set a constant weight to the leaf nodes
@@ -121,7 +121,7 @@ namespace vot
             virtual bool Compare(TreeNode *leaf, int branch_num, int dim) const;
             virtual bool ClearScores(int bf);             //!< refresh the temporary score for this tree
             // function for build image database
-            virtual size_t DescendFeature(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
+            virtual size_t DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
             virtual size_t DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
             virtual double ComputeImageVectorMagnitude(int bf, DistanceType dt);
             virtual bool SetConstantWeight(int bf);   //!< set a constant weight to the leaf nodes
