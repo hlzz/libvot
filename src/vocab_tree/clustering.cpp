@@ -153,8 +153,42 @@ namespace tw
 		return change_num;
 	}
 
-	void ComputeMeans(size_t num, int dim, int k, DTYPE **p, int *assignment_curr, double *means_curr)
+	/**
+	 * @brief Accumulate the feature descriptors to the total, a subroutine used by multi-threaded version of ComputeMeans
+	 * @param num - the total number of feature points
+	 * @param start_id - the start index for this thread
+	 * @param dim - the dimension of the feature points
+	 * @param k - the number of clusters
+	 * @param p - the address to the starting feature point
+	 * @param assignment_curr - the current assignments computed by ComputeAssignment
+	 * @param total - accumulator
+	 * @param counts - counter
+	 * @return
+	 */
+	void MultiDesAccumulation(size_t num, int dim, int k, DTYPE **p, int *assignment_curr, double *totals, size_t *counts)
 	{
+		for(size_t i = 0; i < num; i++)
+		{
+			int label = assignment_curr[i];
+			counts[label]++;
+			for(int j = 0; j < dim; j++)
+				totals[label * dim + j] += (double)p[i][j];
+		}
+	}
+
+	/**
+	 * @brief Compute new means for each cluster
+	 * @param num - the total number of feature points
+	 * @param dim - the dimension of the feature points
+	 * @param k - the number of clusters
+	 * @param assignment_curr - the current assignments computed by ComputeAssignment
+	 * @param means_curr - the means of clusters
+	 * @param thread_num - the number of threads
+	 * @return
+	 */
+	void ComputeMeans(size_t num, int dim, int k, DTYPE **p, int *assignment_curr, double *means_curr, int thread_num)
+	{
+		// initialization
 		size_t *counts = new size_t [k];
 		for(int i = 0; i < k; i++)
 		{
@@ -164,14 +198,53 @@ namespace tw
 		}
 
 		// accumulation
-		for(int i = 0; i < num; i++)
+		if(thread_num == 1)
 		{
-			int lable = assignment_curr[i];
-			counts[lable]++;
-			for(int j = 0; j < dim; j++)
-				means_curr[lable * dim + j] += p[i][j];
+			for(size_t i = 0; i < num; i++)
+			{
+				int label = assignment_curr[i];
+				counts[label]++;
+				for(int j = 0; j < dim; j++)
+					means_curr[label * dim + j] += (double)p[i][j];
+			}
 		}
-		//for(int i = 0; i < k; i++) {showi(counts[i]); }
+		else
+		{
+			double *sub_totals[thread_num];	
+			size_t *sub_counts[thread_num];
+			for(int i = 0; i < thread_num; i++)
+			{
+				sub_totals[i] = new double [dim * k];
+				sub_counts[i] = new size_t [k];
+				for(int j = 0; j < dim * k; j++)
+					sub_totals[i][j] = 0.0;
+				for(int j = 0; j < k; j++)
+					sub_counts[i][j] = 0;
+			}
+			std::vector<std::thread> threads;
+			size_t off = 0;
+			for(int i = 0; i < thread_num; i++)
+			{
+				size_t feature_num = num / thread_num;
+				if(i == thread_num - 1)
+					feature_num = num - (thread_num - 1) * feature_num;
+				threads.push_back(std::thread(MultiDesAccumulation, feature_num, dim, k, p+off, assignment_curr+off, sub_totals[i], sub_counts[i]));
+				off += feature_num;
+			}
+			std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+			for(int i = 0; i < thread_num; i++)
+			{
+				for(int j = 0; j < k * dim; j++)
+					means_curr[j] += sub_totals[i][j];
+				for(int j = 0; j < k; j++)
+					counts[j] += sub_counts[i][j];
+			}
+			for(int i = 0; i < thread_num; i++)
+			{
+				delete [] sub_counts[i];
+				delete [] sub_totals[i];
+			}
+		}
 
 		// normalization
 		for(int i = 0; i < k; i++)
@@ -236,7 +309,7 @@ namespace tw
 			}
 
 			// initial assignment
-			for(int i = 0; i < num; i++)
+			for(size_t i = 0; i < num; i++)
 				assignment_curr[i] = -1;	
 
 			size_t change_num = ComputeAssignment(num, dim, k, p, means_curr, assignment_curr, dis, thread_num);
@@ -246,14 +319,14 @@ namespace tw
 			while(change_pct > change_pct_threshold)
 			{
 				// recompute means
-				ComputeMeans(num, dim, k, p, assignment_curr, means_curr);
+				ComputeMeans(num, dim, k, p, assignment_curr, means_curr, thread_num);
 
 				// recompute assignments
 				change_num = ComputeAssignment(num, dim, k, p, means_curr, assignment_curr, dis, thread_num);
 				change_pct = (double) change_num / num;
 			}
 
-			ComputeMeans(num, dim, k, p, assignment_curr, means_curr);
+			ComputeMeans(num, dim, k, p, assignment_curr, means_curr, thread_num);
 			if(dis < min_dis)
 			{
 				min_dis = dis;

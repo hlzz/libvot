@@ -194,7 +194,10 @@ namespace vot
 		size_t db_image_num = tree->database_image_num;
 		for(size_t i = first_index; i < first_index + num_images; i++)
 		{
+			match_file_mutex.lock();
 			std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
+			match_file_mutex.unlock();
+
 			memset(scores, 0.0, sizeof(float) * db_image_num);
 			tree->Query((*sift_data)[i], scores);
 			for(size_t j = 0; j < db_image_num; j++)
@@ -203,6 +206,7 @@ namespace vot
 				indexed_scores[j].index = j;
 			}
 			qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
+			
 			match_file_mutex.lock();
 			for(size_t j = 0; j < db_image_num; j++)
 			{
@@ -277,7 +281,7 @@ namespace vot
 		    delete [] scores;
 		    delete [] indexed_scores;
 	    }
-	    else 	// TODO(tianwei):multi-thread version
+	    else 	
 	    {
 	    	std::vector<std::thread> threads;
 	    	float **scores = new float* [thread_num];
