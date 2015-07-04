@@ -669,18 +669,21 @@ namespace vot
             std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
         }
 
-        double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
         database_image_num++;
-        switch(dis_type)
-        {
-            case L1:
-                return mag;
-            case L2:
-                return sqrt(mag);
-            default:
-                std::cout << "[ComputeImageVectorMagnitude] Wrong distance type\n";
-                return 0;
-        }
+        return 0;
+
+        // (optional) return the image vector magnitude (unnormalized)
+        // double mag = root->ComputeImageVectorMagnitude(branch_num, dis_type);
+        // switch(dis_type)
+        // {
+        //     case L1:
+        //         return mag;
+        //     case L2:
+        //         return sqrt(mag);
+        //     default:
+        //         std::cout << "[ComputeImageVectorMagnitude] Wrong distance type\n";
+        //         return 0;
+        // }
     }
 
     size_t TreeInNode::DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
@@ -708,52 +711,6 @@ namespace vot
     {
         add_lock.lock();
         q[id] += weight;
-        if(add)     // add this image to inverted list
-        {
-            size_t curr_image_num = (size_t) inv_list.size();
-            if(curr_image_num == 0)
-                inv_list.push_back(ImageCount(image_index, (float)weight));
-            else
-            {
-                if(inv_list[curr_image_num-1].index == image_index)
-                {
-                    inv_list[curr_image_num-1].count += weight;
-                }
-                else
-                {
-                    inv_list.push_back(ImageCount(image_index, weight));
-                }
-            }
-        }
-        add_lock.unlock();
-        return id;
-    }
-
-    size_t TreeInNode::DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
-    {
-        int best_idx = 0;
-        float min_distance = std::numeric_limits<float>::max();
-        for(int i = 0; i < branch_num; i++)
-        {
-            if(children[i] != NULL)
-            {
-                float curr_dist = l2sq(v, children[i]->des, dim);
-                if(curr_dist < min_distance)
-                {
-                    min_distance = curr_dist;
-                    best_idx = i;
-                }
-            }
-        }
-
-        size_t ret = children[best_idx]->DescendFeatureLock(v, image_index, branch_num, dim, add);
-        return ret;        
-    }
-
-    size_t TreeLeafNode::DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
-    {
-        add_lock.lock();
-        score += weight;
         if(add)     // add this image to inverted list
         {
             size_t curr_image_num = (size_t) inv_list.size();
@@ -1073,32 +1030,5 @@ namespace vot
 
         return  true;
     }    
-
-    size_t TreeInNode::MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim)
-    {
-        int best_idx = 0;
-        float min_distance = std::numeric_limits<float>::max();
-        for(int i = 0; i < branch_num; i++)
-        {
-            if(children[i] != NULL)
-            {
-                float curr_dist = l2sq(v, children[i]->des, dim);
-                if(curr_dist < min_distance)
-                {
-                    min_distance = curr_dist;
-                    best_idx = i;
-                }
-            }
-        }
-
-        size_t ret = children[best_idx]->MultiDescendFeature(q, v, image_index, branch_num, dim);
-        return ret;        
-    }
-
-    size_t TreeLeafNode::MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim)
-    {
-        q[id] += weight;
-        return id;
-    }
 
 }   // end of namespace vot

@@ -159,7 +159,7 @@ namespace vot
 	    for(int i = 0; i < siftfile_num; i++)
 	    {
 	        double mag = tree.AddImage2Tree(start_id + i, sift_data[i], thread_num);
-	        std::cout << "[BuildDB] Add image #" << start_id + i << " to database, image vector magnitude " << mag << '\n';
+	        std::cout << "[BuildDB] Add image #" << start_id + i << " to database\n";
 	    } 
 	    tree.ComputeTFIDFWeight(siftfile_num);
 	    tree.NormalizeDatabase(start_id, siftfile_num);
@@ -206,7 +206,7 @@ namespace vot
 				indexed_scores[j].index = j;
 			}
 			qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
-			
+
 			match_file_mutex.lock();
 			for(size_t j = 0; j < db_image_num; j++)
 			{

@@ -55,7 +55,6 @@ namespace vot
             virtual bool ClearScores(int bf) = 0;             //!< refresh the temporary score for this tree
             // function for build image database
             virtual size_t DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true) = 0;
-            virtual size_t DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true) = 0;
             virtual double ComputeImageVectorMagnitude(int bf, DistanceType dt) = 0;
             virtual bool SetConstantWeight(int bf) = 0;   //!< set a constant weight to the leaf nodes
             virtual bool ComputeTFIDFWeight(int bf, size_t n) = 0;  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
@@ -65,7 +64,6 @@ namespace vot
             virtual bool IndexLeaves(int branch_num) = 0;
             virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor) = 0;     //!< fill the query vector
             virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores) = 0;       //!< score each image in the database
-            virtual size_t MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim) = 0;    //!< used for query database
 
             DTYPE *des; //!< the descriptor vector
             size_t id; //!< the id of the node 
@@ -89,7 +87,6 @@ namespace vot
             virtual bool ClearScores(int bf);             //!< refresh the temporary score for this tree
             // function for build image database
             virtual size_t DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
-            virtual size_t DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
             virtual double ComputeImageVectorMagnitude(int bf, DistanceType dt);
             virtual bool SetConstantWeight(int bf);   //!< set a constant weight to the leaf nodes
             virtual bool ComputeTFIDFWeight(int bf, size_t n);  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
@@ -99,7 +96,6 @@ namespace vot
             virtual bool IndexLeaves(int branch_num);
             virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor);     //!< fill the query vector
             virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores);       //!< score each image in the database
-            virtual size_t MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim);    //!< used for query database
 
             TreeNode **children;
     };
@@ -122,7 +118,6 @@ namespace vot
             virtual bool ClearScores(int bf);             //!< refresh the temporary score for this tree
             // function for build image database
             virtual size_t DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
-            virtual size_t DescendFeatureLock(DTYPE *v, size_t image_index, int branch_num, int dim, bool add = true);
             virtual double ComputeImageVectorMagnitude(int bf, DistanceType dt);
             virtual bool SetConstantWeight(int bf);   //!< set a constant weight to the leaf nodes
             virtual bool ComputeTFIDFWeight(int bf, size_t n);  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
@@ -132,7 +127,6 @@ namespace vot
             virtual bool IndexLeaves(int branch_num);
             virtual bool FillQueryVector(float *q, int branch_num, float normalize_factor);     //!< fill the query vector
             virtual bool ScoreQuery(float *q, int branch_num, DistanceType dt, float *scores);       //!< score each image in the database
-            virtual size_t MultiDescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim);    //!< used for query database
 
             float score;            //!< temporary score, for querying and computing magnitude use
             float weight;           //!< weight for this node
