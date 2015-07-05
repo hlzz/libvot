@@ -21,6 +21,23 @@
 
 namespace vot
 {
+    /** Random sample "sample_num" number of numbers from [0, 1, ... , total] */
+	std::vector<size_t> RandomSample(size_t total, size_t sample_num)
+	{
+		std::vector<size_t> samples;
+		std::vector<size_t> total_numbers;
+		for(size_t i = 0; i < total; i++)
+		{
+			total_numbers.push_back(i);
+		}
+		std::random_shuffle(total_numbers.begin(), total_numbers.end());
+		for(size_t i = 0; i < sample_num; i++)
+		{
+			samples.push_back(total_numbers[i]);
+		}
+		return samples;
+	}
+
 	bool BuildVocabTree(const char *sift_list, 
 						const char *output_filename, 
 						int depth, int branch_num, 
@@ -29,16 +46,20 @@ namespace vot
     	// read sift filenames, get the total number of sift keys, and allocate memory 
 		std::vector<std::string> sift_filenames; 
 		tw::IO::ExtractLines(sift_list, sift_filenames); 
-		int siftfile_num = sift_filenames.size(); 
+		size_t siftfile_num = sift_filenames.size(); 
+		// sample a part of sift files
+		size_t sample_size = siftfile_num;
+		std::vector<size_t> siftfile_samples = RandomSample(siftfile_num, sample_size);
+
 		size_t total_keys = 0; 
 		std::vector<tw::SiftData> sift_data; 
 		if(sift_type == 0) 
 		{
-			sift_data.resize(siftfile_num); 
-			for(int i = 0; i < sift_filenames.size(); i++) 
+			sift_data.resize(sample_size); 
+			for(size_t i = 0; i < sample_size; i++) 
 			{
-				sift_data[i].ReadSiftFile(sift_filenames[i]); 
-				total_keys += sift_data[i].getFeatureNum(); 
+				sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]); 
+				total_keys += sift_data[i].getFeatureNum();
 			} 
 			std::cout << "[Build Tree] Total sift keys (Type SIFT5.0): " << total_keys << std::endl; 
 		} 
@@ -67,13 +88,13 @@ namespace vot
 	    size_t off = 0;
 	    size_t curr_key = 0;
 	    int curr_array = 0;
-	    for(int i = 0; i < siftfile_num; i++)
+	    for(size_t i = 0; i < sample_size; i++)
 	    {
-	    	size_t num_keys = sift_data[i].getFeatureNum();
-	    	if(num_keys > 0)
+	    	int num_keys = sift_data[i].getFeatureNum();
+	    	if(num_keys > 0	)
 	    	{
 	    		DTYPE *dp = sift_data[i].getDesPointer();
-	    		for(size_t j = 0; j < num_keys; j++)
+	    		for(int j = 0; j < num_keys; j++)
 	    		{
 	    			for(int k = 0; k < FDIM; k++)
 	    			{
