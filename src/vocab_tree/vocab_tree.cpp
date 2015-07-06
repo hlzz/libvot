@@ -450,7 +450,7 @@ namespace vot
             else
             {
                 char is_internal;
-                int c = fread(&is_internal, sizeof(DTYPE), 1, f);
+                int c = fread(&is_internal, sizeof(char), 1, f);
                 if(c != 1)
                 {
                     std::cout << "[ReadNode] Reading error\n";
