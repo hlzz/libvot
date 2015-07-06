@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 {
     if (argc < 3) 
     {
-        printf("Usage: %s <sift_list> <tree.out> [depth] [branch_num] [sift_type] [thread_num]\n", argv[0]);
+        printf("Usage: %s <sift_list> <tree.out> [depth] [branch_num] [sift_type] [num_matches] [thread_num]\n", argv[0]);
         return -1;
     }
 
@@ -48,11 +48,13 @@ int main(int argc, char **argv)
     if(argc > 5)
         sift_type = atoi(argv[5]);
     if(argc > 6)
-        thread_num = atoi(argv[6]);
+        num_matches = atoi(argv[6]);
+    if(argc > 7)
+        thread_num = atoi(argv[7]);
 
-    vot::BuildVocabTree(sift_input_file, tree_output, depth, branch_num, sift_type, thread_num);
-    vot::BuildImageDatabase(sift_input_file, tree_output, db_output, sift_type, start_id, thread_num);
-    vot::QueryDatabase(db_output, sift_input_file, match_output, sift_type, thread_num);
+    //vot::BuildVocabTree(sift_input_file, tree_output, depth, branch_num, sift_type, thread_num);
+    //vot::BuildImageDatabase(sift_input_file, tree_output, db_output, sift_type, start_id, thread_num);
+    //vot::QueryDatabase(db_output, sift_input_file, match_output, sift_type, thread_num);
     vot::FilterMatchList(sift_input_file, match_output, filtered_output, num_matches);
 
     return 0;

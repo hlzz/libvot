@@ -16,7 +16,7 @@ float l2sq(DTYPE *a, DTYPE *b, int dim)
     float dist = 0.0;
     for(int i = 0; i < dim; i++)
     {
-        int d = (int)a[i] - (int)b[i];
+        float d = (float)a[i] - (float)b[i];
         dist += d*d;
     }
     return dist;
@@ -201,7 +201,12 @@ namespace vot
                     children[i] = new TreeInNode();
                 children[i]->des = new DTYPE [dim];
                 for(int j = 0; j < dim; j++)
-                    children[i]->des[j] = (int) (means[i*dim + j] + 0.5);     // round to the nearest integer
+                {
+                    if(sizeof(DTYPE) == 1)          // (char) round to the nearest integer
+                        children[i]->des[j] = (int) (means[i*dim + j] + 0.5);     
+                    else                            // (float)
+                        children[i]->des[j] = means[i*dim + j];
+                }
             }
             else
             {
@@ -703,6 +708,7 @@ namespace vot
                 }
             }
         }
+
 
         size_t ret = children[best_idx]->DescendFeature(q, v, image_index, branch_num, dim, add);
         return ret;
