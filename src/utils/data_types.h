@@ -129,7 +129,85 @@ public:
                 fclose(fd);
                 return false;
             }
+        }
+        else
+        {
+            fclose(fd);
+            return false;
+        }
+        return true;
+    }
 
+    ///
+    /// \brief ConvertChar2Float: Read a char sift file and convert it to DTYPE(float/double) sift. 
+    ///                           The descriptors are L1 normalized and then square-rooted (RootSift)
+    /// \param szFileName: the name of the sift file
+    /// \return
+    ///
+    bool ReadChar2DTYPE(std::string const &szFileName)
+    {
+        name_ = 'S' + ('I' << 8) + ('F' << 16) + ('T' << 24);
+        version_ = 'V' + ('5' << 8) + ('.' << 16) + ('0' << 24);
+        FILE *fd;
+        if((fd = fopen(szFileName.c_str(), "rb")) == NULL)
+        {
+            std::cout << "[ReadSiftFile] Can't read sift file " << szFileName << '\n';
+            return false;
+        }
+        int f = fread(&name_, sizeof(int), 1, fd);
+        int g = fread(&version_, sizeof(int), 1, fd);
+        if(f != 1 || g != 1)
+        {
+            std::cout << "[ReadSiftFile] Reading error\n";
+            return false;
+        }
+
+        if(name_ == ('S'+ ('I'<<8)+('F'<<16)+('T'<<24)))
+        {
+            int a, b, c;
+            a = fread(&npoint_, sizeof(int), 1, fd);
+            b = fread(&nLocDim_, sizeof(int), 1, fd);
+            c = fread(&nDesDim_, sizeof(int), 1, fd);
+            if(a != 1 || b != 1 || c!= 1)
+            {
+                std::cout << "[ReadSiftFile] Reading error\n";
+                return false;
+            }
+
+            lp_ = new LTYPE [npoint_ * nLocDim_];          //restoring location data
+            dp_ = new DTYPE [npoint_ * nDesDim_];          //restoring descriptor data
+            unsigned char *temp_dp = new unsigned char [npoint_ * nDesDim_];    // restoring the temporary descriptor data
+            if(npoint_ >= 0 && nLocDim_ > 0 && nDesDim_ == 128)
+            {
+                int d, e;
+                d = fread(lp_, sizeof(LTYPE), nLocDim_ * npoint_, fd);
+                e = fread(temp_dp, sizeof(unsigned char), nDesDim_ * npoint_, fd);
+                if(d != nLocDim_ * npoint_ || e != nDesDim_ * npoint_)
+                {
+                    std::cout << "[ReadSiftFile] Reading error\n";
+                    return false;
+                }
+                // convert SIFT to RootSIFT
+                for(int i = 0; i < npoint_; i++)
+                {
+                    DTYPE magnitude = 0.0;
+                    for(int j = 0; j < nDesDim_; j++)
+                    {
+                        magnitude += (DTYPE) temp_dp[i*nDesDim_+j];
+                    }
+                    for(int j = 0; j < nDesDim_; j++)
+                    {
+                        dp_[i*nDesDim_+j] = sqrt((double) temp_dp[i*nDesDim_+j] / magnitude);
+                    }
+                }
+                delete [] temp_dp;
+                fclose(fd);
+            }
+            else
+            {
+                fclose(fd);
+                return false;
+            }
         }
         else
         {

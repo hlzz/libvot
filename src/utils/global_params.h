@@ -1,7 +1,7 @@
 #ifndef GLOBAL_PARAMS_HEADER
 #define GLOBAL_PARAMS_HEADER
 
-#define DTYPE unsigned char 
+#define DTYPE float
 #define LTYPE float
 #define FDIM 128
 

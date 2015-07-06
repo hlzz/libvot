@@ -58,7 +58,10 @@ namespace vot
 			sift_data.resize(sample_size); 
 			for(size_t i = 0; i < sample_size; i++) 
 			{
-				sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]); 
+				if(sizeof(DTYPE) == 1)
+					sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]); 
+				else
+					sift_data[i].ReadChar2DTYPE(sift_filenames[siftfile_samples[i]]);
 				total_keys += sift_data[i].getFeatureNum();
 			} 
 			std::cout << "[Build Tree] Total sift keys (Type SIFT5.0): " << total_keys << std::endl; 
@@ -159,7 +162,10 @@ namespace vot
 
 	        for(int i = 0; i < sift_filenames.size(); i++)
 	        {
-	            sift_data[i].ReadSiftFile(sift_filenames[i]);
+	        	if(sizeof(DTYPE) == 1)
+	        		sift_data[i].ReadSiftFile(sift_filenames[i]);
+	        	else
+	        		sift_data[i].ReadChar2DTYPE(sift_filenames[i]);
 	            total_keys += sift_data[i].getFeatureNum();
 	        }
 	        std::cout << "[BuildDB] Total sift keys (Type SIFT5.0): " << total_keys << '\n';
@@ -260,7 +266,10 @@ namespace vot
 
 			for(size_t i = 0; i < sift_filenames.size(); i++)
 			{
-				sift_data[i].ReadSiftFile(sift_filenames[i]);
+				if(sizeof(DTYPE) == 1)
+					sift_data[i].ReadSiftFile(sift_filenames[i]);
+				else
+					sift_data[i].ReadChar2DTYPE(sift_filenames[i]);
 				total_keys += sift_data[i].getFeatureNum();
 			}
 			std::cout << "[VocabMatch] Total sift keys (Type SIFT5.0): " << total_keys << '\n';

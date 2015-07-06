@@ -122,7 +122,8 @@ namespace vot
         {
             std::cout << "[VocabTree Build] Begin Build Vocabulary Tree ...\n";
             std::cout << "[VocabTree Build] with depth " << dep << " and branch number " << bf << ".\n";
-            std::cout << "[VocabTree Build] Approxiamately " << (float)dim * pow(bf, dep+1)/(1024 * 1024 * (bf-1)) << "mb memory will be used to load the tree.\n";
+            std::cout << "[VocabTree Build] Approxiamately " << (float)sizeof(DTYPE) * dim * pow(bf, dep+1)/(1024 * 1024) 
+                      << "mb memory will be used to load the tree.\n";
         }
 
         double *means = new double [branch_num * dim];
@@ -1029,6 +1030,6 @@ namespace vot
         }
 
         return  true;
-    }    
+    }
 
 }   // end of namespace vot
