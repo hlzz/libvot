@@ -68,7 +68,7 @@ int main(int argc, char **argv)
     const char *ground_truth_match = argv[2];
     const char *match_file = argv[3];
     int query_level = 2;
-    int qe_inlier_thresh = 150;
+    int qe_inlier_thresh = 200;
 
     if(argc == 5)
         query_level = atoi(argv[4]);
@@ -99,13 +99,6 @@ int main(int argc, char **argv)
     int nmatch, finlier, hinlier;
     size_t ground_truth_count = 0;
 
-    // float max_dist = log(min_finlier/C) * log(min_finlier/C); 
-    // Eigen::MatrixXf distance_matrix = Eigen::MatrixXf::Constant(image_num, image_num, max_dist);
-    // for(int i = 0; i < image_num; i++)
-    // {
-    //     distance_matrix(i, i) = 0;
-    // }
-
     while(!fin.eof())
     {
         std::getline(fin, line);
@@ -133,13 +126,8 @@ int main(int argc, char **argv)
         }
     }
     fin.close();
-    // Eigen::FullPivLU<Eigen::MatrixXf> lu_decomp(distance_matrix);
-    // cout << "rank " << lu_decomp.rank() << endl;
-    // cout << "image num " << image_num << endl;
 
     // read match file
-    // we would like to complete the match_matrix
-    //Eigen::MatrixXf match_matrix = Eigen::MatrixXf::Constant(image_num, image_num, 0.0);
     vot::ImageGraph image_graph(image_num);
     size_t match_count = 0;
     size_t hit_count = 0;
@@ -249,6 +237,25 @@ int main(int argc, char **argv)
     cout << "precision / recall: " << precision << " " << recall << "\n";
 
     }
+
+    // write the final match pair file
+    ofstream fout("match_pair_file.txt");
+    if(!fout.is_open())
+    {
+        std::cout << "[MatchFile] Error opening file for writing\n" << std::endl;
+        return -1;
+    }
+    for(int i = 0; i < image_num; i++)
+    {
+        for(int j = i+1; j < image_num; j++)
+        {
+            if(visit_mat[i][j])
+            {
+                fout << sift_filenames[i] << " " << sift_filenames[j] << endl;
+            }
+        }
+    }
+    fout.close();
 
     // release the memory
     for(int i = 0; i < image_num; i++)
