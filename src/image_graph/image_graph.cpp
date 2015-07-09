@@ -155,6 +155,7 @@ namespace vot
             {
                 expansion_lists[src].push_back(temp);
                 visit_mat[src][temp.dst] = true;
+                visit_mat[temp.dst][src] = true;
                 QueryExpansionSub(src, temp.dst, temp.score, visit_mat, expansion_lists, level-1, inlier_threshold);
             }
         }

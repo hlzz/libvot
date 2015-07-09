@@ -93,12 +93,10 @@ int main(int argc, char **argv)
         cout << "Failed to open the ground truth match\n";
         return -1;
     }
-
     string line;
     size_t index1, index2;
     int nmatch, finlier, hinlier;
     size_t ground_truth_count = 0;
-
     while(!fin.eof())
     {
         std::getline(fin, line);
@@ -114,7 +112,7 @@ int main(int argc, char **argv)
             return -1;
         }
 
-        if(index1 < index2) // note that index1 < index2
+        if(index1 < index2) // note that index1 < index2 in the first place since we only do match when index1 < index2
         {
             // fill in the ground truth match matrix
             if(finlier > inlier_thresh)
@@ -158,7 +156,7 @@ int main(int argc, char **argv)
         ss << line;
         ss >> index1 >> index2;
 
-        if(index1 < index2)
+        if(index1 < index2) // note that index1 < index2 in the first place, that's how the vocabulary tree list is generated
         {
             rank_list[index1].push_back(index2);
         }
@@ -174,6 +172,7 @@ int main(int argc, char **argv)
             // if the previous one is a true match, then continue; Otherwise stop matching for this image
             match_count++;
             visit_mat[i][rank_list[i][j]] = true;
+            visit_mat[i][rank_list[i][j]] = true;
 
             // this searches in the ground-truth match list, which simulates the matching process
             int k = 0;
@@ -183,6 +182,12 @@ int main(int argc, char **argv)
                 {
                     hit_count++; 
                     image_graph.addEdge(true_matches[i][k]);
+                    vot::LinkNode temp(true_matches[i][k].dst, 
+                                       true_matches[i][k].src, 
+                                       true_matches[i][k].score, 
+                                       true_matches[i][k].p_match, 
+                                       true_matches[i][k].g_match);
+                    image_graph.addEdge(temp);
                     jump_state = 0;
                     break;
                 }
@@ -225,6 +230,12 @@ int main(int argc, char **argv)
                     {
                         hit_count++;
                         image_graph.addEdge(true_matches[i][k]);
+                        vot::LinkNode temp(true_matches[i][k].dst, 
+                                           true_matches[i][k].src, 
+                                           true_matches[i][k].score, 
+                                           true_matches[i][k].p_match, 
+                                           true_matches[i][k].g_match);
+                        image_graph.addEdge(temp);
                         break;
                     }
                 }
@@ -239,7 +250,9 @@ int main(int argc, char **argv)
     }
 
     // write the final match pair file
-    ofstream fout("match_pair_file.txt");
+    ofstream fout("match_pairs_file");
+    ofstream fout1("expansion_add");
+    ofstream fout2("expansion_true");
     if(!fout.is_open())
     {
         std::cout << "[MatchFile] Error opening file for writing\n" << std::endl;
@@ -252,10 +265,29 @@ int main(int argc, char **argv)
             if(visit_mat[i][j])
             {
                 fout << sift_filenames[i] << " " << sift_filenames[j] << endl;
+                int k = 0;
+                for(k = 0; k < rank_list[i].size(); k++)
+                {
+                    if(j == rank_list[i][k])
+                        break;
+                }
+                if(k == rank_list[i].size())
+                {
+                    fout1 << sift_filenames[i] << " " << sift_filenames[j] << endl;
+                    for(k = 0; k < true_matches[i].size(); k++)
+                    {
+                        if(j == true_matches[i][k].dst)
+                        {
+                            fout2 << sift_filenames[i] << " " << sift_filenames[j] << " " << true_matches[i][k].g_match << endl;
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
     fout.close();
+    fout1.close();
 
     // release the memory
     for(int i = 0; i < image_num; i++)

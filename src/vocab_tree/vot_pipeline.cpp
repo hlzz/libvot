@@ -367,44 +367,60 @@ namespace vot
 	        std::cout << "[FilterMatchList] Read the vocabulary tree match file: " << match_list << '\n';
 	    }
 
-	    std::unordered_map<size_t, std::vector<size_t> > match_pairs;
 	    std::string line;
 	    size_t index0, index1;
 	    float score;
+	    std::vector<std::vector<size_t> > top_matches;
+	    top_matches.resize(image_num);
 	    while(!fin.eof())
 	    {
-	        std::getline(fin, line);
-	        if(line == "")
-	            continue;
-	        std::stringstream line_stream;
-	        line_stream << line;
-	        line_stream >> index0 >> index1 >> score;
-
+	    	std::getline(fin, line);
+	    	if(line == "")
+	    		continue;
+	    	std::stringstream line_stream;
+	    	line_stream << line;
+	    	line_stream >> index0 >> index1 >> score;
 	        if(index0 >= sift_filenames.size() || index1 >= sift_filenames.size())
 	        {
 	            std::cout << "[FilterMatchList] Invalid index pair: " << index0 << " " << index1 << '\n';
 	            continue;
 	        }
-
-	        if(score > 0 && index0 != index1)
+	        // find top-'num_matches' pairs
+	        if(top_matches[index0].size() < num_matches && index0 != index1 && score > 0)
 	        {
-	            std::unordered_map<size_t, std::vector<size_t> >::iterator itr = match_pairs.find(index0);
-	            if(itr == match_pairs.end())
-	            {
-	                std::vector<size_t> pairs;
-	                pairs.push_back(index1);
-	                match_pairs.insert(std::make_pair(index0, pairs));
-	            }
-	            else {
-	                std::vector<size_t> & pairs = itr->second;
-	                pairs.push_back(index1);
-	            }
+	        	top_matches[index0].push_back(index1);
 	        }
 	    }
 	    fin.close();
 
-		std::ofstream fout("match_pairs_idx.txt");
-		std::ofstream fout1("match_pairs_idx");
+	    std::vector<std::vector<size_t> > filtered_matches;
+	    filtered_matches.resize(image_num);
+	    for(size_t i = 0; i < image_num; i++)
+	    {
+	    	for(size_t j = 0; j < top_matches[i].size(); j++)
+	    	{
+	    		index0 = i; 
+	    		index1 = top_matches[i][j];
+	    		if(index0 > index1)
+	    		{
+	    			int temp = index1;
+	    			index1 = index0;
+	    			index0 = temp;
+	    		}
+	    		filtered_matches[index0].push_back(index1);
+	    	}
+	    }
+
+	    // get unique match pairs
+	    for(size_t i = 0; i < image_num; i++)
+	    {
+	    	std::sort(filtered_matches[i].begin(), filtered_matches[i].end());
+	    	filtered_matches[i].erase(std::unique(filtered_matches[i].begin(), filtered_matches[i].end()), filtered_matches[i].end());
+	    }
+
+	    // write match pairs (names and indexes) to two files
+		std::ofstream fout("match_pairs_idx.txt");		// used for match (sift filenames pairs)
+		std::ofstream fout1("match_pairs_idx");			// used for query expansion (sift index pairs)
 		if(!fout.is_open() || !fout1.is_open())
 	    {
 	        std::cout << "[FilterMatchList] Fail to open the filtered match file\n";
@@ -415,21 +431,24 @@ namespace vot
 	        std::cout << "[FilterMatchList] Write the filtered match file match_pairs_idx" << '\n';
 	    }
 
-	    for(std::unordered_map<size_t, std::vector<size_t> >::const_iterator itr = match_pairs.begin(); itr != match_pairs.end(); itr++)
+	    for(size_t i = 0; i < image_num; i++)
 	    {
-	        size_t index0 = itr->first;
-	        std::vector<size_t> const & pairs = itr->second;
-	        size_t num_match_images = std::min((size_t)num_matches, pairs.size());
-	        for(size_t idx = 0; idx < num_match_images; idx++)
-	        {
-	            size_t index1 = pairs[idx];
-	            fout << sift_filenames[index0] << '\t' << sift_filenames[index1] << '\n';
-	            fout1 << index0 << " " << index1 << '\n';
-	        }
+	    	for(size_t j = 0; j < filtered_matches[i].size(); j++)
+	    	{
+	    		fout << sift_filenames[i] << " " << sift_filenames[filtered_matches[i][j]] << '\n';
+	    	}
+	    } 
+	    fout.close();
+
+	    for(size_t i = 0; i < image_num; i++)
+	    {
+	    	for(size_t j = 0; j < top_matches[i].size(); j++)
+	    	{
+	    		fout1 << i << " " << top_matches[i][j] << '\n';
+	    	}
 	    }
 	    fout1.close();
-	    fout.close();
+
 		return true;	
 	}
-
 }	// end of namespace vot
