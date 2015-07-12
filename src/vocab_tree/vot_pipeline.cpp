@@ -12,10 +12,10 @@
 
 #include "vot_pipeline.h"
 #include "vocab_tree.h"
-#include "io_utils.h"
-#include "data_types.h"
-#include "data_structures.h"
-#include "global_params.h"
+#include "../utils/io_utils.h"
+#include "../utils/data_types.h"
+#include "../utils/data_structures.h"
+#include "../utils/global_params.h"
 
 #define MAX_ARRAY_SIZE 8388608  // 2^23
 

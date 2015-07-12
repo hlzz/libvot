@@ -9,7 +9,6 @@
 #include <algorithm>
 
 #include "clustering.h"
-#include "global_params.h"
 
 namespace tw
 {

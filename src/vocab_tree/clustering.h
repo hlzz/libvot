@@ -1,7 +1,7 @@
 #ifndef CLUSTERING_HEADER
 #define CLUSTERING_HEADER
 
-#include "global_params.h"
+#include "../utils/global_params.h"
 
 namespace tw
 {

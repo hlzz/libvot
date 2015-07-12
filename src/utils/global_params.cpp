@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "utils/global_params.h"
+#include "global_params.h"
 
 using std::cout;
 using std::endl;

@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 #include "io_utils.h"
-#include "image_graph/image_graph.h"
+#include "../image_graph/image_graph.h"
 
 namespace tw
 {
