@@ -52,9 +52,9 @@ int main(int argc, char **argv)
     if(argc > 7)
         thread_num = atoi(argv[7]);
 
-    vot::BuildVocabTree(sift_input_file, tree_output, depth, branch_num, sift_type, thread_num);
-    vot::BuildImageDatabase(sift_input_file, tree_output, db_output, sift_type, start_id, thread_num);
-    vot::QueryDatabase(db_output, sift_input_file, match_output, sift_type, thread_num);
+    //vot::BuildVocabTree(sift_input_file, tree_output, depth, branch_num, sift_type, thread_num);
+    //vot::BuildImageDatabase(sift_input_file, tree_output, db_output, sift_type, start_id, thread_num);
+    //vot::QueryDatabase(db_output, sift_input_file, match_output, sift_type, thread_num);
     vot::FilterMatchList(sift_input_file, match_output, filtered_output, num_matches);
 
     return 0;

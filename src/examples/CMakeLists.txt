@@ -18,10 +18,14 @@ target_link_libraries(image_search Threads::Threads)
 add_executable(graph_partition graph_partition.cpp ../image_graph/image_graph.cpp ../utils/io_utils.cpp ../utils/global_params.cpp ../utils/data_structures.cpp)
 
 add_executable(query_expansion query_expansion.cpp ../utils/io_utils.cpp ../image_graph/image_graph.cpp ../utils/data_structures.cpp)
+set_property(TARGET query_expansion PROPERTY CXX_STANDARD 11)
+set_property(TARGET query_expansion PROPERTY CXX_STANDARD_REQUIRED on)
 
 add_executable(sequence_match sequence_match.cpp ../utils/io_utils.cpp)
 
 add_executable(compute_stats compute_stats.cpp ../utils/io_utils.cpp)
+set_property(TARGET compute_stats PROPERTY CXX_STANDARD 11)
+set_property(TARGET compute_stats PROPERTY CXX_STANDARD_REQUIRED on)
 
 add_executable(svt svt.cpp ../utils/io_utils.cpp)
 set_property(TARGET svt PROPERTY CXX_STANDARD 11)

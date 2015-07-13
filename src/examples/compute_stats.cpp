@@ -8,6 +8,7 @@ Tianwei <shentianweipku@gmail.com>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <unordered_set>
 #include <cmath>
 #include <cassert>
 #include <cstdlib>
@@ -88,6 +89,8 @@ int main(int argc, char **argv)
 	fin.close();
 
 	// read match file
+	std::vector<std::unordered_set<int> > match_log;
+	match_log.resize(image_num);
 	size_t match_count = 0;
 	size_t hit_count = 0;
 	ifstream fin1(match_file);
@@ -108,11 +111,26 @@ int main(int argc, char **argv)
 		if(index1 < index2)
 		{
 			match_count++;
+			match_log[index1].insert(index2);
 			vector<size_t>::iterator it;
 			it = find(true_matches[index1].begin(), true_matches[index1].end(), index2);
 			if(it != true_matches[index1].end())
 			{
 				hit_count++;
+			}
+		}
+		else 			// index1 > index2
+		{
+			std::unordered_set<int>::iterator it = match_log[index2].find(index1);
+			if(it == match_log[index2].end())
+			{
+				match_count++;
+				vector<size_t>::iterator it1;
+				it1 = find(true_matches[index2].begin(), true_matches[index2].end(), index1);
+				if(it1 != true_matches[index2].end())
+				{
+					hit_count++;
+				}
 			}
 		}
 	}
@@ -131,77 +149,77 @@ int main(int argc, char **argv)
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
 
-	Eigen::MatrixXf gt_mat = Eigen::MatrixXf::Constant(image_num, image_num, -1);
-	for(int i = 0; i < image_num; i++)
-	{
-		for(int j = 0; j < true_matches[i].size(); j++)
-		{
-			gt_mat(i, true_matches[i][j]) = 1;
-			gt_mat(true_matches[i][j], i) = 1;
-		}
-	}
+	// Eigen::MatrixXf gt_mat = Eigen::MatrixXf::Constant(image_num, image_num, -1);
+	// for(int i = 0; i < image_num; i++)
+	// {
+	// 	for(int j = 0; j < true_matches[i].size(); j++)
+	// 	{
+	// 		gt_mat(i, true_matches[i][j]) = 1;
+	// 		gt_mat(true_matches[i][j], i) = 1;
+	// 	}
+	// }
 
-	// random sampling ground truth and form the sample matrix M
-	Eigen::MatrixXf sample_mt = Eigen::MatrixXf::Constant(image_num, image_num, 0);
+	// // random sampling ground truth and form the sample matrix M
+	// Eigen::MatrixXf sample_mt = Eigen::MatrixXf::Constant(image_num, image_num, 0);
 
-	const float sample_ratio = 0.02;
-	const int sample_size = image_num * sample_ratio;
-	vector<vector<int> > sample_set;
-	sample_set.resize(image_num);
+	// const float sample_ratio = 0.02;
+	// const int sample_size = image_num * sample_ratio;
+	// vector<vector<int> > sample_set;
+	// sample_set.resize(image_num);
 
-	// sample without replacement
-	for(int i = 0; i < image_num; i++)
-	{
-		for(int j = 0; j < sample_size; j++)
-		{
-			int curr_idx = rand() % image_num;
-			int k;
-			for(k = 0; k < j; k++)
-			{
-				if(curr_idx == sample_set[i][k]) 
-				{
-					j--; k = -1;
-					break;
-				}
-			}
-			if(k != -1)
-				sample_set[i].push_back(curr_idx);
-		}
-		assert(sample_set[i] == sample_size);
-	}
+	// // sample without replacement
+	// for(int i = 0; i < image_num; i++)
+	// {
+	// 	for(int j = 0; j < sample_size; j++)
+	// 	{
+	// 		int curr_idx = rand() % image_num;
+	// 		int k;
+	// 		for(k = 0; k < j; k++)
+	// 		{
+	// 			if(curr_idx == sample_set[i][k]) 
+	// 			{
+	// 				j--; k = -1;
+	// 				break;
+	// 			}
+	// 		}
+	// 		if(k != -1)
+	// 			sample_set[i].push_back(curr_idx);
+	// 	}
+	// 	assert(sample_set[i] == sample_size);
+	// }
 
-	int count = 0;
-	for(int i = 0; i < image_num; i++)
-	{
-		for(int j = 0; j < sample_size; j++)
-		{
-			sample_mt(i, sample_set[i][j]) = gt_mat(i, sample_set[i][j]);
-			sample_mt(sample_set[i][j], i) = gt_mat(i, sample_set[i][j]); 
-			if(gt_mat(i, sample_set[i][j]) == 1)
-			{
-				count++;
-			}
-		}
-	}
-	float step_size = 1.2 / sample_ratio;
-	float tolerance = 1e-4;	
-	float tau = 100000;
-	int max_iter = 30;
+	// int count = 0;
+	// for(int i = 0; i < image_num; i++)
+	// {
+	// 	for(int j = 0; j < sample_size; j++)
+	// 	{
+	// 		sample_mt(i, sample_set[i][j]) = gt_mat(i, sample_set[i][j]);
+	// 		sample_mt(sample_set[i][j], i) = gt_mat(i, sample_set[i][j]); 
+	// 		if(gt_mat(i, sample_set[i][j]) == 1)
+	// 		{
+	// 			count++;
+	// 		}
+	// 	}
+	// }
+	// float step_size = 1.2 / sample_ratio;
+	// float tolerance = 1e-4;	
+	// float tau = 100000;
+	// int max_iter = 30;
 
-	int k0 = tau / (step_size * Fnorm(sample_mt));
-	//cout << tau << " " << step_size << " " << Fnorm(sample_mt) << " " << k0 <<endl;
-	//Eigen::MatrixXf Y = 
-	Eigen::MatrixXf X = Eigen::MatrixXf::Constant(image_num, image_num, 0);
-	Eigen::MatrixXf Y = k0 * step_size * sample_mt;
-	int r0 = 0;
-	for(int k = 0; k < max_iter; k++)
-	{
-		cout << "iteration " << k  << ": " << endl;
-		Eigen::JacobiSVD<Eigen::MatrixXf> svd(sample_mt, Eigen::ComputeThinU | Eigen::ComputeThinV);
-		// Eigen::MatrixXf U = svd.matrixU();
-		// Eigen::MatrixXf V = svd.matrixV();
-		// cout << svd.singularValues() << endl;
-	}
+	// int k0 = tau / (step_size * Fnorm(sample_mt));
+	// //cout << tau << " " << step_size << " " << Fnorm(sample_mt) << " " << k0 <<endl;
+	// //Eigen::MatrixXf Y = 
+	// Eigen::MatrixXf X = Eigen::MatrixXf::Constant(image_num, image_num, 0);
+	// Eigen::MatrixXf Y = k0 * step_size * sample_mt;
+	// int r0 = 0;
+	// for(int k = 0; k < max_iter; k++)
+	// {
+	// 	cout << "iteration " << k  << ": " << endl;
+	// 	Eigen::JacobiSVD<Eigen::MatrixXf> svd(sample_mt, Eigen::ComputeThinU | Eigen::ComputeThinV);
+	// 	// Eigen::MatrixXf U = svd.matrixU();
+	// 	// Eigen::MatrixXf V = svd.matrixV();
+	// 	// cout << svd.singularValues() << endl;
+	// }
 
 
 	// Eigen::FullPivLU<Eigen::MatrixXf> lu_decomp(gt_mat);

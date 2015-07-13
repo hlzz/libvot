@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <limits>
 #include <sstream>
 #include <fstream>
+#include <unordered_set>
 #include <Eigen/Dense>
 #include <Eigen/SVD>
 
