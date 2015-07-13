@@ -196,7 +196,7 @@ int main(int argc, char **argv)
             {
                 jump_state++;
             }
-            if(MatchJump(jump_state, 1))
+            if(MatchJump(jump_state, 2))
                 break;
         }
     }

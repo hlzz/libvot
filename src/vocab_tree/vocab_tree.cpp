@@ -676,6 +676,7 @@ namespace vot
         }
 
         database_image_num++;
+        delete [] q;
         return 0;
 
         // (optional) return the image vector magnitude (unnormalized)
@@ -956,6 +957,8 @@ namespace vot
             q[i] /= mag;
         }
         root->ScoreQuery(q, branch_num, dis_type, scores);
+
+        delete [] q;
 
         return true;
     }

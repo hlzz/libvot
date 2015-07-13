@@ -162,7 +162,7 @@ namespace vot
 
 	        for(int i = 0; i < sift_filenames.size(); i++)
 	        {
-	        	if(sizeof(DTYPE) == 1)
+	        	if(sizeof(DTYPE) == 1)		// unsigned char
 	        		sift_data[i].ReadSiftFile(sift_filenames[i]);
 	        	else
 	        		sift_data[i].ReadChar2DTYPE(sift_filenames[i]);
