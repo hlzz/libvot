@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 	vector<string> sift_filenames;
 	tw::IO::ExtractLines(sift_file, sift_filenames);
 	size_t image_num = sift_filenames.size();
-	vector<vector<size_t> > true_matches;
+	vector<unordered_set<size_t> > true_matches;
 	true_matches.resize(image_num);
 
 	// read ground truth match file
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 		if(finlier > inlier_thresh && index1 < index2)
 		{
 			// note that index1 < index2
-			true_matches[index1].push_back(index2);
+			true_matches[index1].insert(index2);
 			ground_truth_count++;
 		}
 	}
@@ -112,8 +112,7 @@ int main(int argc, char **argv)
 		{
 			match_count++;
 			match_log[index1].insert(index2);
-			vector<size_t>::iterator it;
-			it = find(true_matches[index1].begin(), true_matches[index1].end(), index2);
+			std::unordered_set<size_t>::iterator it = true_matches[index1].find(index2);
 			if(it != true_matches[index1].end())
 			{
 				hit_count++;
@@ -125,8 +124,7 @@ int main(int argc, char **argv)
 			if(it == match_log[index2].end())
 			{
 				match_count++;
-				vector<size_t>::iterator it1;
-				it1 = find(true_matches[index2].begin(), true_matches[index2].end(), index1);
+				std::unordered_set<size_t>::iterator it1 = true_matches[index2].find(index1);
 				if(it1 != true_matches[index2].end())
 				{
 					hit_count++;
