@@ -1,4 +1,4 @@
 1. detailed Unit test for each module
 2. do ClearTree job in destructor function
 3. boost the retrieval performance
-4. multi-threaded vocabulary tree build
+4. all logistic work (README.md, manual, etc.)
