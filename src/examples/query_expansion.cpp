@@ -157,12 +157,13 @@ int main(int argc, char **argv)
         ss << line;
         ss >> index1 >> index2;
 
-        if(index1 < index2) // note that index1 < index2 in the first place, that's how the vocabulary tree list is generated
-        {
-            rank_list[index1].push_back(index2);
-        }
+        rank_list[index1].push_back(index2);
     }
     fin1.close();
+
+    // (index1, index2) and (index2, index1) are the same. In case that they were counted twice, use a unordered_set
+    std::vector<std::unordered_set<int> > vocab_matches;
+    vocab_matches.resize(image_num);
 
     // select the useful first layer connection
     for(int i = 0; i < image_num; i++)
@@ -171,34 +172,43 @@ int main(int argc, char **argv)
         for(int j = 0; j < rank_list[i].size(); j++)
         {
             // if the previous one is a true match, then continue; Otherwise stop matching for this image
-            match_count++;
-            visit_mat[i][rank_list[i][j]] = true;
-            visit_mat[i][rank_list[i][j]] = true;
-
-            // this searches in the ground-truth match list, which simulates the matching process
-            int k = 0;
-            for(; k < true_matches[i].size(); k++)
+            int index1 = i, index2 = rank_list[i][j];
+            if(index2 < index1)
             {
-                if(true_matches[i][k].dst == rank_list[i][j])
+                std::swap(index1, index2);
+            }
+            std::unordered_set<int>::iterator it = vocab_matches[index1].find(index2);
+            if(it == vocab_matches[index1].end())   // this pair (index1, index2) hasn't been matched
+            {
+                vocab_matches[index1].insert(index2);
+                match_count++;
+                visit_mat[index1][index2] = true;
+                visit_mat[index2][index1] = true;
+                // this searches in the ground-truth match list, which simulates the matching process
+                int k = 0;
+                for(; k < true_matches[index1].size(); k++)
                 {
-                    hit_count++; 
-                    image_graph.addEdge(true_matches[i][k]);
-                    vot::LinkNode temp(true_matches[i][k].dst, 
-                                       true_matches[i][k].src, 
-                                       true_matches[i][k].score, 
-                                       true_matches[i][k].p_match, 
-                                       true_matches[i][k].g_match);
-                    image_graph.addEdge(temp);
-                    jump_state = 0;
-                    break;
+                    if(true_matches[index1][k].dst == index2)
+                    {
+                        hit_count++; 
+                        image_graph.addEdge(true_matches[index1][k]);
+                        vot::LinkNode temp(true_matches[index1][k].dst, 
+                                           true_matches[index1][k].src, 
+                                           true_matches[index1][k].score, 
+                                           true_matches[index1][k].p_match, 
+                                           true_matches[index1][k].g_match);
+                        image_graph.addEdge(temp);
+                        jump_state = 0;
+                        break;
+                    }
                 }
+                if(k == true_matches[index1].size())     // no match for this image pair
+                {
+                    jump_state++;
+                }
+                if(MatchJump(jump_state, 100))
+                    break;
             }
-            if(k == true_matches[i].size())     // no match for this image pair
-            {
-                jump_state++;
-            }
-            if(MatchJump(jump_state, 2))
-                break;
         }
     }
 
@@ -212,42 +222,41 @@ int main(int argc, char **argv)
     for(int iter = 0; iter < 2; iter++)
     {
 
-    vector<vector<vot::LinkNode> > expansion_lists;
-    image_graph.QueryExpansion(expansion_lists, visit_mat, query_level, qe_inlier_thresh);
+        vector<vector<vot::LinkNode> > expansion_lists;
+        image_graph.QueryExpansion(expansion_lists, visit_mat, query_level, qe_inlier_thresh);
 
-    // recompute precision and recall after query expansion
-    match_count = 0;
-    hit_count = 0;
-    for(int i = 0; i < image_num; i++)
-    {
-        for(int j = i+1; j < image_num; j++)
+        // recompute precision and recall after query expansion
+        match_count = 0;
+        hit_count = 0;
+        for(int i = 0; i < image_num; i++)
         {
-            if(visit_mat[i][j])
+            for(int j = i+1; j < image_num; j++)
             {
-                match_count++;
-                for(int k = 0; k < true_matches[i].size(); k++)
+                if(visit_mat[i][j])
                 {
-                    if(true_matches[i][k].dst == j)
+                    match_count++;
+                    for(int k = 0; k < true_matches[i].size(); k++)
                     {
-                        hit_count++;
-                        image_graph.addEdge(true_matches[i][k]);
-                        vot::LinkNode temp(true_matches[i][k].dst, 
-                                           true_matches[i][k].src, 
-                                           true_matches[i][k].score, 
-                                           true_matches[i][k].p_match, 
-                                           true_matches[i][k].g_match);
-                        image_graph.addEdge(temp);
-                        break;
+                        if(true_matches[i][k].dst == j)
+                        {
+                            hit_count++;
+                            image_graph.addEdge(true_matches[i][k]);
+                            vot::LinkNode temp(true_matches[i][k].dst, 
+                                               true_matches[i][k].src, 
+                                               true_matches[i][k].score, 
+                                               true_matches[i][k].p_match, 
+                                               true_matches[i][k].g_match);
+                            image_graph.addEdge(temp);
+                            break;
+                        }
                     }
                 }
             }
         }
-    }
-    precision = (double) hit_count / match_count;
-    recall = (double) hit_count / ground_truth_count;
-    cout << "hit / match / ground_truth: " << hit_count << " " << match_count << " " << ground_truth_count << "\n";
-    cout << "precision / recall: " << precision << " " << recall << "\n";
-
+        precision = (double) hit_count / match_count;
+        recall = (double) hit_count / ground_truth_count;
+        cout << "hit / match / ground_truth: " << hit_count << " " << match_count << " " << ground_truth_count << "\n";
+        cout << "precision / recall: " << precision << " " << recall << "\n";
     }
 
     // write the final match pair file
