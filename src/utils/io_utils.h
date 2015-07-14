@@ -26,18 +26,15 @@ namespace tw
     public:
         template <class charType>
         static void TrimLeft(std::basic_string<charType> & str, const char *chars2remove = NULL);
-
         template <class charType>
         static void TrimRight(std::basic_string<charType> & str, const char *chars2remove = NULL);
-
         template <class charType>
         static void Trim(std::basic_string<charType> & str, const char *chars2remove = NULL);
-
         static bool IsEmptyString(const std::string & str);
-
         static int ExtractLines(const char *input_file_path, std::vector<std::string> & lines);
-
         static bool IsFileExist(const char *filename);
+        static std::string JoinPath(std::string folder, std::string filename);
+        static bool Mkdir(const std::string path);
     };
 
 }   // end of namespace tw

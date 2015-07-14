@@ -1,9 +1,24 @@
 #include <cstdlib>
-#include <sys/stat.h>
 #include <fstream>
 #include <vector>
 #include "io_utils.h"
 #include "../image_graph/image_graph.h"
+
+#if defined(__WIN32__) || defined(_MSC_VER)
+#include <io.h>
+#include <windows.h>
+#include <sys/stat.h>
+#if defined(_MSC_VER)
+#include <direct.h>
+#endif
+#else
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+#if defined(__MACH__)
+#include <unistd.h>
+#endif
+#endif
 
 namespace tw
 {
@@ -167,5 +182,45 @@ namespace tw
     {
         struct stat buffer;
         return (stat(filename, &buffer) == 0);
+    }
+
+    std::string IO::JoinPath(std::string folder, std::string filename)
+    {
+        #ifdef WIN32
+        std::string sep = "\\";
+        #else
+        std::string sep = "/";
+        #endif
+        if(folder.length() > 0)
+        {
+            if(folder[folder.size()-1] != sep[0])
+                return folder+sep+filename;
+            else
+                return folder+filename;
+        }
+        else
+            return filename;
+    }
+
+    bool IO::Mkdir(const std::string path)
+    {
+        #ifdef _MSC_VER
+        int mkDirRes = _mkdir(path.c_str());
+        #elif __WIN32__
+        int mkDirRes = mkdir(path.c_str());
+        #else
+        int mkDirRes = mkdir(path.c_str(), S_IRWXU | S_IRGRP | S_IROTH);
+        #endif
+
+        if (0 == mkDirRes || (mkDirRes !=0 && EEXIST == errno)  )
+        {
+            std::cout << "Create folder \"" << path<< "\"" << std::endl;
+        }
+        else
+        {
+            std::cout << "The folder may exist \"" << path<< "\"" << std::endl;
+        };
+
+        return mkDirRes == 0;
     }
 }   // end of namespace tw

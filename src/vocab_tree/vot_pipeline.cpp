@@ -56,6 +56,7 @@ namespace vot
 		if(sift_type == 0) 
 		{
 			sift_data.resize(sample_size); 
+			std::cout << "Reading sift (type 0) files...\n";
 			for(size_t i = 0; i < sample_size; i++) 
 			{
 				if(sizeof(DTYPE) == 1)
