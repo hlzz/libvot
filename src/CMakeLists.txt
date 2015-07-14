@@ -6,8 +6,7 @@ set(LIBVOT_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party
     ${CMAKE_CURRENT_SOURCE_DIR}/vocab_tree
     ${CMAKE_CURRENT_SOURCE_DIR}/examples
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party)
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils)
 include_directories(${LIBVOT_INCLUDES})
 
 # utility functions
