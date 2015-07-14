@@ -206,7 +206,7 @@ int main(int argc, char **argv)
                 {
                     jump_state++;
                 }
-                if(MatchJump(jump_state, 100))
+                if(MatchJump(jump_state,3))
                     break;
             }
         }
@@ -240,6 +240,7 @@ int main(int argc, char **argv)
                         if(true_matches[i][k].dst == j)
                         {
                             hit_count++;
+                            // note that image graph won't add edges that have already in the graph
                             image_graph.addEdge(true_matches[i][k]);
                             vot::LinkNode temp(true_matches[i][k].dst, 
                                                true_matches[i][k].src, 

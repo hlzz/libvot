@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     std::string tree_output = tw::IO::JoinPath(output_directory, std::string("tree.out"));
     std::string db_output = tw::IO::JoinPath(output_directory, std::string("db.out"));
     std::string match_output = tw::IO::JoinPath(output_directory, std::string("match.out"));
-    std::string filtered_output = tw::IO::JoinPath(output_directory, std::string("match"));
+    std::string filtered_output = tw::IO::JoinPath(output_directory, std::string("match_pairs"));
 
     // create folder
     tw::IO::Mkdir(output_directory);

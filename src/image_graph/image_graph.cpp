@@ -17,6 +17,7 @@ namespace vot
     {
         size_ = size;
         adj_lists_.resize(size);
+        adj_sets_.resize(size);
     }
 
     ImageGraph::ImageGraph(const std::vector<std::string> &image_filenames, const std::vector<std::string> &sift_filenames)
@@ -26,17 +27,22 @@ namespace vot
         sift_filenames_ = sift_filenames;
         assert(sift_filenames.size() == image_filenames.size());
         adj_lists_.resize(size_);
+        adj_sets_.resize(size_);
     }
 
     void ImageGraph::addEdge(int src, int dst, double score)
     {
-        adj_lists_[src].push_back(vot::LinkNode(src, dst, score));
+        std::unordered_set<int>::iterator it = adj_sets_[src].find(dst);
+        if(it == adj_sets_[src].end())
+            adj_lists_[src].push_back(vot::LinkNode(src, dst, score));
     }
 
     void ImageGraph::addEdge(vot::LinkNode n)
     {
-        // Note: here it doesn't check repitition
-        adj_lists_[n.src].push_back(n);
+        int src = n.src, dst = n.dst;
+        std::unordered_set<int>::iterator it = adj_sets_[src].find(dst);
+        if(it == adj_sets_[src].end())
+            adj_lists_[src].push_back(n);
     }
 
     int ImageGraph::NumConnectedComponents(int threshold)
