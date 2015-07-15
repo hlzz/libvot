@@ -56,6 +56,7 @@ namespace vot
 		if(sift_type == 0) 
 		{
 			sift_data.resize(sample_size); 
+			std::cout << "Reading sift (type 0) files...\n";
 			for(size_t i = 0; i < sample_size; i++) 
 			{
 				if(sizeof(DTYPE) == 1)
@@ -419,8 +420,10 @@ namespace vot
 	    }
 
 	    // write match pairs (names and indexes) to two files
-		std::ofstream fout("match_pairs_idx.txt");		// used for match (sift filenames pairs)
-		std::ofstream fout1("match_pairs_idx");			// used for query expansion (sift index pairs)
+	    std::string sift_index_file(output);
+	    std::string sift_name_file = sift_index_file+".txt";
+		std::ofstream fout(sift_name_file);				// used for match (sift filenames pairs)
+		std::ofstream fout1(sift_index_file);			// used for query expansion (sift index pairs)
 		if(!fout.is_open() || !fout1.is_open())
 	    {
 	        std::cout << "[FilterMatchList] Fail to open the filtered match file\n";

@@ -282,13 +282,13 @@ namespace vot
                 delete [] sub_means[i];
             }
         }
-        // if(depth_curr < 2)
-        // {
-        //     for(int i = 0; i < bf; i++)
-        //     {
-        //         std::cout << "children " << i << " counts: " << counts[i] << std::endl;
-        //     }
-        // }
+        if(depth_curr < 2)
+        {
+            for(int i = 0; i < bf; i++)
+            {
+                std::cout << "children " << i << " counts: " << counts[i] << std::endl;
+            }
+        }
 
         delete [] counts;
         return true;

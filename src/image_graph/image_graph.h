@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <cassert>
+#include <unordered_set>
 
 namespace vot
 {
@@ -49,7 +50,8 @@ namespace vot
 		size_t size_;
 		std::vector<std::string> image_filenames_;
 		std::vector<std::string> sift_filenames_;
-		std::vector<std::vector<LinkNode> > adj_lists_;
+		std::vector<std::vector<LinkNode> > adj_lists_;		//!< adjacent list that save the connection
+		std::vector<std::unordered_set<int> > adj_sets_;		//!< this unordered_set is used to insert nodes
 	};
 }	// end of namespace vot
 
