@@ -21,6 +21,8 @@ namespace tw
 		size_t index;	
 	};
 
+	int CompareIndexedFloat(const void *a, const void *b); //!< compare function for tw::IndexedFloat
+
 }	// end of namespace tw
 
 

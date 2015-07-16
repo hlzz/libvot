@@ -32,4 +32,16 @@ namespace tw
 		father[y] = x;
 		return true;
 	}
+
+
+	int CompareIndexedFloat(const void *a, const void *b)
+	{
+		tw::IndexedFloat *i1, *i2;
+		i1 = (tw::IndexedFloat *)a;
+		i2 = (tw::IndexedFloat *)b;
+		if(i1->value < i2->value)
+			return 1;
+		else 
+			return -1;
+	}
 }	// end of namespace tw

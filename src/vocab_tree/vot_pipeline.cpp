@@ -199,17 +199,6 @@ namespace vot
 	    return true;
 	}
 
-	int CompareIndexedFloat(const void *a, const void *b)
-	{
-		tw::IndexedFloat *i1, *i2;
-		i1 = (tw::IndexedFloat *)a;
-		i2 = (tw::IndexedFloat *)b;
-		if(i1->value < i2->value)
-			return 1;
-		else 
-			return -1;
-	}
-
 	std::mutex match_file_mutex;
 	void MultiQueryDatabase(vot::VocabTree *tree, 
 							std::vector<tw::SiftData> *sift_data, 
@@ -233,7 +222,7 @@ namespace vot
 				indexed_scores[j].value = scores[j];
 				indexed_scores[j].index = j;
 			}
-			qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
+			qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), tw::CompareIndexedFloat);
 
 			match_file_mutex.lock();
 			for(size_t j = 0; j < db_image_num; j++)
@@ -302,7 +291,7 @@ namespace vot
 		    		indexed_scores[j].value = scores[j];
 		    		indexed_scores[j].index = j;
 		    	}
-		    	qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), CompareIndexedFloat);
+		    	qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), tw::CompareIndexedFloat);
 		    	for(size_t j = 0; j < db_image_num; j++)
 		    	{
 		    		fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j].index, indexed_scores[j].value);
