@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     // Karger's algorithm requires the graph to be a connected component
     if(ig.NumConnectedComponents())
     {
-        cuts = ig.KargerCut();
+        if(!ig.KargerCut(cuts)) return -1;
         cout << cuts[0].size() << " " << cuts[1].size() << endl;
         cout << "part1\n";
         for(int i = 0; i < cuts[0].size(); i++)
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
 
     if(large_graph.NumConnectedComponents())
     {
-        cuts = large_graph.KargerCut();
+        large_graph.KargerCut(cuts);
         cout << cuts[0].size() << " " << cuts[1].size() << endl;
         cout << "part1\n";
         for(int i = 0; i < cuts[0].size(); i++)

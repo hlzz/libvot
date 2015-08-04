@@ -48,8 +48,8 @@ namespace tw
     template double* allocate_2d<double>(double ***array, int row, int col);
     template void free_2d<double>(double ***array, double *data);
 
-    template vot::LinkNode* allocate_2d<vot::LinkNode>(vot::LinkNode ***array, int row, int col);
-    template void free_2d<vot::LinkNode>(vot::LinkNode ***array, vot::LinkNode *data);
+    template vot::LinkEdge* allocate_2d<vot::LinkEdge>(vot::LinkEdge ***array, int row, int col);
+    template void free_2d<vot::LinkEdge>(vot::LinkEdge ***array, vot::LinkEdge *data);
 
     template <class charType>
     void IO::TrimLeft(std::basic_string<charType> & str, const char* chars2remove)

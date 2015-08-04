@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     tw::IO::ExtractLines(sift_file, sift_filenames);
     size_t image_num = sift_filenames.size();
 
-    vector<vector<vot::LinkNode> > true_matches;
+    vector<vector<vot::LinkEdge> > true_matches;
     true_matches.resize(image_num);
 
     // read ground truth match file
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
             // fill in the ground truth match matrix
             if(finlier > inlier_thresh)
             {
-                vot::LinkNode temp(index1, index2, 0.0, nmatch, finlier);
+                vot::LinkEdge temp(index1, index2, 0.0, nmatch, finlier);
                 true_matches[index1].push_back(temp);
                 ground_truth_count++;
             }
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
                     {
                         hit_count++; 
                         image_graph.addEdge(true_matches[index1][k]);
-                        vot::LinkNode temp(true_matches[index1][k].dst, 
+                        vot::LinkEdge temp(true_matches[index1][k].dst, 
                                            true_matches[index1][k].src, 
                                            true_matches[index1][k].score, 
                                            true_matches[index1][k].p_match, 
@@ -223,7 +223,7 @@ int main(int argc, char **argv)
     for(int iter = 0; iter < 2; iter++)
     {
 
-        vector<vector<vot::LinkNode> > expansion_lists;
+        vector<vector<vot::LinkEdge> > expansion_lists;
         image_graph.QueryExpansion(expansion_lists, visit_mat, query_level, qe_inlier_thresh);
 
         // recompute precision and recall after query expansion
@@ -243,7 +243,7 @@ int main(int argc, char **argv)
                             hit_count++;
                             // note that image graph won't add edges that have already in the graph
                             image_graph.addEdge(true_matches[i][k]);
-                            vot::LinkNode temp(true_matches[i][k].dst, 
+                            vot::LinkEdge temp(true_matches[i][k].dst, 
                                                true_matches[i][k].src, 
                                                true_matches[i][k].score, 
                                                true_matches[i][k].p_match, 
