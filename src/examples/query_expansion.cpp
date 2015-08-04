@@ -173,6 +173,7 @@ int main(int argc, char **argv)
         {
             // if the previous one is a true match, then continue; Otherwise stop matching for this image
             int index1 = i, index2 = rank_list[i][j];
+            if(index1 == index2) continue;
             if(index2 < index1)
             {
                 std::swap(index1, index2);

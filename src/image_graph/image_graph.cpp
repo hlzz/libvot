@@ -166,7 +166,8 @@ namespace vot
             vot::LinkNode temp(src, adj_lists_[tgt][k].dst, score * adj_lists_[tgt][k].score);
             if(!visit_mat[src][temp.dst] && adj_lists_[tgt][k].g_match > inlier_threshold)
             {
-                expansion_lists[src].push_back(temp);
+                if(temp.src != temp.dst)
+                    expansion_lists[src].push_back(temp);
                 visit_mat[src][temp.dst] = true;
                 visit_mat[temp.dst][src] = true;
                 QueryExpansionSub(src, temp.dst, temp.score, visit_mat, expansion_lists, level-1, inlier_threshold);
@@ -181,7 +182,7 @@ namespace vot
                                                                         int inlier_threshold)
     {        
         const int MAX_LEVEL = 5;
-        if(level < 1 || level > 5)
+        if(level < 1 || level > MAX_LEVEL)
         {
             std::cout << "[QueryExpansion] Error: exceed the maximum expansion level (5)\n";
             return expansion_lists;
@@ -194,7 +195,6 @@ namespace vot
             int size_i = adj_lists_[i].size();
             for(int j = 0; j < size_i; j++)
             {
-                expansion_lists[i].push_back(adj_lists_[i][j]);
                 visit_mat[i][adj_lists_[i][j].dst] = true;
                 if(adj_lists_[i][j].g_match > inlier_threshold)
                     QueryExpansionSub(i, adj_lists_[i][j].dst, adj_lists_[i][j].score, visit_mat, expansion_lists, level - 1, inlier_threshold);
