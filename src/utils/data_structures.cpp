@@ -8,7 +8,7 @@ namespace tw
 	{
 		father = new size_t[n];
 		size = n;
-		for(int i = 0; i < size; i++)
+		for(size_t i = 0; i < size; i++)
 			father[i] = i;
 	}
 

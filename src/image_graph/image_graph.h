@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include <cassert>
-#include <unordered_set>
+#include <unordered_map>
 
 namespace vot
 {
@@ -44,14 +44,15 @@ namespace vot
                                                                 bool **visit_mat,
                                                                 int level,
                                                                 int inlier_threshold = 150);
+        int AdjListSize(int idx);
         void ShowInfo();
 
 	private:
-		size_t size_;
-		std::vector<std::string> image_filenames_;
-		std::vector<std::string> sift_filenames_;
-		std::vector<std::vector<LinkNode> > adj_lists_;		//!< adjacent list that save the connection
-		std::vector<std::unordered_set<int> > adj_sets_;		//!< this unordered_set is used to insert nodes
+		int size_;                                                  //!< the total number of nodes in the graph
+		std::vector<std::string> image_filenames_;                  //!< this stores the names of the image files, if available
+		std::vector<std::string> sift_filenames_;                   //!< this stores the names of the sift files, if available
+		std::vector<std::vector<LinkNode> > adj_lists_;		        //!< adjacent list that save the connection
+		std::vector<std::unordered_map<int, int> > adj_maps_;		//!< find the edge index by adj_maps_[src][dst]
 	};
 }	// end of namespace vot
 

@@ -27,24 +27,16 @@ TEST(ImageGraph, NumConnectedComponents)
 	EXPECT_EQ(2, q.NumConnectedComponents());		
 }
 
-TEST(VocabTree, Pipeline)
+TEST(ImageGraph, AddRepeatedEdge)
 {
-    const char *sift_input_file = "small_stadium/sift_list";
-    const char *tree_output = "tree.out";
-    const char *db_output = "db.out";
-    const char *match_output = "match.out";
-    const char *filtered_output = "match";
-
-    // optional parameters
-    int depth = 6;
-    int branch_num = 8;
-    int sift_type = 0;
-    int thread_num = sysconf(_SC_NPROCESSORS_ONLN);     // this works on unix and mac
-    int start_id = 0;
-    int num_matches = 50;
-
-    vot::BuildVocabTree(sift_input_file, tree_output, depth, branch_num, sift_type, thread_num);
-    vot::BuildImageDatabase(sift_input_file, tree_output, db_output, sift_type, start_id, thread_num);
-    vot::QueryDatabase(db_output, sift_input_file, match_output, sift_type, thread_num);
-    vot::FilterMatchList(sift_input_file, match_output, filtered_output, num_matches);
+    vot::ImageGraph g(10);
+    g.addEdge(0, 1, 0);
+    g.addEdge(0, 1, 1);
+    g.addEdge(0, 1, 100);
+    // also test the other direcition; this means to protect double-add
+    g.addEdge(1, 0, 0.0);
+    g.addEdge(1, 0, 1);
+    g.addEdge(1, 0, 200);
+    EXPECT_EQ(1, g.AdjListSize(0));
+    EXPECT_EQ(1, g.AdjListSize(1));
 }
