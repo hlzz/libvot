@@ -192,13 +192,13 @@ int main(int argc, char **argv)
                     if(true_matches[index1][k].dst == index2)
                     {
                         hit_count++; 
-                        image_graph.addEdge(true_matches[index1][k]);
+                        image_graph.AddEdge(true_matches[index1][k]);
                         vot::LinkEdge temp(true_matches[index1][k].dst, 
                                            true_matches[index1][k].src, 
                                            true_matches[index1][k].score, 
                                            true_matches[index1][k].p_match, 
                                            true_matches[index1][k].g_match);
-                        image_graph.addEdge(temp);
+                        image_graph.AddEdge(temp);
                         jump_state = 0;
                         break;
                     }
@@ -242,13 +242,13 @@ int main(int argc, char **argv)
                         {
                             hit_count++;
                             // note that image graph won't add edges that have already in the graph
-                            image_graph.addEdge(true_matches[i][k]);
+                            image_graph.AddEdge(true_matches[i][k]);
                             vot::LinkEdge temp(true_matches[i][k].dst, 
                                                true_matches[i][k].src, 
                                                true_matches[i][k].score, 
                                                true_matches[i][k].p_match, 
                                                true_matches[i][k].g_match);
-                            image_graph.addEdge(temp);
+                            image_graph.AddEdge(temp);
                             break;
                         }
                     }

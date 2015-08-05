@@ -16,19 +16,37 @@ namespace vot
 ImageGraph::ImageGraph(int size)
 {
     size_ = size;
-    adj_maps_.resize(size);
+    adj_maps_.resize(size_);
+    nodes_.resize(size_);
+    for(int i = 0; i < size_; i++)
+        nodes_[i] = ImageNode();
 }
 
 ImageGraph::ImageGraph(const std::vector<std::string> &image_filenames, const std::vector<std::string> &sift_filenames)
 {
-    size_ = image_filenames.size();
-    image_filenames_ = image_filenames;
-    sift_filenames_ = sift_filenames;
     assert(sift_filenames.size() == image_filenames.size());
+    size_ = image_filenames.size();
     adj_maps_.resize(size_);
+    nodes_.resize(size_);
+    for(int i = 0; i < size_; i++)
+        nodes_[i] = ImageNode(image_filenames[i], sift_filenames[i]);
 }
 
-void ImageGraph::addEdge(int src, int dst, double score)
+void ImageGraph::AddNode()
+{
+    nodes_.push_back(vot::ImageNode());
+    adj_maps_.push_back(EdgeMap());
+    size_ = nodes_.size();
+}
+
+void ImageGraph::AddNode(const vot::ImageNode &n)
+{
+    nodes_.push_back(vot::ImageNode(n));
+    adj_maps_.push_back(EdgeMap());
+    size_ = nodes_.size();
+}
+
+void ImageGraph::AddEdge(int src, int dst, double score)
 {
     EdgeMap::iterator it = adj_maps_[src].find(dst);
     if(it == adj_maps_[src].end())
@@ -37,7 +55,7 @@ void ImageGraph::addEdge(int src, int dst, double score)
     }
 }
 
-void ImageGraph::addEdge(vot::LinkEdge n)
+void ImageGraph::AddEdge(const vot::LinkEdge &n)
 {
     int src = n.src, dst = n.dst;
     EdgeMap::iterator it = adj_maps_[src].find(dst);
@@ -67,9 +85,8 @@ int ImageGraph::NumConnectedComponents(int threshold)
             int component_size = 1;
             while(!index_queue.empty())
             {
-                size_t curr = index_queue.front();
+                int curr = index_queue.front();
                 index_queue.pop();
-                //for(int i = 0; i < adj_lists_[curr].size(); i++)
                 for(EdgeMap::iterator it = adj_maps_[curr].begin(); it != adj_maps_[curr].end(); it++)
                 {
                     if(!is_visited[it->second.dst])
@@ -197,8 +214,6 @@ std::vector<std::vector<vot::LinkEdge> > ImageGraph::QueryExpansion(Edge2dArray 
     return expansion_lists;
 }
 
-int ImageGraph::AdjListSize(int idx) { return adj_maps_[idx].size(); }
-
 void ImageGraph::ShowInfo()
 {
     std::cout << "[ImageGraph] Node size: " << size_ << "\n";
@@ -210,5 +225,8 @@ void ImageGraph::ShowInfo()
         }
     }
 }
+
+int ImageGraph::AdjListSize(int idx) { return adj_maps_[idx].size(); }
+int ImageGraph::NodeNum() {return size_;}
 
 }   // end of namespace vot

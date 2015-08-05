@@ -22,6 +22,20 @@ struct LinkEdge
         src(src_), dst(dst_), score(score_), p_match(p_match_), g_match(g_match_) {}
 };
 
+struct ImageNode
+{
+    std::string image_name;
+    std::string sift_name;
+    ImageNode(const std::string &iname, const std::string &sname): image_name(iname), sift_name(sname) {}
+    ImageNode(): image_name(""), sift_name("") {}
+    //! Copy constructor
+    ImageNode(const ImageNode & node)
+    {
+        image_name = node.image_name;
+        sift_name = node.sift_name;
+    }
+};
+
 class ImageGraph
 {
     typedef std::unordered_map<int, LinkEdge> EdgeMap;
@@ -31,11 +45,15 @@ public:
     ImageGraph(int size);
     //! Brief construct a image graph with filenames
     ImageGraph(const std::vector<std::string> &image_filenames, const std::vector<std::string> &sift_filenames);
-    void addEdge(int src, int dst, double score);
-    void addEdge(vot::LinkEdge n);
+    void AddNode();
+    void AddNode(const vot::ImageNode &n);
+    void AddEdge(int src, int dst, double score);
+    void AddEdge(const vot::LinkEdge &n);
     int NumConnectedComponents(int threshold = 0);
     bool KargerCut(std::vector<std::vector<int> > &global_min_cut);
+    //! Brief Remove the singleton node from the graph
     bool Consolidate(int k);
+    //! Brief Query expansion and its sub-routine
     std::vector<std::vector<vot::LinkEdge> > QueryExpansion(Edge2dArray &expansion_lists,
                                                             bool **visit_mat,
                                                             int level,
@@ -46,13 +64,14 @@ public:
                            Edge2dArray &expansion_lists,
                            int level,
                            int inlier_threshold);
-    int AdjListSize(int idx);
     void ShowInfo();
+    //! Brief output the information
+    int AdjListSize(int idx);
+    int NodeNum();
 
 private:
     int size_;										//!< the total number of nodes in the graph
-    std::vector<std::string> image_filenames_;		//!< this stores the names of the image files, if available
-    std::vector<std::string> sift_filenames_;		//!< this stores the names of the sift files, if available
+    std::vector<ImageNode> nodes_;                  //!< this stores the nodes information
     std::vector<EdgeMap> adj_maps_;					//!< find the edge index by adj_maps_[src][dst]
 };
 }	// end of namespace vot
