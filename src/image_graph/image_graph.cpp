@@ -29,24 +29,24 @@ ImageGraph::ImageGraph(const std::vector<std::string> &image_filenames, const st
     adj_maps_.resize(size_);
     nodes_.resize(size_);
     for(int i = 0; i < size_; i++)
-        nodes_[i] = ImageNode(image_filenames[i], sift_filenames[i]);
+        nodes_[i] = ImageNode(i, image_filenames[i], sift_filenames[i]);
 }
 
-void ImageGraph::AddNode()
+void ImageGraph::addNode()
 {
     nodes_.push_back(vot::ImageNode());
     adj_maps_.push_back(EdgeMap());
     size_ = nodes_.size();
 }
 
-void ImageGraph::AddNode(const vot::ImageNode &n)
+void ImageGraph::addNode(const vot::ImageNode &n)
 {
     nodes_.push_back(vot::ImageNode(n));
     adj_maps_.push_back(EdgeMap());
     size_ = nodes_.size();
 }
 
-void ImageGraph::AddEdge(int src, int dst, double score)
+void ImageGraph::addEdge(int src, int dst, double score)
 {
     EdgeMap::iterator it = adj_maps_[src].find(dst);
     if(it == adj_maps_[src].end())
@@ -55,7 +55,7 @@ void ImageGraph::AddEdge(int src, int dst, double score)
     }
 }
 
-void ImageGraph::AddEdge(const vot::LinkEdge &n)
+void ImageGraph::addEdge(const vot::LinkEdge &n)
 {
     int src = n.src, dst = n.dst;
     EdgeMap::iterator it = adj_maps_[src].find(dst);
@@ -65,7 +65,20 @@ void ImageGraph::AddEdge(const vot::LinkEdge &n)
     }
 }
 
-int ImageGraph::NumConnectedComponents(int threshold)
+void ImageGraph::addEdgeu(int src, int dst, double score)
+{
+    addEdge(src, dst, score);
+    addEdge(dst, src, score);
+}
+
+void ImageGraph::addEdgeu(const vot::LinkEdge &n)
+{
+    addEdge(n);
+    vot::LinkEdge n_inv(n.dst, n.src, n.score, n.p_match, n.g_match);
+    addEdge(n_inv);
+}
+
+int ImageGraph::numConnectedComponents(int threshold)
 {
     bool is_visited[size_];
     for(int i = 0; i < size_; i++)
@@ -104,7 +117,7 @@ int ImageGraph::NumConnectedComponents(int threshold)
     return numCC;
 }
 
-bool ImageGraph::KargerCut(std::vector<std::vector<int> > &global_min_cut)
+bool ImageGraph::kargerCut(std::vector<std::vector<int> > &global_min_cut)
 {
     std::vector<int> global_min_cut1, global_min_cut2;
     // randomly select an edge
@@ -160,61 +173,74 @@ bool ImageGraph::KargerCut(std::vector<std::vector<int> > &global_min_cut)
     return true;
 }
 
-bool ImageGraph::Consolidate(int k)
+bool ImageGraph::consolidate(int k)
 {
     return true;
 }
 
-bool ImageGraph::QueryExpansionSub(int src, int tgt,
-                                   double score, bool **visit_mat,
-                                   Edge2dArray &expansion_lists,
-                                   int level,
-                                   int inlier_threshold)
+bool ImageGraph::queryExpansionSub(int src, int tgt,
+                                   double score, Edge2dArray &expansion_lists, bool **visit_mat, 
+                                   int level, int inlier_threshold)
 {
     if(level < 1) {return false;}
     for(EdgeMap::iterator it = adj_maps_[tgt].begin(); it != adj_maps_[tgt].end(); it++)
     {
         vot::LinkEdge temp(src, it->second.dst, score * it->second.score);
-        if(!visit_mat[src][temp.dst] && it->second.g_match > inlier_threshold)
+        if(temp.src != temp.dst && !visit_mat[src][temp.dst] && it->second.g_match >= inlier_threshold)
         {
-            if(temp.src != temp.dst)
-                expansion_lists[src].push_back(temp);
+            expansion_lists[src].push_back(temp);
             visit_mat[src][temp.dst] = true;
-            visit_mat[temp.dst][src] = true;
-            QueryExpansionSub(src, temp.dst, temp.score, visit_mat, expansion_lists, level-1, inlier_threshold);
+            queryExpansionSub(src, temp.dst, temp.score, expansion_lists, visit_mat, level-1, inlier_threshold);
         }
     }
     return true;
 }
 
-std::vector<std::vector<vot::LinkEdge> > ImageGraph::QueryExpansion(Edge2dArray &expansion_lists,
-                                                                    bool **visit_mat,
-                                                                    int level,
-                                                                    int inlier_threshold)
+bool ImageGraph::queryExpansion(Edge2dArray &expansion_lists, int level, int inlier_threshold)
 {
     const int MAX_LEVEL = 5;
     if(level < 1 || level > MAX_LEVEL)
     {
         std::cout << "[QueryExpansion] Error: exceed the maximum expansion level (5)\n";
-        return expansion_lists;
+        return false;
     }
 
+    expansion_lists.clear();
     expansion_lists.resize(size_);
+    bool **visit_mat = new bool* [size_];
+    for(int i = 0; i < size_; i++)
+    {
+        visit_mat[i] = new bool [size_];
+        memset(visit_mat[i], false, sizeof(bool) * size_);
+    }
 
+    // set the first layer connection
+    for(int i = 0; i < size_; i++)
+        for(EdgeMap::iterator it = adj_maps_[i].begin(); it != adj_maps_[i].end(); it++)
+            visit_mat[i][it->second.dst] = true;
+
+    // query expansion
     for(int i = 0; i < size_; i++)
     {
         for(EdgeMap::iterator it = adj_maps_[i].begin(); it != adj_maps_[i].end(); it++)
         {
-            visit_mat[i][it->second.dst] = true;
-            if(it->second.g_match > inlier_threshold)
-                QueryExpansionSub(i, it->second.dst, it->second.score, visit_mat, expansion_lists, level - 1, inlier_threshold);
+            if(it->second.g_match >= inlier_threshold)
+            {
+                queryExpansionSub(i, it->second.dst, it->second.score, expansion_lists, visit_mat, level - 1, inlier_threshold);
+            }
         }
     }
 
-    return expansion_lists;
+    // release the temporary memory for visit_mat
+    for(int i = 0; i < size_; i++)
+    {
+        delete [] visit_mat[i];        
+    }
+    delete [] visit_mat;
+    return true;
 }
 
-void ImageGraph::ShowInfo()
+void ImageGraph::showInfo()
 {
     std::cout << "[ImageGraph] Node size: " << size_ << "\n";
     for(int i = 0; i < size_; i++)
@@ -226,7 +252,7 @@ void ImageGraph::ShowInfo()
     }
 }
 
-int ImageGraph::AdjListSize(int idx) { return adj_maps_[idx].size(); }
-int ImageGraph::NodeNum() {return size_;}
+int ImageGraph::adjListSize(int idx) { return adj_maps_[idx].size(); }
+int ImageGraph::nodeNum() {return size_;}
 
 }   // end of namespace vot

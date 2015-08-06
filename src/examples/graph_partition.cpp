@@ -53,19 +53,19 @@ int main(int argc, char **argv)
      *  Case #1: make a undirected graph data
      */
     vot::ImageGraph ig(6);
-    ig.AddEdge(0, 1, 1.0);
-    ig.AddEdge(0, 2, 1.0);
-    ig.AddEdge(1, 2, 1.0);
-    ig.AddEdge(2, 3, 1.0);
-    ig.AddEdge(3, 4, 1.0);
-    ig.AddEdge(3, 5, 1.0);
-    ig.AddEdge(4, 5, 1.0);
+    ig.addEdge(0, 1, 1.0);
+    ig.addEdge(0, 2, 1.0);
+    ig.addEdge(1, 2, 1.0);
+    ig.addEdge(2, 3, 1.0);
+    ig.addEdge(3, 4, 1.0);
+    ig.addEdge(3, 5, 1.0);
+    ig.addEdge(4, 5, 1.0);
 
     std::vector<std::vector<int> > cuts;
     // Karger's algorithm requires the graph to be a connected component
-    if(ig.NumConnectedComponents())
+    if(ig.numConnectedComponents())
     {
-        if(!ig.KargerCut(cuts)) return -1;
+        if(!ig.kargerCut(cuts)) return -1;
         cout << cuts[0].size() << " " << cuts[1].size() << endl;
         cout << "part1\n";
         for(int i = 0; i < cuts[0].size(); i++)
@@ -86,12 +86,12 @@ int main(int argc, char **argv)
     vot::ImageGraph large_graph(image_num);
     while(fin >> src >> dst >> score)
     {
-        large_graph.AddEdge(src, dst, score);
+        large_graph.addEdge(src, dst, score);
     }
 
-    if(large_graph.NumConnectedComponents())
+    if(large_graph.numConnectedComponents())
     {
-        large_graph.KargerCut(cuts);
+        large_graph.kargerCut(cuts);
         cout << cuts[0].size() << " " << cuts[1].size() << endl;
         cout << "part1\n";
         for(int i = 0; i < cuts[0].size(); i++)

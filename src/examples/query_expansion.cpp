@@ -131,14 +131,6 @@ int main(int argc, char **argv)
     size_t match_count = 0;
     size_t hit_count = 0;
 
-    bool **visit_mat;
-    visit_mat = new bool *[image_num];
-    for(int i = 0; i < image_num; i++)
-    {
-        visit_mat[i] = new bool [image_num];
-        memset(visit_mat[i], false, sizeof(bool)*image_num);
-    }
-
     // read the original rank list of vocabulary tree
     vector<vector<size_t> > rank_list;
     rank_list.resize(image_num);
@@ -183,8 +175,6 @@ int main(int argc, char **argv)
             {
                 vocab_matches[index1].insert(index2);
                 match_count++;
-                visit_mat[index1][index2] = true;
-                visit_mat[index2][index1] = true;
                 // this searches in the ground-truth match list, which simulates the matching process
                 int k = 0;
                 for(; k < true_matches[index1].size(); k++)
@@ -192,13 +182,7 @@ int main(int argc, char **argv)
                     if(true_matches[index1][k].dst == index2)
                     {
                         hit_count++; 
-                        image_graph.AddEdge(true_matches[index1][k]);
-                        vot::LinkEdge temp(true_matches[index1][k].dst, 
-                                           true_matches[index1][k].src, 
-                                           true_matches[index1][k].score, 
-                                           true_matches[index1][k].p_match, 
-                                           true_matches[index1][k].g_match);
-                        image_graph.AddEdge(temp);
+                        image_graph.addEdgeu(true_matches[index1][k]);
                         jump_state = 0;
                         break;
                     }
@@ -224,31 +208,27 @@ int main(int argc, char **argv)
     {
 
         vector<vector<vot::LinkEdge> > expansion_lists;
-        image_graph.QueryExpansion(expansion_lists, visit_mat, query_level, qe_inlier_thresh);
+        image_graph.queryExpansion(expansion_lists, query_level, qe_inlier_thresh);
 
         // recompute precision and recall after query expansion
-        match_count = 0;
-        hit_count = 0;
         for(int i = 0; i < image_num; i++)
         {
-            for(int j = i+1; j < image_num; j++)
+            for(int j = 0; j < expansion_lists[i].size(); j++)
             {
-                if(visit_mat[i][j])
+                int index1 = i, index2 = expansion_lists[i][j].dst;
+                if(index1 > index2)
+                    std::swap(index1, index2);
+                std::unordered_set<int>::iterator it = vocab_matches[index1].find(index2);
+                if(it == vocab_matches[index1].end())
                 {
+                    vocab_matches[index1].insert(index2);
                     match_count++;
-                    for(int k = 0; k < true_matches[i].size(); k++)
+                    for(int k = 0; k < true_matches[index1].size(); k++)
                     {
-                        if(true_matches[i][k].dst == j)
+                        if(true_matches[index1][k].dst == index2)
                         {
-                            hit_count++;
-                            // note that image graph won't add edges that have already in the graph
-                            image_graph.AddEdge(true_matches[i][k]);
-                            vot::LinkEdge temp(true_matches[i][k].dst, 
-                                               true_matches[i][k].src, 
-                                               true_matches[i][k].score, 
-                                               true_matches[i][k].p_match, 
-                                               true_matches[i][k].g_match);
-                            image_graph.AddEdge(temp);
+                            hit_count++; 
+                            image_graph.addEdgeu(true_matches[index1][k]);
                             break;
                         }
                     }
@@ -274,7 +254,8 @@ int main(int argc, char **argv)
     {
         for(int j = i+1; j < image_num; j++)
         {
-            if(visit_mat[i][j])
+            std::unordered_set<int>::iterator it = vocab_matches[i].find(j);
+            if(it != vocab_matches[i].end())
             {
                 fout << sift_filenames[i] << " " << sift_filenames[j] << endl;
                 int k = 0;
@@ -283,14 +264,14 @@ int main(int argc, char **argv)
                     if(j == rank_list[i][k])
                         break;
                 }
-                if(k == rank_list[i].size())
+                if(k == rank_list[i].size())        // not in the rank_list
                 {
                     fout1 << sift_filenames[i] << " " << sift_filenames[j] << endl;
-                    for(k = 0; k < true_matches[i].size(); k++)
+                    for(int l = 0; l < true_matches[i].size(); l++)
                     {
-                        if(j == true_matches[i][k].dst)
+                        if(j == true_matches[i][l].dst) // is a true match
                         {
-                            fout2 << sift_filenames[i] << " " << sift_filenames[j] << " " << true_matches[i][k].g_match << endl;
+                            fout2 << sift_filenames[i] << " " << sift_filenames[j] << " " << true_matches[i][l].g_match << endl;
                             break;
                         }
                     }
@@ -300,13 +281,5 @@ int main(int argc, char **argv)
     }
     fout.close();
     fout1.close();
-
-    // release the memory
-    for(int i = 0; i < image_num; i++)
-    {
-        delete [] visit_mat[i];
-    }
-    delete [] visit_mat;
-
     return 0;
 }
