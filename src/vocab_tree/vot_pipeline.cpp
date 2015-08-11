@@ -157,28 +157,6 @@ namespace vot
 	    std::vector<std::string> sift_filenames;
 	    tw::IO::ExtractLines(sift_list, sift_filenames);
 	    int siftfile_num = sift_filenames.size();
-	    size_t total_keys = 0;
-	    std::vector<tw::SiftData> sift_data;
-
-	    if(sift_type == 0)
-	    {
-	        sift_data.resize(siftfile_num);
-
-	        for(int i = 0; i < sift_filenames.size(); i++)
-	        {
-	        	if(sizeof(DTYPE) == 1)		// unsigned char
-	        		sift_data[i].ReadSiftFile(sift_filenames[i]);
-	        	else
-	        		sift_data[i].ReadChar2DTYPE(sift_filenames[i]);
-	            total_keys += sift_data[i].getFeatureNum();
-	        }
-	        std::cout << "[BuildDB] Total sift keys (Type SIFT5.0): " << total_keys << '\n';
-	    }
-	    else //if(sift_type == 1)
-	    {
-	        std::cout << "[BuildDB] Sift type is wrong (should be 0). Exit...\n";
-	        return false;
-	    }
 
 	    // TODO(tianwei): a filter key step
 	    // add image into the database using the inverted list
@@ -189,7 +167,20 @@ namespace vot
 	    tree.SetConstantWeight();
 	    for(int i = 0; i < siftfile_num; i++)
 	    {
-	        double mag = tree.AddImage2Tree(start_id + i, sift_data[i], thread_num);
+	    	tw::SiftData sift_data;
+	    	if(sift_type == 0)
+	    	{
+	        	if(sizeof(DTYPE) == 1)		// unsigned char
+	        		sift_data.ReadSiftFile(sift_filenames[i]);
+	        	else
+	        		sift_data.ReadChar2DTYPE(sift_filenames[i]);
+	    	}
+	    	else
+	    	{
+	    		std::cout << "[BuildDB] Sift type is wrong (should be 0). Exit...\n";
+	    		return false;
+	    	}
+	        double mag = tree.AddImage2Tree(start_id + i, sift_data, thread_num);
 	        std::cout << "[BuildDB] Add image #" << start_id + i << " to database\n";
 	    } 
 	    tree.ComputeTFIDFWeight(siftfile_num);
@@ -204,7 +195,8 @@ namespace vot
 
 	std::mutex match_file_mutex;
 	void MultiQueryDatabase(vot::VocabTree *tree, 
-							std::vector<tw::SiftData> *sift_data, 
+							std::vector<std::string> *sift_filenames, 
+							int sift_type,
 							size_t first_index,
 							size_t num_images, 
 							float *scores, 
@@ -219,7 +211,21 @@ namespace vot
 			match_file_mutex.unlock();
 
 			memset(scores, 0.0, sizeof(float) * db_image_num);
-			tree->Query((*sift_data)[i], scores);
+			// read sift data
+			tw::SiftData sift_data;
+			if(sift_type == 0)
+			{
+				if(sizeof(DTYPE) == 1)
+					sift_data.ReadSiftFile((*sift_filenames)[i]);
+				else
+					sift_data.ReadChar2DTYPE((*sift_filenames)[i]);
+			}
+			else
+			{
+				std::cout << "[VocabMatch] Sift type is wrong (should be 0). Exit...\n";
+				exit(-1);
+			}
+			tree->Query(sift_data, scores);
 			for(size_t j = 0; j < db_image_num; j++)
 			{
 				indexed_scores[j].value = scores[j];
@@ -251,27 +257,6 @@ namespace vot
 		std::vector<std::string> sift_filenames;
 		tw::IO::ExtractLines(query_sift_list, sift_filenames);
 		int siftfile_num = sift_filenames.size();
-		size_t total_keys = 0;
-		std::vector<tw::SiftData> sift_data;
-		if(sift_type == 0)
-		{
-			sift_data.resize(siftfile_num);
-
-			for(size_t i = 0; i < sift_filenames.size(); i++)
-			{
-				if(sizeof(DTYPE) == 1)
-					sift_data[i].ReadSiftFile(sift_filenames[i]);
-				else
-					sift_data[i].ReadChar2DTYPE(sift_filenames[i]);
-				total_keys += sift_data[i].getFeatureNum();
-			}
-			std::cout << "[VocabMatch] Total sift keys (Type SIFT5.0): " << total_keys << '\n';
-		}
-	    else //if(sift_type == 1)
-	    {
-	    	std::cout << "[VocabMatch] Sift type is wrong (should be 0). Exit...\n";
-	    	exit(-1);
-	    }
 
 	    FILE *match_file = fopen(match_output, "w");
 	    if(match_file == NULL)
@@ -288,7 +273,21 @@ namespace vot
 		    {
 		    	std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
 		    	memset(scores, 0.0, sizeof(float) * db_image_num);
-		    	tree->Query(sift_data[i], scores);
+		    	// read sift data
+		    	tw::SiftData sift_data;
+		    	if(sift_type == 0)
+		    	{
+					if(sizeof(DTYPE) == 1)
+						sift_data.ReadSiftFile(sift_filenames[i]);
+					else
+						sift_data.ReadChar2DTYPE(sift_filenames[i]);
+		    	}
+		    	else
+		    	{
+			    	std::cout << "[VocabMatch] Sift type is wrong (should be 0). Exit...\n";
+			    	exit(-1);
+		    	}
+		    	tree->Query(sift_data, scores);
 		    	for(size_t j = 0; j < db_image_num; j++)
 		    	{
 		    		indexed_scores[j].value = scores[j];
@@ -300,7 +299,6 @@ namespace vot
 		    		fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j].index, indexed_scores[j].value);
 		    	}
 		    }
-
 		    delete [] scores;
 		    delete [] indexed_scores;
 	    }
@@ -321,7 +319,7 @@ namespace vot
 	    		size_t thread_image = siftfile_num / thread_num;
 	    		if(i == thread_num - 1)
 	    			thread_image = siftfile_num - (thread_num - 1) * thread_image;
-		    	threads.push_back(std::thread(MultiQueryDatabase, tree, &sift_data, off, thread_image, scores[i], indexed_scores[i], match_file));
+		    	threads.push_back(std::thread(MultiQueryDatabase, tree, &sift_filenames, sift_type, off, thread_image, scores[i], indexed_scores[i], match_file));
 		    	off += thread_image;
 	    	}
 	    	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
