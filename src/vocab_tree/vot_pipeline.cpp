@@ -193,7 +193,6 @@ namespace vot
 	    return true;
 	}
 
-	std::mutex match_file_mutex;
 	void MultiQueryDatabase(vot::VocabTree *tree, 
 							std::vector<std::string> *sift_filenames, 
 							int sift_type,
@@ -201,14 +200,15 @@ namespace vot
 							size_t num_images, 
 							float *scores, 
 							tw::IndexedFloat *indexed_scores, 
-							FILE *match_file)
+							FILE *match_file,
+							std::mutex *match_file_mutex)
 	{
 		size_t db_image_num = tree->database_image_num;
 		for(size_t i = first_index; i < first_index + num_images; i++)
 		{
-			match_file_mutex.lock();
+			match_file_mutex->lock();
 			std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
-			match_file_mutex.unlock();
+			match_file_mutex->unlock();
 
 			memset(scores, 0.0, sizeof(float) * db_image_num);
 			// read sift data
@@ -233,12 +233,12 @@ namespace vot
 			}
 			qsort(indexed_scores, db_image_num, sizeof(tw::IndexedFloat), tw::CompareIndexedFloat);
 
-			match_file_mutex.lock();
+			match_file_mutex->lock();
 			for(size_t j = 0; j < db_image_num; j++)
 			{
 				fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j].index, indexed_scores[j].value);
 			}
-			match_file_mutex.unlock();
+			match_file_mutex->unlock();
 		}
 	}
 
@@ -304,6 +304,7 @@ namespace vot
 	    }
 	    else 	
 	    {
+			std::mutex match_file_mutex;
 	    	std::vector<std::thread> threads;
 	    	float **scores = new float* [thread_num];
 	    	tw::IndexedFloat **indexed_scores = new tw::IndexedFloat* [thread_num];
@@ -319,7 +320,8 @@ namespace vot
 	    		size_t thread_image = siftfile_num / thread_num;
 	    		if(i == thread_num - 1)
 	    			thread_image = siftfile_num - (thread_num - 1) * thread_image;
-		    	threads.push_back(std::thread(MultiQueryDatabase, tree, &sift_filenames, sift_type, off, thread_image, scores[i], indexed_scores[i], match_file));
+		    	threads.push_back(std::thread(MultiQueryDatabase, tree, &sift_filenames, sift_type, off, thread_image, 
+		    								  scores[i], indexed_scores[i], match_file, &match_file_mutex));
 		    	off += thread_image;
 	    	}
 	    	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
