@@ -53,7 +53,6 @@ namespace vot
 		size_t max_siftfile_num = (memory_size - tree_memory_size) / 2;
 		size_t sample_size = siftfile_num > max_siftfile_num ? max_siftfile_num : siftfile_num;
 		std::vector<size_t> siftfile_samples = RandomSample(siftfile_num, sample_size);
-		std::cout << sample_size << " "<< max_siftfile_num << " " << memory_size << " " << tree_memory_size << std::endl;
 
 		size_t total_keys = 0; 
 		std::vector<tw::SiftData> sift_data; 
