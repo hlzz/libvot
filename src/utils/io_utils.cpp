@@ -1,23 +1,33 @@
 #include <cstdlib>
 #include <fstream>
 #include <vector>
+#include <cassert>
 #include "io_utils.h"
 #include "../image_graph/image_graph.h"
 
+// defines for file IO manipulation
 #if defined(__WIN32__) || defined(_MSC_VER)
 #include <io.h>
 #include <windows.h>
 #include <sys/stat.h>
-#if defined(_MSC_VER)
-#include <direct.h>
-#endif
+    #if defined(_MSC_VER)
+    #include <direct.h>
+    #endif
 #else
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
-#if defined(__MACH__)
 #include <unistd.h>
 #endif
+// define for GetAvailMem()
+#if defined(__WIN32__) || defined(_MSC_VER)
+#include <excpt.h>
+#else
+#include <sys/sysctl.h>
+#endif
+
+#if defined(_MSC_VER)
+#include <intrin.h>
 #endif
 
 namespace tw
@@ -223,4 +233,33 @@ namespace tw
 
         return mkDirRes == 0;
     }
+
+    size_t IO::GetAvailMem()
+    {
+        // get the physical memory
+        size_t total_mem;
+        #if defined(__linux__)                  // linux
+        long pages = sysconf(_SC_PHYS_PAGES);
+        long page_size = sysconf(_SC_PAGE_SIZE);
+        total_mem = pages * page_size;
+
+        #elif defined(__APPLE__)                // mac
+        int mib[2] = { CTL_HW, HW_MEMSIZE };
+        u_int namelen = sizeof(mib) / sizeof(mib[0]);
+        size_t len = sizeof(total_mem);
+        if(sysctl(mib, namelen, &total_mem, &len, NULL, 0) < 0)
+        {
+            assert(false && "IO::GetAvailMem() failed on MacOS");
+            return 0;
+        }
+
+        #else                                   // windows
+        MEMORYSTATUSEX status;
+        status.dwLength = sizeof(status);
+        GlobalMemoryStatusEx(&status);
+        total_mem = status.ullTotalPhys;
+        #endif
+        // reserve some memory for system purpose
+        return total_mem * 3/4;
+    } 
 }   // end of namespace tw

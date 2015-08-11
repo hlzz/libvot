@@ -21,7 +21,7 @@
 
 namespace vot
 {
-    /** Random sample "sample_num" number of numbers from [0, 1, ... , total] */
+    /** Random sample "sample_num" number of numbers from [0, 1, ... , total] (total >= sample_num)*/
 	std::vector<size_t> RandomSample(size_t total, size_t sample_num)
 	{
 		std::vector<size_t> samples;
@@ -48,8 +48,12 @@ namespace vot
 		tw::IO::ExtractLines(sift_list, sift_filenames); 
 		size_t siftfile_num = sift_filenames.size(); 
 		// sample a part of sift files
-		size_t sample_size = siftfile_num;
+		size_t memory_size = tw::IO::GetAvailMem() / (1024*1024);	// convert to mb
+		size_t tree_memory_size = FDIM * sizeof(DTYPE) * pow((double)branch_num, (double)(depth+1)) / (1024*1024);
+		size_t max_siftfile_num = (memory_size - tree_memory_size) / 2;
+		size_t sample_size = siftfile_num > max_siftfile_num ? max_siftfile_num : siftfile_num;
 		std::vector<size_t> siftfile_samples = RandomSample(siftfile_num, sample_size);
+		std::cout << sample_size << " "<< max_siftfile_num << " " << memory_size << " " << tree_memory_size << std::endl;
 
 		size_t total_keys = 0; 
 		std::vector<tw::SiftData> sift_data; 
