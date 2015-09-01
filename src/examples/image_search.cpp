@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     int sift_type = 0;
     int thread_num = sysconf(_SC_NPROCESSORS_ONLN);     // this works on unix and mac
     int start_id = 0;
-    int num_matches = 50;
+    int num_matches = 300;
 
     if(argc > 3)
         depth = atoi(argv[3]);
