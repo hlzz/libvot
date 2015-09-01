@@ -423,7 +423,7 @@ namespace vot
 	    }
 	    else 
 	    {
-	        std::cout << "[FilterMatchList] Write the filtered match file match_pairs_idx" << '\n';
+	        std::cout << "[FilterMatchList] Write the filtered index file " << sift_index_file << '\n';
 	    }
 
 	    for(size_t i = 0; i < image_num; i++)
