@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <queue>
 #include <cstdlib>
@@ -250,6 +251,38 @@ void ImageGraph::showInfo()
             std::cout << it->second.src << " " << it->second.dst << " " << it->second.score << "\n";
         }
     }
+}
+
+bool ImageGraph::graphvizu(std::string gv_filename, std::string graph_name)
+{
+    std::ofstream fout;
+    fout.open(gv_filename.c_str());
+    if(fout.is_open())
+    {
+        fout << "graph " << graph_name << "{\n";
+        // node attributes
+        fout << "\tnode [label=\"\", fontsize=5, shape=circle, margin=0, width=0.01];\n";
+
+        // edge attributes
+        for(int i = 0; i < size_; i++)
+        {
+            for(EdgeMap::iterator it = adj_maps_[i].begin(); it != adj_maps_[i].end(); it++)
+            {
+                if(it->second.src < it->second.dst)
+                {
+                    fout << "\t" << it->second.src << " -- " << it->second.dst << " [penwidth=0.05];\n";
+                }
+            }
+        }
+        fout << "}\n";
+    }
+    else
+    {
+        std::cerr << "Fail to open " << gv_filename << " for writing\n";
+        return false;
+    }
+    fout.close();
+    return true;
 }
 
 int ImageGraph::adjListSize(int idx) { return adj_maps_[idx].size(); }

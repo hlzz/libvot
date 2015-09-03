@@ -73,8 +73,10 @@ public:
     //! Brief Query expansion and its sub-routine
     bool queryExpansion(Edge2dArray &expansion_lists, int level, int inlier_threshold = 150);
     bool queryExpansionSub(int src, int tgt, double score, Edge2dArray &expansion_lists, bool **visit_mat, int level, int inlier_threshold);
-    void showInfo();
+    //! Brief output the undirected visualization code for graphviz
+    bool graphvizu(std::string gv_filename, std::string graph_name);
     //! Brief output the information
+    void showInfo();
     int adjListSize(int idx);
     int nodeNum();
 
