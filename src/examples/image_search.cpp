@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <vector>
 #include <fstream>
-#include <unistd.h>
+#include <thread>
 
 #include "vot_pipeline.h"
 #include "io_utils.h"
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     int depth = 6;
     int branch_num = 8;
     int sift_type = 0;
-    int thread_num = sysconf(_SC_NPROCESSORS_ONLN);     // this works on unix and mac
+    int thread_num = std::thread::hardware_concurrency();
     int start_id = 0;
     int num_matches = 100;
 

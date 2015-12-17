@@ -240,8 +240,8 @@ namespace tw
 		}
 		else
 		{
-			double *sub_totals[thread_num];	
-			size_t *sub_counts[thread_num];
+			std::vector<double *>sub_totals(thread_num);
+			std::vector<size_t *>sub_counts(thread_num);
 			for(int i = 0; i < thread_num; i++)
 			{
 				sub_totals[i] = new double [dim * k];

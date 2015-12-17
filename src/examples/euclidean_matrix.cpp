@@ -35,6 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <stdio.h>
 #include <cmath>
+#include <vector>
 
 #include <Eigen/Dense>
 #include <Eigen/SVD>
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
 	ss >> matrix_filename;
 	FILE *matrix_file = fopen(matrix_filename.c_str(), "w");
 
-	point2d points[MATRIX_SIZE];
+	std::vector<point2d> points(MATRIX_SIZE);
 	for(int i = 0; i < MATRIX_SIZE; i++)
 	{
 		points[i].x = rand() % 1000;	

@@ -289,7 +289,7 @@ namespace vot
             std::vector<std::thread> threads;
             int subtree_threads = thread_num / bf;
             size_t offset = 0;
-            double *sub_means[bf];
+            std::vector<double *>sub_means(bf);
             for(int i = 0; i < bf; i++)
             {
                 int sub_thread_num = 0;

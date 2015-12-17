@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <unistd.h>
 
 #include "../src/vocab_tree/vot_pipeline.h"
 #include "gtest/gtest.h"

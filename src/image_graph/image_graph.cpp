@@ -112,11 +112,7 @@ void ImageGraph::addEdgeu(const vot::LinkEdge &n)
 
 int ImageGraph::numConnectedComponents(int threshold)
 {
-    bool is_visited[size_];
-    for(int i = 0; i < size_; i++)
-    {
-        is_visited[i] = false;
-    }
+    std::vector<bool> is_visited(size_, false);
 
     size_t numCC = 0;
     for(int i = 0; i < size_; i++)

@@ -36,7 +36,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <vector>
 #include <fstream>
-#include <unistd.h>
 
 #include "vocab_tree.h"
 #include "io_utils.h"

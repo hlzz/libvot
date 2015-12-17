@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	{
 		printf("Usage: %s <sift_file> <groud_truth_match> <match_file>\n", argv[0]);
 		printf("Each line of the ground_truth_match file consists of a 5-tuple of the form <pmatch, fmatch, hmatch, index1, index2>\n");
-		printf("Each line of the match_file conssits of a 2-tuple of the form <index1, index2>\n");
+		printf("Each line of the match_file consists of a 2-tuple of the form <index1, index2>\n");
 		return -1;
 	}
 
