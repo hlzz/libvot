@@ -43,7 +43,7 @@ Since the library is multi-threaded, the rank is unordered with respect to the f
 ##License
 The BSD 3-Clause License
 
-##Contact
+##Contact and Donation
 For inquiries and suggestions, please send your emails to 
-<tshenaa@ust.hk>
-
+<tshenaa@ust.hk>. If you would like to support this project, you can make a donation via [pledgie](https://pledgie.com/campaigns/30901)  
+<a href='https://pledgie.com/campaigns/30901'><img alt='Click here to lend your support to: Open-Source Image Retrieval Project and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30901.png?skin_name=chrome' border='0' ></a>
