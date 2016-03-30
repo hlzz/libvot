@@ -4,7 +4,7 @@
 
 ##Introduction
 
-*libvot* is an implementation of vocabulary tree, which is an algorithm widely used in image retrieval and computer vision. It usually comprises three components to build a image retrieval system using vocabulary tree: build a k-means tree using sift descriptors from images, register images into the database, query images against the database. In this library, we use C++11 standard multi-thread library to accelerate the computation, which achieves fast and accurate image retrieval result. This project is inspired by Snavely's [VocabTree2](https://github.com/snavely/VocabTree2) project. Currently this library is under active development for research purpose. 
+*libvot* is an implementation of vocabulary tree, which is an algorithm widely used in image retrieval and computer vision. It usually comprises three components to build a image retrieval system using vocabulary tree: build a k-means tree using sift descriptors from images, register images into the database, query images against the database. In this library, we use C++11 standard multi-thread library to accelerate the computation, which achieves fast and accurate image retrieval result. This project is inspired by Snavely's [VocabTree2](https://github.com/snavely/VocabTree2) project. Currently this library is under active development for research purpose. If you find this repository useful, please star it to let me know. :)
 
 ##Installation
 
