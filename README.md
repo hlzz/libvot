@@ -1,4 +1,6 @@
 #libvot - A C++11 multi-thread library for image retrieval
+
+[![Join the chat at https://gitter.im/hlzz/libvot](https://badges.gitter.im/hlzz/libvot.svg)](https://gitter.im/hlzz/libvot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=master)](https://travis-ci.org/hlzz/libvot)
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 
