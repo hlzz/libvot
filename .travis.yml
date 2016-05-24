@@ -8,4 +8,6 @@ compiler:
 
 before_install: scripts/travis-ci_update.sh
 
-script: scripts/travis-ci_install.sh
+script: 
+scripts/travis-ci_install.sh 
+scripts/travis-ci_test.sh
