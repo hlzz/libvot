@@ -14,7 +14,7 @@ ENDIF()
 # set policy
 
 # MACOSX_RPATH is enabled by default.
-SET(MACOSX_RPATH TRUE)
+set(CMAKE_MACOSX_RPATH TRUE)
 
 #------------------------------------------------------------------
 
