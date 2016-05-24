@@ -3,7 +3,7 @@ language: C++
 sudo: required
 
 compiler:
-  - clang
+  # - clang   # there seems to be a bug in clang with c++11 stuff like pthread and chrono.
   - gcc
 
 before_install: scripts/travis-ci_update.sh
