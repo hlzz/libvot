@@ -37,4 +37,4 @@ build/*
 doc/*
 
 # qt cmake user file
-*.txt.user
+CMakeLists.txt.user

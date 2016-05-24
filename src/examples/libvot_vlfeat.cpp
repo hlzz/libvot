@@ -1,4 +1,5 @@
 #include <iostream>
+#include <gflags/gflags.h>
 
 extern "C" {
 #include <vl/generic.h>

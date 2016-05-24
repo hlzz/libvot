@@ -10,12 +10,10 @@ IF(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "In-source build is not allowed, please do out-of-source build.")
 ENDIF()
 
-#------------------------------------------------------------------
-# set policy
-
-# MACOSX_RPATH is enabled by default.
-set(CMAKE_MACOSX_RPATH TRUE)
-
+#----------------------- Set Policy -------------------------------
+IF(POLICY CMP0042)
+    CMAKE_POLICY(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
+ENDIF()
 #------------------------------------------------------------------
 
 # set compiler options, output all warnings

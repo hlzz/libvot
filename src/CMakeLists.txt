@@ -12,12 +12,19 @@ INCLUDE_DIRECTORIES(${LIBVOT_INCLUDES})
 
 # ---------------- Set libraries begin ---------------------
 # (This has to be specified before compiling the executables)
+
 # Setup vlfeat for feature detection
 SET(VLFEAT_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/vlfeat
     )
 SET(VLFEAT_LIBRARY vlfeat)
 INCLUDE_DIRECTORIES(BEFORE ${VLFEAT_INCLUDE_DIRS})
+
+# Setup gflags for command line tools
+# use the built-in gflags include directory, defined in gflags CMakefile
+INCLUDE_DIRECTORIES(BEFORE ${GFLAGS_INCLUDE_DIR})
+SET(GFLAGS_LIBRARY gflags)
+
 # ---------------- Set libraries end ---------------------
 
 # the third parth libs

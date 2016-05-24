@@ -36,5 +36,6 @@ ADD_EXECUTABLE(web_search web_search.cpp ../vocab_tree/vocab_tree.cpp ../vocab_t
 SET_PROPERTY(TARGET web_search PROPERTY CXX_STANDARD 11)
 SET_PROPERTY(TARGET web_search PROPERTY CXX_STANDARD_REQUIRED on)
 
+# using vlfeat feature in libvot
 ADD_EXECUTABLE(libvot_vlfeat libvot_vlfeat.cpp)
-TARGET_LINK_LIBRARIES(libvot_vlfeat ${VLFEAT_LIBRARY})
+TARGET_LINK_LIBRARIES(libvot_vlfeat ${VLFEAT_LIBRARY} ${GFLAGS_LIBRARY})

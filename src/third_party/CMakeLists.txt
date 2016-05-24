@@ -1,1 +1,2 @@
 ADD_SUBDIRECTORY(vlfeat)
+ADD_SUBDIRECTORY(gflags)
