@@ -22,6 +22,7 @@ ADD_LIBRARY(vlfeat SHARED ${vlfeat_header} ${vlfeat_cpp})
 
 # link pthread into vlfeat, otherwise there might be errors regarding
 # pthread_key_create, pthread_getspecific, pthread_key_delete, etc.
+# Thanks to http://stackoverflow.com/questions/1620918/cmake-and-libpthread
 FIND_PACKAGE(Threads REQUIRED)
 IF(THREADS_HAVE_PTHREAD_ARG)
     SET_PROPERTY(TARGET vlfeat PROPERTY COMPILE_OPTIONS "-pthread")

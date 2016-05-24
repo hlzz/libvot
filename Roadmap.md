@@ -6,10 +6,17 @@
 
 * Deep learning method supports
 
-* Re-organize code structure
+* Re-organize code structure  
+    - CMake organization
 
-* Add more feature support, such as VLFeat, BREIF, etc.
+* Add more feature support, such as VLFeat, BREIF, etc.  
+    - add vlfeat (check)
 
 * benchmark dataset performance (2D / 3D)
 
 * SLAM-friendly development, add loop closure detection
+
+* Better engineering  
+    - command line system (maybe gflags?)  
+    - python export
+
