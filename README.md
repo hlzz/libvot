@@ -10,7 +10,7 @@
 
 ##Installation
 
-The build system of libvot is based on [CMake](http://cmake.org). To take full advantages of the new features in C++11, we require the version of CMake to be 2.8 or above. Current we have tested our program under Linux (Ubuntu 14.04, CentOS 7) and MacOS (10.10). The common steps to build the library is:
+The build system of libvot is based on [CMake](http://cmake.org). To take full advantages of the new features in C++11, we require the version of CMake to be 2.8.12 or above. Current we have tested our program under Linux (Ubuntu 14.04, CentOS 7) and MacOS (10.10). The common steps to build the library is:
 
 1. Extract source files.
 2. Create build directory and change to it.
@@ -23,6 +23,7 @@ On Unix-like systems with GNU Make as build tool, the following sequence of comm
 can be used to compile the source code.
 
     $ cd libvot
+    $ git submodule init & git submodule update  
     $ mkdir build && cd build
     $ cmake ..
     $ make

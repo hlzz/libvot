@@ -1,3 +1,9 @@
 language: C++
 
-script: scripts/install.sh
+compiler:
+  - clang
+  - gcc
+
+before_install: scripts/travis-ci_update.sh
+
+script: scripts/travis-ci_install.sh

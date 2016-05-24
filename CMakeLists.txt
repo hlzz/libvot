@@ -1,7 +1,7 @@
 # Copyright (c) 2015 - 2016. Tianwei Shen (shentianweipku@gmail.com)
 # Hong Kong University of Science and Technology (HKUST)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12 FATAL_ERROR)  # newest gflags needs 2.8.12
 
 PROJECT(libvot)
 

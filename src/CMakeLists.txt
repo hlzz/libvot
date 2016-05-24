@@ -1,4 +1,13 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8 FATAL_ERROR)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12 FATAL_ERROR)
+
+# ==============================================================================
+# Check that submodule have been initialized and updated
+# ==============================================================================
+if(NOT EXISTS ${CURRENT_SOURCE_DIR}/third_party/gflags)
+    MESSAGE(FATAL_ERROR
+        "\n submodule(s) are missing, please update your repository:\n"
+        "  > git submodule update -i\n")
+endif()
 
 # include files
 SET(LIBVOT_INCLUDES
@@ -10,7 +19,9 @@ SET(LIBVOT_INCLUDES
     )
 INCLUDE_DIRECTORIES(${LIBVOT_INCLUDES})
 
-# ---------------- Set libraries begin ---------------------
+# ==============================================================================
+# Set libraries begin 
+# ==============================================================================
 # (This has to be specified before compiling the executables)
 
 # Setup vlfeat for feature detection
