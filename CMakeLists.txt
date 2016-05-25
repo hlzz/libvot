@@ -25,7 +25,7 @@ ELSEIF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 ENDIF()
 
 # libvot build options
-OPTION(LIBVOT_BUILD_TESTS "Build libvot tests" OFF)
+OPTION(LIBVOT_BUILD_TESTS "Build libvot tests" ON)
 
 # by default build in release mode
 IF(NOT CMAKE_BUILD_TYPE)
@@ -38,5 +38,8 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 # The source files
 ADD_SUBDIRECTORY(src)
+
 # Test source code
-ADD_SUBDIRECTORY(test)
+IF(LIBVOT_BUILD_TESTS)
+	ADD_SUBDIRECTORY(test)
+ENDIF(LIBVOT_BUILD_TESTS)
