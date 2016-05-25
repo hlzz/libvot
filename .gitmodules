@@ -1,3 +1,6 @@
 [submodule "src/third_party/gflags"]
 	path = src/third_party/gflags
 	url = https://github.com/gflags/gflags.git
+[submodule "src/third_party/gtest"]
+	path = src/third_party/gtest
+	url = https://github.com/google/googletest
