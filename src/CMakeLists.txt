@@ -5,7 +5,12 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12 FATAL_ERROR)
 # ==============================================================================
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/src/third_party/gflags)
     MESSAGE(FATAL_ERROR
-        "\n submodule(s) are missing, please update your repository:\n"
+        "\n Submodule gflags is missing, please update your repository:\n"
+        "  > git submodule update -i\n")
+endif()
+if(NOT EXISTS ${PROJECT_SOURCE_DIR}/src/third_party/gtest)
+    MESSAGE(FATAL_ERROR
+        "\n Submodule gtest is missing, please update your repository:\n"
         "  > git submodule update -i\n")
 endif()
 

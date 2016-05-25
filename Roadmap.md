@@ -7,7 +7,7 @@
 * Deep learning method supports
 
 * Re-organize code structure  
-    - CMake organization
+    - CMake organization (add installation rules)
 
 * Add more feature support, such as VLFeat, BREIF, etc.  
     - add vlfeat (check)
@@ -19,4 +19,3 @@
 * Better engineering  
     - command line system (maybe gflags?)  
     - python export
-

@@ -38,7 +38,5 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 # The source files
 ADD_SUBDIRECTORY(src)
-
-# add gtest 1.7.0
-ADD_SUBDIRECTORY(gtest-1.7.0)
+# Test source code
 ADD_SUBDIRECTORY(test)
