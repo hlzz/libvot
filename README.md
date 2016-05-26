@@ -46,6 +46,11 @@ Each line in *match.out* contains three numbers “first_index second_index simi
 Since the library is multi-threaded, the rank is unordered with respect to the first index (they are ordered w.r.t the second index). 
 *match_pairs* saves the ordered similarity ranks, from *0*th image to *n-1*th image. 
 
+## Contributing
+We are working toward the next major release (0.2.0). 
+If you are interested in contributing, please have a look at the Roadmap.md file. 
+All types of contribution, including documentation, testing, and new features are welcomed and appreciated.
+
 ##License
 The BSD 3-Clause License
 
