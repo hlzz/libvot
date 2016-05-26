@@ -89,10 +89,14 @@ int main(int argc, char **argv)
     if(argc > 7)
         thread_num = atoi(argv[7]);
 
-    vot::BuildVocabTree(sift_input_file, tree_output.c_str(), depth, branch_num, sift_type, thread_num);
-    vot::BuildImageDatabase(sift_input_file, tree_output.c_str(), db_output.c_str(), sift_type, start_id, thread_num);
-    vot::QueryDatabase(db_output.c_str(), sift_input_file, match_output.c_str(), sift_type, thread_num);
-    vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches);
+    if(!vot::BuildVocabTree(sift_input_file, tree_output.c_str(), depth, branch_num, sift_type, thread_num))
+		return -1;
+    if(!vot::BuildImageDatabase(sift_input_file, tree_output.c_str(), db_output.c_str(), sift_type, start_id, thread_num))
+		return -1;
+    if(!vot::QueryDatabase(db_output.c_str(), sift_input_file, match_output.c_str(), sift_type, thread_num))
+		return -1;
+    if(!vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches))
+		return -1;
 
     return 0;
 }

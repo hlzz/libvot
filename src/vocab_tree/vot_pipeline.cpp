@@ -111,6 +111,11 @@ namespace vot
 	    	total_keys += sift_data[i].getFeatureNum();
 	    } 
 	    std::cout << "[Build Tree] Total sift keys (Type SIFT5.0): " << total_keys << std::endl; 
+		if(total_keys == 0)
+		{
+			std::cerr << "[Build Tree] Error: No sift keys input, maybe the sift type is wrong. Exit...\n";
+			return false;
+		}
 
 	    size_t len = (size_t) total_keys * FDIM;
 		size_t num_arrays = len / MAX_ARRAY_SIZE + ((len % MAX_ARRAY_SIZE) == 0 ? 0 : 1);
