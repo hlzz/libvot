@@ -6,6 +6,6 @@ cmake ../
 make -j8
 
 # test
-cd test && ./unit_test
-cd ../src/examples/
+make test
+cd src/examples/
 ./image_search ../../../test_data/list ./vocab_out 6 8 1
