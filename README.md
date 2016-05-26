@@ -4,6 +4,10 @@
 [![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=master)](https://travis-ci.org/hlzz/libvot) 
 [![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=feature)](https://travis-ci.org/hlzz/libvot) 
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
+<a href="https://scan.coverity.com/projects/hlzz-libvot">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/8983/badge.svg"/>
+</a>
 [![todofy badge](https://todofy.org/b/hlzz/libvot/master)](https://todofy.org/r/hlzz/libvot/master)
 
 ##Introduction
