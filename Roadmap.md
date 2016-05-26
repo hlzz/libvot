@@ -4,7 +4,9 @@
 
 * Detailed unit test for each module
 
-* Deep learning method supports
+* Deep learning methods support
+
+* [Hashing methods](https://github.com/willard-yuan/hashing-baseline-for-image-retrieval) support
 
 * Re-organize code structure  
     - CMake organization (add installation rules)
