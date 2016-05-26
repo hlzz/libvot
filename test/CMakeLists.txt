@@ -2,12 +2,16 @@
 # All rights reserved.
 
 # Where Google Test's .h files can be found.
-INCLUDE_DIRECTORIES(${gtest_SOURCE_DIR}/include)
+include_directories(${gtest_SOURCE_DIR}/include)
 
-SET(THREADS_PREFER_PTHREAD_FLAG ON)
-FIND_PACKAGE(Threads REQUIRED)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
-SET(TEST_SOURCES 
+# set output built test executables back to RUNTIME_OUTPUT_DIRECTORY,
+# which is different from src, so that add_test can find them
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
+
+set(TEST_SOURCES
 unit_test.cpp 
 ../src/image_graph/image_graph.cpp 
 ../src/utils/data_structures.cpp
@@ -18,11 +22,11 @@ unit_test.cpp
 ../src/vocab_tree/vocab_tree.cpp)
 
 # compile options for unit test (need c++11)
-ADD_EXECUTABLE(unit_test ${TEST_SOURCES})
-SET_PROPERTY(TARGET unit_test PROPERTY CXX_STANDARD 11)
-SET_PROPERTY(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
-# target_link_libraries(unit_test Threads::Threads)		# this will fail on travis-CI
-TARGET_LINK_LIBRARIES(unit_test ${CMAKE_THREAD_LIBS_INIT})
-TARGET_LINK_LIBRARIES(unit_test gtest_main)
+add_executable(unit_test ${TEST_SOURCES})
+set_property(TARGET unit_test PROPERTY CXX_STANDARD 11)
+set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
+target_link_libraries(unit_test Threads::Threads)		# this will fail on travis-CI
+target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(unit_test gtest_main)
 
-ADD_TEST(unit_test unit_test)
+add_test(unit_test unit_test)

@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 	std::vector<point2d> points(MATRIX_SIZE);
 	for(int i = 0; i < MATRIX_SIZE; i++)
 	{
-		points[i].x = rand() % 1000;	
+		points[i].x = rand() % 1000;
 		points[i].x /= 1000;
 		points[i].y = rand() % 1000;
 		points[i].y /= 1000;

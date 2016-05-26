@@ -1,28 +1,38 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 # ==============================================================================
 # Check that submodule have been initialized and updated
 # ==============================================================================
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/src/third_party/gflags)
-    MESSAGE(FATAL_ERROR
+    message(FATAL_ERROR
         "\n Submodule gflags is missing, please update your repository:\n"
         "  > git submodule update -i\n")
 endif()
 if(NOT EXISTS ${PROJECT_SOURCE_DIR}/src/third_party/gtest)
-    MESSAGE(FATAL_ERROR
+    message(FATAL_ERROR
         "\n Submodule gtest is missing, please update your repository:\n"
         "  > git submodule update -i\n")
 endif()
 
+# The version number.
+set (LIBVOT_VERSION_MAJOR 0)
+set (LIBVOT_VERSION_MINOR 1)
+
+# configure a header file to pass some of the CMake settings to the source code
+configure_file (
+  "${CMAKE_CURRENT_SOURCE_DIR}/libvot_config.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/libvot_config.h"
+  )
+install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/libvot_config.h" DESTINATION include)
+
 # include files
-SET(LIBVOT_INCLUDES
+set(LIBVOT_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party
     ${CMAKE_CURRENT_SOURCE_DIR}/vocab_tree
-    ${CMAKE_CURRENT_SOURCE_DIR}/examples
     ${CMAKE_CURRENT_SOURCE_DIR}/utils
     )
-INCLUDE_DIRECTORIES(${LIBVOT_INCLUDES})
+include_directories(${LIBVOT_INCLUDES})
 
 # ==============================================================================
 # Set libraries begin 
@@ -30,27 +40,31 @@ INCLUDE_DIRECTORIES(${LIBVOT_INCLUDES})
 # (This has to be specified before compiling the executables)
 
 # Setup vlfeat for feature detection
-SET(VLFEAT_INCLUDE_DIRS
+set(VLFEAT_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/vlfeat
     )
-SET(VLFEAT_LIBRARY vlfeat)
-INCLUDE_DIRECTORIES(BEFORE ${VLFEAT_INCLUDE_DIRS})
+set(VLFEAT_LIBRARY vlfeat)
+include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 
 # Setup gflags for command line tools
 # use the built-in gflags include directory, defined in gflags CMakefile
-INCLUDE_DIRECTORIES(BEFORE ${GFLAGS_INCLUDE_DIR})
-SET(GFLAGS_LIBRARY gflags)
-
+include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
+set(GFLAGS_LIBRARY gflags)
 # ---------------- Set libraries end ---------------------
 
+# Specify output bin_path and lib_path
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # the third parth libs
-ADD_SUBDIRECTORY(third_party)
+add_subdirectory(third_party)
 # utility functions
-ADD_SUBDIRECTORY(utils)
+add_subdirectory(utils)
 # the main vocabulary tree directory
-ADD_SUBDIRECTORY(vocab_tree)
+add_subdirectory(vocab_tree)
 # the image graph directory
-ADD_SUBDIRECTORY(image_graph)
+add_subdirectory(image_graph)
 # the executable files
-ADD_SUBDIRECTORY(examples)
+add_subdirectory(examples)
 

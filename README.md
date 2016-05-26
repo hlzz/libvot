@@ -38,9 +38,9 @@ We also add a small image dataset [fountain-P11]( http://cvlabwww.epfl.ch/data/m
 If you use the out-of-source build as shown in the installation section and in the *build* directory, 
 the following command should work smoothly and generate several output files in build/src/example/vocab_out directory. 
 
-    $ cd src/example
+    $ cd bin
     $ ./image_search <image_list> <output_folder> [depth] [branch_num] [sift_type] [num_matches] [thread_num]  
-    $ (e.g.) ./image_search ../../../test_data/list ./vocab_out 6 8 1
+    $ (e.g.) ./image_search ../../test_data/list ./vocab_out 6 8 1
 
 Each line in *match.out* contains three numbers “first_index second_index similarity score”. 
 Since the library is multi-threaded, the rank is unordered with respect to the first index (they are ordered w.r.t the second index). 

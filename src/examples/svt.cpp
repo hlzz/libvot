@@ -147,9 +147,9 @@ int main(int argc, char ** argv)
 		}
 	}
 
-cout << sample_mat << endl;
+	cout << sample_mat << endl;
 
-	// singular value thresholding	
+	// singular value thresholding
 	float step_size = 1.5;//1.2 * mat_size / sample_ratio;
 	float tau = 5 * mat_size;
 	int k0 = tau / (step_size * Fnorm(sample_mat)) + 1;
@@ -160,9 +160,9 @@ cout << sample_mat << endl;
 	for(int i = 0; i < max_iter; i++)
 	{
 		JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
-		MatrixXd U = svd.matrixU();	
-		MatrixXd V = svd.matrixV();	
-		VectorXd singular_vector = svd.singularValues();	
+		MatrixXd U = svd.matrixU();
+		MatrixXd V = svd.matrixV();
+		VectorXd singular_vector = svd.singularValues();
 		MatrixXd S = MatrixXd::Constant(mat_size, mat_size, 0);
 		for(int i = 0; i < mat_size; i++)
 		{
@@ -193,7 +193,7 @@ cout << sample_mat << endl;
 			}
 		}
 	}
-	//cout << X << endl;
+
 	// compute completion error
 	float completion_error = 0;
 	float max_error = 0;
@@ -220,25 +220,6 @@ cout << sample_mat << endl;
 	cout << "max_error " << max_error << endl;
 	cout << "within_bound_count " << within_bound_count << endl;
 	cout << "relative_error " << relative_error << endl;
-
-
-	/*
-	for(int i = 0; i < X.rows(); i++)
-	{
-		for(int j = 0; j < X.cols(); j++)
-		{
-			if(X(i, j) > 0)
-			{
-				X(i, j) = 1;
-			}
-			else
-			{
-				X(i, j) = -1;
-			}
-		}
-	}
-	*/
-	//cout << X << endl;
 
 	return 0;
 }

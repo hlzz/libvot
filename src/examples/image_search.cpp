@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <fstream>
 #include <thread>
 
+#include "libvot_config.h"
 #include "vot_pipeline.h"
 #include "io_utils.h"
 
@@ -53,6 +54,7 @@ sift_type: 0 - our own sift data format
 
 int main(int argc, char **argv)
 {
+	fprintf(stdout, "libvot version: %d.%d\n", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR);
     if (argc < 3) 
     {
         printf("Usage: %s <sift_list> <output_dir> [depth] [branch_num] [sift_type] [num_matches] [thread_num]\n", argv[0]);
