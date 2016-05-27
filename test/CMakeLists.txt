@@ -25,7 +25,7 @@ unit_test.cpp
 add_executable(unit_test ${TEST_SOURCES})
 set_property(TARGET unit_test PROPERTY CXX_STANDARD 11)
 set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
-target_link_libraries(unit_test Threads::Threads)		# this will fail on travis-CI
+#target_link_libraries(unit_test Threads::Threads)		# this will fail on travis-CI
 target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(unit_test gtest_main)
 
