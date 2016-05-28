@@ -1,6 +1,7 @@
 ## Roadmap (Version 0.2)
 
 ### Version 0.2 will concentrate on these issues: 
+* Improvement: support image database update
 
 * Detailed unit test for each module
 
@@ -15,9 +16,13 @@
     - add vlfeat (check)
 
 * benchmark dataset performance (2D / 3D)
+    - [Oxford 5k](http://www.robots.ox.ac.uk/~vgg/data/oxbuildings/)
+    - [Flickr 1M](http://press.liacs.nl/mirflickr/)
 
 * SLAM-friendly development, add loop closure detection
 
 * Better engineering  
-    - command line system (maybe gflags?)  
+    - command line system (e.g. gflags)  
     - python export
+
+* Add option to support opencv

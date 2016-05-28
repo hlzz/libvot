@@ -6,31 +6,31 @@
 # * Remove executables, exmaples, data, doc, etc.
 # * Add CMake import
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0 FATAL_ERROR)
-PROJECT(vlfeat)
+cmake_minimum_required(VERSION 2.8.0 FATAL_ERROR)
+project(vlfeat)
 
-IF(POLICY CMP0042)
-    CMAKE_POLICY(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
-ENDIF()
+if(POLICY CMP0042)
+    cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
+endif()
 
 # disable Intel@avx 
-ADD_DEFINITIONS(-DVL_DISABLE_AVX)
+add_definitions(-DVL_DISABLE_AVX)
 
-FILE(GLOB_RECURSE vlfeat_header vl/*.h vl/*.tc)
-FILE(GLOB_RECURSE vlfeat_cpp vl/*.c vl/*.th)
+file(GLOB_RECURSE vlfeat_header vl/*.h vl/*.tc)
+file(GLOB_RECURSE vlfeat_cpp vl/*.c vl/*.th)
 
-ADD_LIBRARY(vlfeat SHARED ${vlfeat_header} ${vlfeat_cpp})
+add_library(vlfeat SHARED ${vlfeat_header} ${vlfeat_cpp})
 
 # link pthread into vlfeat, otherwise there might be errors regarding
 # pthread_key_create, pthread_getspecific, pthread_key_delete, etc.
 # Thanks to http://stackoverflow.com/questions/1620918/cmake-and-libpthread
-FIND_PACKAGE(Threads REQUIRED)
-IF(THREADS_HAVE_PTHREAD_ARG)
-    SET_PROPERTY(TARGET vlfeat PROPERTY COMPILE_OPTIONS "-pthread")
-    SET_PROPERTY(TARGET vlfeat PROPERTY INTERFACE_COMPILE_OPTIONS "-pthread")
-ENDIF()
-IF(CMAKE_THREAD_LIBS_INIT)
-    TARGET_LINK_LIBRARIES(vlfeat "${CMAKE_THREAD_LIBS_INIT}")
-ENDIF()
+find_package(Threads REQUIRED)
+if(THREADS_HAVE_PTHREAD_ARG)
+    set_property(TARGET vlfeat PROPERTY COMPILE_OPTIONS "-pthread")
+    set_property(TARGET vlfeat PROPERTY INTERFACE_COMPILE_OPTIONS "-pthread")
+endif()
+if(CMAKE_THREAD_LIBS_INIT)
+    target_link_libraries(vlfeat "${CMAKE_THREAD_LIBS_INIT}")
+endif()
 
-SET_PROPERTY(TARGET vlfeat PROPERTY FOLDER libvot/third_party/vlfeat)
+set_property(TARGET vlfeat PROPERTY FOLDER libvot/third_party/vlfeat)

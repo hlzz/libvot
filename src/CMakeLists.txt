@@ -14,10 +14,6 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/src/third_party/gtest)
         "  > git submodule update -i\n")
 endif()
 
-# The version number.
-set (LIBVOT_VERSION_MAJOR 0)
-set (LIBVOT_VERSION_MINOR 1)
-
 # configure a header file to pass some of the CMake settings to the source code
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/libvot_config.h.in"
@@ -31,8 +27,10 @@ set(LIBVOT_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party
     ${CMAKE_CURRENT_SOURCE_DIR}/vocab_tree
     ${CMAKE_CURRENT_SOURCE_DIR}/utils
+    ${CMAKE_CURRENT_SOURCE_DIR}/feature
+    ${CMAKE_CURRENT_SOURCE_DIR}/matching
     )
-include_directories(${LIBVOT_INCLUDES})
+include_directories(BEFORE ${LIBVOT_INCLUDES})
 
 # ==============================================================================
 # Set libraries begin 
@@ -59,6 +57,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # the third parth libs
 add_subdirectory(third_party)
+# feature lib
+add_subdirectory(feature)
 # utility functions
 add_subdirectory(utils)
 # the main vocabulary tree directory
@@ -67,4 +67,3 @@ add_subdirectory(vocab_tree)
 add_subdirectory(image_graph)
 # the executable files
 add_subdirectory(examples)
-

@@ -8,4 +8,7 @@ compiler:
 
 before_install: scripts/travis-ci_update.sh
 
+install: 
+  - sudo apt-get -qq install libopencv-dev
+
 script: scripts/travis-ci_install.sh

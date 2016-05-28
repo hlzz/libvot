@@ -11,7 +11,7 @@ find_package(Threads REQUIRED)
 # which is different from src, so that add_test can find them
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
 
-set(TEST_SOURCES
+set(UNIT_TEST_SOURCES
 unit_test.cpp 
 ../src/image_graph/image_graph.cpp 
 ../src/utils/data_structures.cpp
@@ -22,11 +22,16 @@ unit_test.cpp
 ../src/vocab_tree/vocab_tree.cpp)
 
 # compile options for unit test (need c++11)
-add_executable(unit_test ${TEST_SOURCES})
+add_executable(unit_test ${UNIT_TEST_SOURCES})
 set_property(TARGET unit_test PROPERTY CXX_STANDARD 11)
 set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
-#target_link_libraries(unit_test Threads::Threads)		# this will fail on travis-CI
 target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(unit_test gtest_main)
 
 add_test(unit_test unit_test)
+
+if(LIBVOT_USE_OPENCV)
+    add_executable(opencv_test opencv_test.cpp)
+    target_link_libraries(opencv_test ${OpenCV_LIBS})
+    add_test(opencv_test opencv_test ${CMAKE_SOURCE_DIR}/test_data/lena.jpg)
+endif(LIBVOT_USE_OPENCV)
