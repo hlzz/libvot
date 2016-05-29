@@ -10,4 +10,5 @@ else
     sudo add-apt-repository -y ppa:kubuntu-ppa/backports
     sudo add-apt-repository -y ppa:philip5/extra
     sudo apt-get update -qq
+    sudo apt-get install cmake
 fi
