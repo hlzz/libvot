@@ -65,7 +65,11 @@ namespace tw
         static int ExtractLines(const char *input_file_path, std::vector<std::string> & lines); //!< extract lines from a text file
         static bool IsFileExist(const char *filename);                          //!< judge whether the file exists
         static std::string JoinPath(std::string folder, std::string filename);  //!< join a filename with a directory name
-        static bool Mkdir(const std::string path);      //!< make a directory
+
+        static std::pair<std::string, std::string> SplitPath(std::string path);		//!< separate the folder from the filename
+        static std::pair<std::string, std::string> SplitPathExt(std::string path); 	//!< separate the basename from the file type (extension)
+
+		static bool Mkdir(const std::string path);      //!< make a directory
         static size_t GetAvailMem();                    //!< return the total availbale memory that can be used 
     };
 

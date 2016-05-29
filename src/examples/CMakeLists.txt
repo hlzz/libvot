@@ -2,17 +2,17 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
 # compile options for vocabulary tree example (need c++11)
-add_executable(image_search image_search.cpp ../vocab_tree/vot_pipeline.cpp ../vocab_tree/vocab_tree.cpp
-../vocab_tree/clustering.cpp ../utils/global_params.cpp ../utils/io_utils.cpp ../utils/data_structures.cpp)
+add_executable(image_search image_search.cpp)
 set_property(TARGET image_search PROPERTY CXX_STANDARD 11)
 set_property(TARGET image_search PROPERTY CXX_STANDARD_REQUIRED on)
-target_link_libraries(image_search ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(image_search ${CMAKE_THREAD_LIBS_INIT} vot_vocabtree vot_utils)
 install (TARGETS image_search DESTINATION bin CONFIGURATIONS Release)
 
-add_executable(graph_partition graph_partition.cpp ../image_graph/image_graph.cpp ../utils/io_utils.cpp
-../utils/global_params.cpp ../utils/data_structures.cpp)
+# graph_partition
+add_executable(graph_partition graph_partition.cpp ../image_graph/image_graph.cpp)
 set_property(TARGET graph_partition PROPERTY CXX_STANDARD 11)
 set_property(TARGET graph_partition PROPERTY CXX_STANDARD_REQUIRED on)
+target_link_libraries(graph_partition ${CMAKE_THREAD_LIBS_INIT} vot_utils)
 install (TARGETS graph_partition DESTINATION bin CONFIGURATIONS Release)
 
 add_executable(query_expansion query_expansion.cpp ../utils/io_utils.cpp ../image_graph/image_graph.cpp
@@ -41,13 +41,13 @@ set_property(TARGET euclidean_matrix PROPERTY CXX_STANDARD 11)
 set_property(TARGET euclidean_matrix PROPERTY CXX_STANDARD_REQUIRED on)
 install (TARGETS euclidean_matrix DESTINATION bin CONFIGURATIONS Release)
 
-add_executable(web_search web_search.cpp ../vocab_tree/vocab_tree.cpp ../vocab_tree/clustering.cpp
-../utils/global_params.cpp ../utils/io_utils.cpp ../utils/data_structures.cpp)
+add_executable(web_search web_search.cpp ../vocab_tree/vocab_tree.cpp ../vocab_tree/clustering.cpp)
 set_property(TARGET web_search PROPERTY CXX_STANDARD 11)
 set_property(TARGET web_search PROPERTY CXX_STANDARD_REQUIRED on)
+target_link_libraries(web_search vot_utils)
 install (TARGETS web_search DESTINATION bin CONFIGURATIONS Release)
 
 # using vlfeat feature in libvot
-add_executable(libvot_vlfeat libvot_vlfeat.cpp)
-target_link_libraries(libvot_vlfeat ${GFLAGS_LIBRARY} vlfeat_vot)
-install (TARGETS libvot_vlfeat DESTINATION bin CONFIGURATIONS Release)
+add_executable(libvot_feature libvot_feature.cpp)
+target_link_libraries(libvot_feature ${GFLAGS_LIBRARY} vot_feature vot_utils)
+install (TARGETS libvot_feature DESTINATION bin CONFIGURATIONS Release)

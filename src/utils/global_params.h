@@ -42,6 +42,12 @@ class GlobalParam
         static int Verbose;
 };
 
+enum LIBVOT_FEATURE_TYPE
+{
+	OPENCV_SIFT = 0,
+	VLFEAT_SIFT = 1,
+};
+
 enum SiftType
 {
 	E3D_SIFT = 0,

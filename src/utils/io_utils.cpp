@@ -243,6 +243,26 @@ namespace tw
             return filename;
     }
 
+	std::pair<std::string, std::string> IO::SplitPath(std::string path)
+	{
+		std::pair<std::string, std::string> res;
+		size_t found;
+	    found = path.find_last_of("/\\");
+	    res.first = path.substr(0, found);
+	    res.second = path.substr(found+1);
+		return res;
+	}
+
+	std::pair<std::string, std::string> IO::SplitPathExt(std::string path)
+	{
+		std::pair<std::string, std::string> res;
+		size_t found;
+	    found = path.find_last_of(".");
+	    res.first = path.substr(0, found);
+	    res.second = path.substr(found+1);
+		return res;
+	}
+
     bool IO::Mkdir(const std::string path)
     {
         #ifdef _MSC_VER

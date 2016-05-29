@@ -23,7 +23,7 @@ The build system of libvot is based on [CMake](http://cmake.org). To take full a
 3. Run CMake to configure the build tree.
 4. Build the software using selected build tool.
 5. Run "make test"
-6. See src/example for the use of this library.
+6. See src/example for the usage of this library.
 
 On Unix-like systems with GNU Make as the build tool, the following sequence of commands can be used to compile the source code.
 
