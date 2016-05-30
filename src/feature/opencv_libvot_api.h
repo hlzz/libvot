@@ -10,6 +10,7 @@ namespace tw  {
 class SiftData;
 
 bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
+                                cv::Mat &descriptors,
                                 tw::SiftData &sift_data);
 
 }	// end of namespace tw

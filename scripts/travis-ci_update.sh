@@ -8,7 +8,6 @@ then
 else
     #install a newer cmake since at this time travis only has version 2.8.7
     sudo add-apt-repository -y ppa:kubuntu-ppa/backports
-    sudo add-apt-repository -y ppa:philip5/extra
     sudo apt-get update -qq
     sudo apt-get install cmake
 fi

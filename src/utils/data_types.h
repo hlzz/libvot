@@ -1,7 +1,7 @@
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -33,12 +33,12 @@ public:
         nLocDim_(obj.nLocDim_), nDesDim_(obj.nDesDim_)
     {
         //copy feature descriptors
-        dp_ = new DTYPE [obj.npoint_];
-        memcpy(dp_, obj.dp_, sizeof(DTYPE)*obj.npoint_);
+        dp_ = new DTYPE [obj.npoint_ * nDesDim_];
+        memcpy(dp_, obj.dp_, sizeof(DTYPE) * obj.npoint_ * nDesDim_);
 
         //copy location descriptors
-        lp_ = new LTYPE [obj.npoint_];
-        memcpy(lp_, obj.lp_, sizeof(LTYPE)*obj.npoint_);
+        lp_ = new LTYPE [obj.npoint_ * nLocDim_];
+        memcpy(lp_, obj.lp_, sizeof(LTYPE) * obj.npoint_ * nLocDim_);
     }
 
     // copy assignment operator
@@ -51,12 +51,12 @@ public:
         nDesDim_ = rhs.nDesDim_;
 
         //copy feature descriptors
-        dp_ = new DTYPE [rhs.npoint_];
-        memcpy(dp_, rhs.dp_, sizeof(DTYPE)*rhs.npoint_);
+        dp_ = new DTYPE [rhs.npoint_ * nDesDim_];
+        memcpy(dp_, rhs.dp_, sizeof(DTYPE) * rhs.npoint_ * nDesDim_);
 
         //copy location descriptors
-        lp_ = new LTYPE [rhs.npoint_];
-        memcpy(lp_, rhs.lp_, sizeof(LTYPE)*rhs.npoint_);
+        lp_ = new LTYPE [rhs.npoint_ * nLocDim_];
+        memcpy(lp_, rhs.lp_, sizeof(LTYPE) * rhs.npoint_ * nLocDim_);
 
         return *this;
     }
@@ -68,6 +68,7 @@ public:
         if (NULL != lp_) delete [] lp_;
     }
 
+	//TODO(tianwei): add serialization library for I/O
     ///
     /// \brief ReadSiftFile: read sift file, this function is compatible with the sfm version of sift file
     /// \param szFileName: the name of the sift file
@@ -250,11 +251,66 @@ public:
         return bOk;
     }
 
+    bool SaveSiftFile(std::string const &szFileName)
+    {
+        FILE *fd;
+        if((fd = fopen(szFileName.c_str(), "wb")) == NULL)
+        {
+            std::cerr << "[SaveSiftFile] Can't open file " << szFileName << " for saving\n";
+            return false;
+        }
+        int f = fwrite(&name_, sizeof(int), 1, fd);
+        int g = fwrite(&version_, sizeof(int), 1, fd);
+        if(f != 1 || g != 1)
+        {
+        	std::cerr << "[SaveSiftFile] Writing error\n";
+        	return false;
+        }
+
+        if(name_ == ('S'+ ('I'<<8)+('F'<<16)+('T'<<24)))
+        {
+        	int a, b, c;
+            a = fwrite(&npoint_, sizeof(int), 1, fd);
+            b = fwrite(&nLocDim_, sizeof(int), 1, fd);
+            c = fwrite(&nDesDim_, sizeof(int), 1, fd);
+            if(a != 1 || b != 1 || c!= 1)
+            {
+            	std::cerr << "[SaveSiftFile] Write error\n";
+            	return false;
+            }
+
+            if(npoint_ >= 0 && nLocDim_ > 0 && nDesDim_ == FDIM)
+            {
+            	int d, e;
+                d = fwrite(lp_, sizeof(LTYPE), nLocDim_ * npoint_, fd);
+                e = fwrite(dp_, sizeof(DTYPE), nDesDim_ * npoint_, fd);
+                if(d != nLocDim_ * npoint_ || e != nDesDim_ * npoint_)
+                {
+	            	std::cerr << "[SaveSiftFile] Writing error\n";
+	            	return false;
+                }
+                fclose(fd);
+            }
+            else
+            {
+                fclose(fd);
+                return false;
+            }
+        }
+        else
+        {
+            fclose(fd);
+            return false;
+        }
+        return true;
+    }
+
     int getFeatureNum() {return npoint_;}
+	void setFeatureNum(int feat_num) {npoint_ = feat_num;}
     int getLocDim() {return nLocDim_;}
     int getDesDim() {return nDesDim_;}
-    LTYPE * getLocPointer() {return lp_;}
-    DTYPE * getDesPointer() {return dp_;}
+    LTYPE* getLocPointer() {return lp_;}
+    DTYPE* getDesPointer() {return dp_;}
 
 private:
     int name_;

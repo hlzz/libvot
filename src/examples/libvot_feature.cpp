@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	// process output_folder flags
 	if(FLAGS_output_folder != "")
 	{
-		cout << "Output folder: " << FLAGS_output_folder << endl;
+		cout << "[Extract Feature] Output folder: " << FLAGS_output_folder << endl;
 		tw::IO::Mkdir(FLAGS_output_folder);
 		for(int i = 0; i < num_images; i++)
 		{
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		cout << "Output folder: output to the same folder as the input files.\n";
+		cout << "[Extract Feature] Output folder: output to the same folder as the input files.\n";
 		for(int i = 0; i < num_images; i++)
 			feat_filenames[i] = tw::IO::SplitPathExt(image_filenames[i]).first + ".sift";
 	}
@@ -77,20 +77,20 @@ int main(int argc, char** argv)
 	{
 		case LIBVOT_FEATURE_TYPE::OPENCV_SIFT:
 		{
-			cv::SiftFeatureDetector cv_sift_detector;
+			cv::SiftDescriptorExtractor cv_sift_detector;
 			for(int i = 0; i < num_images; i++)
 			{
 				const cv::Mat input = cv::imread(image_filenames[0], CV_LOAD_IMAGE_COLOR); //Load as grayscale
 
 				std::vector<cv::KeyPoint> cv_keypoints;
+				cv::Mat sift_descriptors;
 				cv_sift_detector.detect(input, cv_keypoints);
+				cv_sift_detector.compute(input, cv_keypoints, sift_descriptors);
 				tw::SiftData sift_data;
-				tw::OpencvKeyPoints2libvotSift(cv_keypoints, sift_data);
+				tw::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
 
-				// Add results to image and save.
-				//cv::Mat output;
-				//cv::drawKeypoints(input, keypoints, output);
-				//cv::imwrite("sift_result.jpg", output);
+				cout << "[Extract Feature] Save sift data to " << feat_filenames[i] << "\n";
+				sift_data.SaveSiftFile(feat_filenames[i]);
 			}
 			break;
 		}
