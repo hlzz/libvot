@@ -50,7 +50,9 @@ the following command should work smoothly and generate several output files in 
 
 Each line in *match.out* contains three numbers “first_index second_index similarity score”. 
 Since the library is multi-threaded, the rank is unordered with respect to the first index (they are ordered w.r.t the second index). 
-*match_pairs* saves the ordered similarity ranks, from *0*th image to *n-1*th image. 
+*match_pairs* saves the ordered similarity ranks, from *0*th image to *n-1*th image.  
+
+libvot now also has a feature extractor in development. You can use `./libvot_feature <image_list>` to first generate a set of descriptor files and use them as inputs to `image_search`.
 
 ## Contributing
 We are working toward the next major release (0.2.0). 
