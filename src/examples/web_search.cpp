@@ -39,9 +39,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <numeric>
 #include <algorithm>
 
-#include "vocab_tree.h"
-#include "io_utils.h"
-#include "data_structures.h"
+#include "vocab_tree/vocab_tree.h"
+#include "utils/io_utils.h"
+#include "utils/data_structures.h"
 
 using namespace std;
 

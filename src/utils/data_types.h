@@ -237,7 +237,7 @@ public:
         fileIn.read((char*) &cardDesc, sizeof(std::size_t));
         npoint_ = cardDesc;
 
-        //restoring location data (since it's useless for now, fill it with 0)
+        //TODO(tianwei): restoring location data (since it's useless for now, fill it with 0)
         lp_ = new LTYPE [npoint_ * nLocDim_];          
         for(size_t i = 0; i < npoint_ * nLocDim_; i++)
             lp_[i] = 0;
@@ -282,8 +282,8 @@ public:
             if(npoint_ >= 0 && nLocDim_ > 0 && nDesDim_ == FDIM)
             {
             	int d, e;
-                d = fwrite(lp_, sizeof(LTYPE), nLocDim_ * npoint_, fd);
-                e = fwrite(dp_, sizeof(DTYPE), nDesDim_ * npoint_, fd);
+                d = fwrite((void*) lp_, sizeof(LTYPE), nLocDim_ * npoint_, fd);
+                e = fwrite((void*) dp_, sizeof(DTYPE), nDesDim_ * npoint_, fd);
                 if(d != nLocDim_ * npoint_ || e != nDesDim_ * npoint_)
                 {
 	            	std::cerr << "[SaveSiftFile] Writing error\n";
@@ -309,8 +309,8 @@ public:
 	void setFeatureNum(int feat_num) {npoint_ = feat_num;}
     int getLocDim() {return nLocDim_;}
     int getDesDim() {return nDesDim_;}
-    LTYPE* getLocPointer() {return lp_;}
-    DTYPE* getDesPointer() {return dp_;}
+    LTYPE* &getLocPointer() {return lp_;}
+    DTYPE* &getDesPointer() {return dp_;}
 
 private:
     int name_;

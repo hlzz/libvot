@@ -5,7 +5,7 @@
 
 * Detailed unit test for each module
 
-* Deep learning methods support
+* Deep learning methods support (tensorflow)
 
 * [Hashing methods](https://github.com/willard-yuan/hashing-baseline-for-image-retrieval) support
 

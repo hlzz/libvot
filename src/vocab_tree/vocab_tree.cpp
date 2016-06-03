@@ -875,8 +875,9 @@ namespace vot
         }
 
         for(size_t i = 0; i < image_num; i++)
-        {
-            std::cout << "[NormalizeDatabase] Normalized image #" << start_id+i << " vector magnitude " << database_mag[i] << std::endl;
+		{
+			std::cout << "[NormalizeDatabase] Normalized image #" << start_id+i <<
+			             " vector magnitude " << database_mag[i] << std::endl;
         }
         return root->NormalizeDatabase(branch_num, start_id, database_mag);
     }

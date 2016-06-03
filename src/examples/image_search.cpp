@@ -39,8 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <thread>
 
 #include "libvot_config.h"
-#include "vot_pipeline.h"
-#include "io_utils.h"
+#include "vocab_tree/vot_pipeline.h"
+#include "utils/io_utils.h"
 
 //TODO(tianwei): figure out a way to do platform-dependent MAX_ARRAY_SIZE
 //#define MAX_ARRAY_SIZE 8388608  // 2^23

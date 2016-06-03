@@ -10,8 +10,8 @@ bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
 {
 	int num_features = key_points.size();
 	sift_data.setFeatureNum(num_features);
-	DTYPE *dp = sift_data.getDesPointer();
-	LTYPE *lp = sift_data.getLocPointer();
+	DTYPE *&dp = sift_data.getDesPointer();
+	LTYPE *&lp = sift_data.getLocPointer();
 
 	if(dp != NULL)
 		delete [] dp;
@@ -32,10 +32,12 @@ bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
 		lp[i*loc_dim + 3] = kp.size;	// scale
 		lp[i*loc_dim + 4] = kp.angle;	// orientation
 
-		// save descriptors (flaot)
+		// save descriptors
 		DTYPE *desc = descriptors.data;
 		for(int j = 0; j < des_dim; j++)
-			dp[i* des_dim + j] = desc[i * des_dim + j];
+		{
+			dp[i * des_dim + j] = static_cast<DTYPE>(desc[i * des_dim + j]);
+		}
 	}
 
 	return true;

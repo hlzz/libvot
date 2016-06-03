@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 			cv::SiftDescriptorExtractor cv_sift_detector;
 			for(int i = 0; i < num_images; i++)
 			{
-				const cv::Mat input = cv::imread(image_filenames[0], CV_LOAD_IMAGE_COLOR); //Load as grayscale
+				const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR); //Load as grayscale
 
 				std::vector<cv::KeyPoint> cv_keypoints;
 				cv::Mat sift_descriptors;

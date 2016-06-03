@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <stdio.h>
 
-#include "io_utils.h"
+#include "utils/io_utils.h"
 
 using namespace std;
 

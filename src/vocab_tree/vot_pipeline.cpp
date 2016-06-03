@@ -89,11 +89,17 @@ namespace vot
 		std::vector<tw::SiftData> sift_data; 
 		sift_data.resize(sample_size); 
 
-		std::cout << "Reading sift (type " << (int)sift_type << ") files...\n";
+		std::cout << "[Build Tree] Reading sift (type " << (int)sift_type << ") files...\n";
 		for(size_t i = 0; i < sample_size; i++) 
 		{
 			if(sift_type == E3D_SIFT) 
 			{
+				std::string file_type = tw::IO::SplitPathExt(sift_filenames[i]).second;
+				if(file_type != "sift")
+				{
+					std::cout << "[Build Tree] Wrong sift type, should match 'sift'\n";
+					return false;
+				}
 				if(sizeof(DTYPE) == 1)
 					sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]); 
 				else
@@ -105,7 +111,7 @@ namespace vot
 			}
 	    	else //if(sift_type == 1) 
 	    	{
-	    		std::cout << "[Build Tree] Sift type is wrong (should be 0). Exit...\n"; 
+	    		std::cout << "[Build Tree] Sift type is not supported. Exit...\n";
 	    		return false;
 	    	}
 	    	total_keys += sift_data[i].getFeatureNum();
