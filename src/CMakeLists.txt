@@ -67,3 +67,5 @@ add_subdirectory(vocab_tree)
 add_subdirectory(image_graph)
 # the executable files
 add_subdirectory(examples)
+# benchmark related files
+add_subdirectory(benchmark)

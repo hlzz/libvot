@@ -10,10 +10,10 @@
 * [Hashing methods](https://github.com/willard-yuan/hashing-baseline-for-image-retrieval) support
 
 * Re-organize code structure  
-    - CMake organization (add installation rules)
+    - better cmake organization (add installation rules)
 
 * Add more feature support, such as VLFeat, BRIEF, etc.  
-    - add vlfeat (check)
+    - add vlfeat (SIFT)
 
 * benchmark dataset performance (2D / 3D)
     - [Oxford 5k](http://www.robots.ox.ac.uk/~vgg/data/oxbuildings/)
@@ -26,3 +26,5 @@
     - python export
 
 * Add option to support opencv
+    - image I/O currently rely on opencv
+    - opencv feature support (contains non-free modules)
