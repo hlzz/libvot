@@ -8,15 +8,11 @@ bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
                                 cv::Mat &descriptors,
                                 tw::SiftData &sift_data)
 {
+	sift_data.clear();
 	int num_features = key_points.size();
 	sift_data.setFeatureNum(num_features);
 	DTYPE *&dp = sift_data.getDesPointer();
 	LTYPE *&lp = sift_data.getLocPointer();
-
-	if(dp != NULL)
-		delete [] dp;
-	if(lp != NULL)
-		delete [] lp;
 
 	int des_dim = sift_data.getDesDim();
 	int loc_dim = sift_data.getLocDim();

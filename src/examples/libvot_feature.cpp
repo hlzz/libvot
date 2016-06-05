@@ -11,6 +11,7 @@
 #include "utils/global_params.h"
 #include "utils/data_types.h"
 #include "feature/opencv_libvot_api.h"
+#include "feature/vlfeat_libvot_api.h"
 
 extern "C" {
 #include <vl/generic.h>
@@ -27,7 +28,9 @@ extern "C" {
 using namespace std;
 
 DEFINE_string(output_folder, "", "feature output folder, the same as the input folder if not specified");
-DEFINE_int32(feature_type, 0, "feature type");
+DEFINE_int32(feature_type, 0, "feature type, 0 for opencv sift, 1 for vlfeat sift");
+DEFINE_double(edge_thresh, 10, "edge threshold for vlfeat parameter");
+DEFINE_double(peak_thresh, 2.5, "peak threshold for vlfeat parameter");
 
 int main(int argc, char** argv)
 {
@@ -77,10 +80,12 @@ int main(int argc, char** argv)
 	{
 		case LIBVOT_FEATURE_TYPE::OPENCV_SIFT:
 		{
+			cout << "[Extract Feature] Compute SIFT features using opencv sift\n";
 			cv::SiftDescriptorExtractor cv_sift_detector;
 			for(int i = 0; i < num_images; i++)
 			{
-				const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR); //Load as grayscale
+				// load the image in BGR format
+				const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
 
 				std::vector<cv::KeyPoint> cv_keypoints;
 				cv::Mat sift_descriptors;
@@ -89,13 +94,28 @@ int main(int argc, char** argv)
 				tw::SiftData sift_data;
 				tw::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
 
-				cout << "[Extract Feature] Save sift data to " << feat_filenames[i] << "\n";
 				sift_data.SaveSiftFile(feat_filenames[i]);
+				cout << "[Extract Feature] Save sift data (" << sift_data.getFeatureNum()
+				     << " features) to " <<  feat_filenames[i] << "\n";
 			}
 			break;
 		}
 		case LIBVOT_FEATURE_TYPE::VLFEAT_SIFT:
 		{
+			cout << "[Extract Feature] Compute SIFT features using vlfeat sift\n";
+			tw::VlFeatParam vlfeat_param;
+			vlfeat_param.edge_thresh = FLAGS_edge_thresh;
+			vlfeat_param.peak_thresh = FLAGS_peak_thresh;
+			for(int i = 0; i < num_images; i++)
+			{
+				const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
+				tw::SiftData sift_data;
+				int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
+				sift_data.SaveSiftFile(feat_filenames[i]);
+				cout << "[Extract Feature] Save sift data (" << num_features
+				     << " features) to " <<  feat_filenames[i] << "\n";
+			}
+
 			break;
 		}
 		default:

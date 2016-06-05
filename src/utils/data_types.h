@@ -24,7 +24,7 @@ public:
         npoint_ = 0;
         nLocDim_ = 5;
         nDesDim_ = 128;
-        dp_ = NULL; lp_ = NULL;
+        dp_ = nullptr; lp_ = nullptr;
     }
 
     // copy constructor
@@ -64,8 +64,8 @@ public:
     // destructor
     ~SiftData()
     {
-        if (NULL != dp_) delete [] dp_;
-        if (NULL != lp_) delete [] lp_;
+        if (nullptr != dp_) delete [] dp_;
+        if (nullptr != lp_) delete [] lp_;
     }
 
 	//TODO(tianwei): add serialization library for I/O
@@ -79,7 +79,7 @@ public:
         name_ = 'S' + ('I' << 8) + ('F' << 16) + ('T' << 24);
         version_ = 'V' + ('5' << 8) + ('.' << 16) + ('0' << 24);
         FILE *fd;
-        if((fd = fopen(szFileName.c_str(), "rb")) == NULL)
+        if((fd = fopen(szFileName.c_str(), "rb")) == nullptr)
         {
             std::cerr << "[ReadSiftFile] Can't read sift file " << szFileName << '\n';
             return false;
@@ -143,7 +143,7 @@ public:
         name_ = 'S' + ('I' << 8) + ('F' << 16) + ('T' << 24);
         version_ = 'V' + ('5' << 8) + ('.' << 16) + ('0' << 24);
         FILE *fd;
-        if((fd = fopen(szFileName.c_str(), "rb")) == NULL)
+        if((fd = fopen(szFileName.c_str(), "rb")) == nullptr)
         {
             std::cout << "[ReadSiftFile] Can't read sift file " << szFileName << '\n';
             return false;
@@ -254,7 +254,7 @@ public:
     bool SaveSiftFile(std::string const &szFileName)
     {
         FILE *fd;
-        if((fd = fopen(szFileName.c_str(), "wb")) == NULL)
+        if((fd = fopen(szFileName.c_str(), "wb")) == nullptr)
         {
             std::cerr << "[SaveSiftFile] Can't open file " << szFileName << " for saving\n";
             return false;
@@ -305,10 +305,23 @@ public:
         return true;
     }
 
-    int getFeatureNum() {return npoint_;}
+    const int getFeatureNum() const {return npoint_;}
 	void setFeatureNum(int feat_num) {npoint_ = feat_num;}
-    int getLocDim() {return nLocDim_;}
-    int getDesDim() {return nDesDim_;}
+    const int getLocDim() const {return nLocDim_;}
+	void setLocDim(int loc_dim) {nLocDim_ = loc_dim;}
+    const int getDesDim() const {return nDesDim_;}
+	void setDesDim(int des_dim) {nDesDim_ = des_dim;}
+	const int getVersion() const {return version_;}
+	void setVersion(int version) {version_ = version;}
+
+	void clear()
+	{
+        if (nullptr != dp_) delete [] dp_;
+        if (nullptr != lp_) delete [] lp_;
+		dp_ = nullptr; lp_ = nullptr;
+	}
+
+	// To manipulate data in SiftData
     LTYPE* &getLocPointer() {return lp_;}
     DTYPE* &getDesPointer() {return dp_;}
 
