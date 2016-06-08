@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <thread>
+
 #include <gflags/gflags.h>
 
 // libvot includes
@@ -29,8 +31,35 @@ using namespace std;
 
 DEFINE_string(output_folder, "", "feature output folder, the same as the input folder if not specified");
 DEFINE_int32(feature_type, 0, "feature type, 0 for opencv sift, 1 for vlfeat sift");
+DEFINE_int32(thread_num, -1, "thread num");
 DEFINE_double(edge_thresh, 10, "edge threshold for vlfeat parameter");
 DEFINE_double(peak_thresh, 2.5, "peak threshold for vlfeat parameter");
+
+void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
+                            std::vector<std::string> *feat_filenames,
+                            tw::VlFeatParam *vlfeat_param,
+                            int first_index,
+                            int num_images,
+                            std::mutex *cout_mutex)
+{
+	for(size_t i = first_index; i < first_index + num_images; i++)
+	{
+		const cv::Mat input = cv::imread((*image_filenames)[i], CV_LOAD_IMAGE_COLOR);
+		tw::SiftData sift_data;
+		int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, *vlfeat_param);
+		if(!sift_data.SaveSiftFile((*feat_filenames)[i]))
+		{
+			cout_mutex->lock();
+			cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
+			cout_mutex->unlock();
+		}
+
+		cout_mutex->lock();
+		cout << "[Extract Feature] Save sift data (" << num_features
+		     << " features) to " <<  (*feat_filenames)[i] << " (" << i << "/" << image_filenames->size() << ")\n";
+		cout_mutex->unlock();
+	}
+}
 
 int main(int argc, char** argv)
 {
@@ -75,6 +104,26 @@ int main(int argc, char** argv)
 			feat_filenames[i] = tw::IO::SplitPathExt(image_filenames[i]).first + ".sift";
 	}
 
+	// process thread number
+	if(FLAGS_thread_num == -1)		// default, use multi-thread
+	{
+		FLAGS_thread_num = std::thread::hardware_concurrency();		// one single thread would take about 3g memory to process sift
+		size_t memory_size = tw::IO::GetAvailMem() / (1024*1024);	// convert to mb
+		int available_thread_num = memory_size/(3 * 1024);
+		FLAGS_thread_num = FLAGS_thread_num > available_thread_num ? available_thread_num : FLAGS_thread_num;
+		FLAGS_thread_num = FLAGS_thread_num > 0 ? FLAGS_thread_num : 1;
+		std::cout << "[Extract Feature] Available memory: " << memory_size <<
+		             " / thread number: " << FLAGS_thread_num << "\n";
+	}
+	else
+	{
+		const int max_thread_num = std::thread::hardware_concurrency();
+		const int min_thread_num = 1;
+		if (FLAGS_thread_num < min_thread_num || FLAGS_thread_num > max_thread_num)
+			FLAGS_thread_num = 1;
+		std::cout << "[Extract Feature] Thread number " << FLAGS_thread_num << " specified by users\n";
+	}
+
 #ifdef LIBVOT_USE_OPENCV
 	switch (FLAGS_feature_type)
 	{
@@ -102,20 +151,50 @@ int main(int argc, char** argv)
 		}
 		case LIBVOT_FEATURE_TYPE::VLFEAT_SIFT:
 		{
-			cout << "[Extract Feature] Compute SIFT features using vlfeat sift\n";
-			tw::VlFeatParam vlfeat_param;
-			vlfeat_param.edge_thresh = FLAGS_edge_thresh;
-			vlfeat_param.peak_thresh = FLAGS_peak_thresh;
-			for(int i = 0; i < num_images; i++)
+			if(FLAGS_thread_num == 1)		// single thread version
 			{
-				const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
-				tw::SiftData sift_data;
-				int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
-				sift_data.SaveSiftFile(feat_filenames[i]);
-				cout << "[Extract Feature] Save sift data (" << num_features
-				     << " features) to " <<  feat_filenames[i] << "\n";
+				cout << "[Extract Feature] Compute SIFT features using vlfeat sift\n";
+				tw::VlFeatParam vlfeat_param;
+				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
+				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
+				for(int i = 0; i < num_images; i++)
+				{
+					const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
+					tw::SiftData sift_data;
+					int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
+					if(!sift_data.SaveSiftFile(feat_filenames[i]))
+					{
+						cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
+						return -1;
+					}
+					cout << "[Extract Feature] Save sift data (" << num_features
+					<< " features) to " <<  feat_filenames[i] << " (" << i << "/" << num_images << ")\n";
+				}
 			}
+			else 		// multi-thread
+			{
+				cout << "[Extract Feature] Compute SIFT features using vlfeat sift (multi-thread)\n";
+				std::vector<std::thread> threads;
+				std::mutex cout_mutex;
 
+				tw::VlFeatParam vlfeat_param;
+				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
+				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
+
+				size_t off = 0;
+				for(int i = 0; i < FLAGS_thread_num; i++)
+				{
+					size_t thread_image = num_images / FLAGS_thread_num;
+					if(i == FLAGS_thread_num - 1)
+						thread_image = num_images - (FLAGS_thread_num - 1) * thread_image;
+
+					threads.push_back(std::thread(MultiVlfeatSiftExtract,
+					                              &image_filenames, &feat_filenames,
+					                              &vlfeat_param, off, thread_image, &cout_mutex));
+					off += thread_image;
+				}
+				std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
+			}
 			break;
 		}
 		default:
