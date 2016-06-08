@@ -10,7 +10,7 @@ sudo apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavf
 sudo apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
 
 # clone the latest opencv repo in github
-git clone https://github.com/Itseez/opencv.git
+git clone -b 2.4 https://github.com/Itseez/opencv.git
 cd opencv
 # set build instructions for linux 
 mkdir build
