@@ -5,7 +5,7 @@ find_package(Threads REQUIRED)
 add_executable(image_search image_search.cpp)
 set_property(TARGET image_search PROPERTY CXX_STANDARD 11)
 set_property(TARGET image_search PROPERTY CXX_STANDARD_REQUIRED on)
-target_link_libraries(image_search ${CMAKE_THREAD_LIBS_INIT} vot_vocabtree vot_utils)
+target_link_libraries(image_search ${CMAKE_THREAD_LIBS_INIT} vot_vocabtree vot_utils ${GFLAGS_LIBRARY})
 install (TARGETS image_search DESTINATION bin CONFIGURATIONS Release)
 
 # graph_partition

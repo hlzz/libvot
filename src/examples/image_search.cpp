@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Tianwei Shen
+Copyright (c) 2015 - 2016, Tianwei Shen
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <fstream>
 #include <thread>
+#include <gflags/gflags.h>
 
 #include "libvot_config.h"
 #include "vocab_tree/vot_pipeline.h"
@@ -51,11 +52,18 @@ sift_type: 0 - our own sift data format
            1 - vlfeat sift (in openMVG format)
            2 - TODO(tianwei): lowe's sift type
 */
+typedef enum benchmark_dataset {
+	BENCHMARK_NO = 0,
+	BENCHMARK_OXFORD5K = 1,
+} benchmark_dataset;
+
+DEFINE_int32(benchmark, 0, "feature output folder, the same as the input folder if not specified");
 
 int main(int argc, char **argv)
 {
 	fprintf(stdout, "libvot version: %d.%d.%d\n", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
-    if (argc < 3) 
+	gflags::ParseCommandLineFlags(&argc, &argv, true);
+    if (argc < 3)
     {
         printf("Usage: %s <sift_list> <output_dir> [depth] [branch_num] [sift_type] [num_matches] [thread_num]\n", argv[0]);
         return -1;
@@ -99,6 +107,21 @@ int main(int argc, char **argv)
 		return -1;
     if(!vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches))
 		return -1;
+
+	if(FLAGS_benchmark)
+	{
+		benchmark_dataset benchmark_flag = (benchmark_dataset) FLAGS_benchmark;
+		switch(benchmark_flag)
+		{
+			case BENCHMARK_OXFORD5K:
+			{
+				std::cout << "[Image Search] Output benchmark files in oxford5k's use.\n";
+				break;
+			}
+			default:
+				std::cout << "[Image Search] Benchmark type not supported.\n";
+		}
+	}
 
     return 0;
 }

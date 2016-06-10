@@ -36,24 +36,63 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace vot
 {
-	bool BuildVocabTree(const char *sift_list, 
-						const char *output_filename, 
-						int depth = 6, int branch_num = 8, 
-						SiftType sift_type = E3D_SIFT, int thread_num = 1);
+///
+/// \brief BuildVocabTree: build a vocabulary tree using a set of sift files
+/// \param sift_list: the file path of the sift list
+/// \param output_filename: the file path of the output tree file
+/// \param depth: depth of the vocabulary tree
+/// \param branch_num: branch number
+/// \param sift_type: feature type
+/// \param thread_num: thread number for multi-thread processing
+/// \return true if success
+///
+bool BuildVocabTree(const char *sift_list,
+                    const char *output_filename,
+                    int depth = 6, int branch_num = 8,
+                    SiftType sift_type = E3D_SIFT, int thread_num = 1);
 
-	bool BuildImageDatabase(const char *sift_list, 
-							const char *input_tree, 
-							const char *output_filename, 
-							SiftType sift_type = E3D_SIFT, 
-							size_t start_id = 0, 
-							int thread_num = 1);
+///
+/// \brief BuildImageDatabase: build a image database with pre-trained vocabulary tree
+/// \param sift_list: the file path of the sift list
+/// \param input_tree: the file path of the tree file
+/// \param output_filename: the file path of the output image database
+/// \param sift_type: feature type
+/// \param start_id: start id for the images, if not built from new (append)
+/// \param thread_num: thread number for multi-thread processing
+/// \return true if success
+///
+bool BuildImageDatabase(const char *sift_list,
+                        const char *input_tree,
+                        const char *output_filename,
+                        SiftType sift_type = E3D_SIFT,
+                        size_t start_id = 0,
+                        int thread_num = 1);
 
-	bool QueryDatabase(const char *image_db, 
-					   const char *query_sift_list, 
-					   const char *match_output, 
-					   SiftType sift_type = E3D_SIFT, int thread_num = 1);
+///
+/// \brief QueryDatabase: query the image database with a sift list file
+/// \param image_db: the file path of the input image database
+/// \param query_sift_list: the file path of the query sift list file
+/// \param match_output: the rank list output
+/// \param sift_type: feature type
+/// \param thread_num: thread number for multi-thread processing
+/// \return true if success
+///
+///
+bool QueryDatabase(const char *image_db,
+                   const char *query_sift_list,
+                   const char *match_output,
+                   SiftType sift_type = E3D_SIFT, int thread_num = 1);
 
-	bool FilterMatchList(const char *sift_list, const char *match_list, const char *output, size_t num_matches);
+///
+/// \brief FilterMatchList: filter output match file and output TOP-k rank lists
+/// \param sift_list: the file path of the sift list
+/// \param match_list: the file path of the output match file
+/// \param output: the output top-k matched pairs
+/// \param num_matches: the number top-k images
+/// \return true if success
+///
+bool FilterMatchList(const char *sift_list, const char *match_list, const char *output, size_t num_matches);
+
 }
 
 #endif
