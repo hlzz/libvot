@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef VOT_PIPELINE_HEADER
 #define VOT_PIPELINE_HEADER
 
-#include "../utils/global_params.h"
+#include "utils/global_params.h"
 
 namespace vot
 {

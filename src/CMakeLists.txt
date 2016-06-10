@@ -21,35 +21,6 @@ configure_file (
   )
 install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/libvot_config.h" DESTINATION include)
 
-# include files
-set(LIBVOT_INCLUDES
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party
-    ${CMAKE_CURRENT_SOURCE_DIR}/vocab_tree
-    ${CMAKE_CURRENT_SOURCE_DIR}/utils
-    ${CMAKE_CURRENT_SOURCE_DIR}/feature
-    ${CMAKE_CURRENT_SOURCE_DIR}/matching
-    )
-include_directories(BEFORE ${LIBVOT_INCLUDES})
-
-# ==============================================================================
-# Set libraries begin 
-# ==============================================================================
-# (This has to be specified before compiling the executables)
-
-# Setup vlfeat for feature detection
-set(VLFEAT_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/third_party/vlfeat
-    )
-set(VLFEAT_LIBRARY vlfeat)
-include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
-
-# Setup gflags for command line tools
-# use the built-in gflags include directory, defined in gflags CMakefile
-include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
-set(GFLAGS_LIBRARY gflags)
-# ---------------- Set libraries end ---------------------
-
 # Specify output bin_path and lib_path
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

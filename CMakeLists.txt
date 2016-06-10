@@ -63,6 +63,34 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# ==============================================================================
+# Set includes and libraries begin
+# ==============================================================================
+# (This has to be specified before compiling the executables)
+# include files
+set(LIBVOT_INCLUDES
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/third_party
+    ${CMAKE_SOURCE_DIR}/src/vocab_tree
+    ${CMAKE_SOURCE_DIR}/src/utils
+    ${CMAKE_SOURCE_DIR}/src/feature
+    ${CMAKE_SOURCE_DIR}/src/matching
+    )
+include_directories(BEFORE ${LIBVOT_INCLUDES})
+
+# Setup vlfeat for feature detection
+set(VLFEAT_INCLUDE_DIRS
+    ${CMAKE_SOURCE_DIR}/src/third_party/vlfeat
+    )
+set(VLFEAT_LIBRARY vlfeat)
+include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
+
+# Setup gflags for command line tools
+# use the built-in gflags include directory, defined in gflags CMakefile
+include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
+set(GFLAGS_LIBRARY gflags)
+# =============================== Set libraries end ==============================
+
 # The source files
 add_subdirectory(src)
 

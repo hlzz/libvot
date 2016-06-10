@@ -1,9 +1,6 @@
 # Tianwei Shen <shentianweipku@gmail.com> HKUST.
 # All rights reserved.
 
-# Where Google Test's .h files can be found.
-include_directories(${gtest_SOURCE_DIR}/include)
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
@@ -31,7 +28,13 @@ target_link_libraries(unit_test gtest_main)
 add_test(unit_test unit_test)
 
 if(LIBVOT_USE_OPENCV)
+	# opencv basic test
     add_executable(opencv_test opencv_test.cpp)
     target_link_libraries(opencv_test ${OpenCV_LIBS})
     add_test(opencv_test opencv_test ${CMAKE_SOURCE_DIR}/test_data/lena.jpg)
+
+	# libvot_feature test
+    add_executable(libvot_feature_test libvot_feature_test.cpp)
+    target_link_libraries(libvot_feature_test vot_feature vot_utils)
+    add_test(libvot_feature_test libvot_feature_test ${CMAKE_SOURCE_DIR}/test_data/lena.jpg)
 endif(LIBVOT_USE_OPENCV)

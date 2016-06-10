@@ -36,8 +36,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdlib>
 #include <mutex>
 
-#include "../utils/global_params.h"
-#include "../utils/data_types.h"
+#include "utils/global_params.h"
+#include "utils/data_types.h"
 
 namespace vot
 {

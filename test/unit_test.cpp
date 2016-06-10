@@ -4,11 +4,11 @@
 #include <vector>
 #include <fstream>
 
-#include "../src/vocab_tree/vot_pipeline.h"
+#include "vocab_tree/vot_pipeline.h"
 #include "gtest/gtest.h"
-#include "../src/image_graph/image_graph.h"
-#include "../src/utils/data_types.h"
-#include "../src/utils/openmvg_descriptor.hpp"
+#include "image_graph/image_graph.h"
+#include "utils/data_types.h"
+#include "utils/openmvg_descriptor.hpp"
 	
 // -------------------------------------------------------- //
 // 															//

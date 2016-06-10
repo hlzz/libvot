@@ -44,9 +44,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "vot_pipeline.h"
 #include "vocab_tree.h"
-#include "../utils/io_utils.h"
-#include "../utils/data_types.h"
-#include "../utils/data_structures.h"
+#include "utils/io_utils.h"
+#include "utils/data_types.h"
+#include "utils/data_structures.h"
 
 #define MAX_ARRAY_SIZE 8388608  // 2^23
 
