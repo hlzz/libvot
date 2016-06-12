@@ -2,3 +2,4 @@ src/*
 build/*
 test_data/*
 CMakeLists.txt.user
+doc/latex/*
