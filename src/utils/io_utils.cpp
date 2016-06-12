@@ -263,6 +263,13 @@ namespace tw
 		return res;
 	}
 
+	std::string IO::GetFilename(std::string path)
+	{
+		std::string res = SplitPath(path).second;
+		res = SplitPathExt(res).first;
+		return res;
+	}
+
     bool IO::Mkdir(const std::string path)
     {
         #ifdef _MSC_VER

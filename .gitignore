@@ -33,6 +33,9 @@
 # Build directory
 build/*
 
+# test_data ignores
+test_data/lena.sift
+
 # qt cmake user file
 CMakeLists.txt.user
 

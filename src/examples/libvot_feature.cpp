@@ -6,7 +6,7 @@
 #include <thread>
 #include <mutex>
 
-#include <gflags/gflags.h>
+#include "gflags/gflags.h"
 
 // libvot includes
 #include "libvot_config.h"
@@ -80,6 +80,20 @@ int main(int argc, char** argv)
 	}
 
 	const char *c_image_list = argv[1];
+	// guard against single image input
+	string image_list_ext = tw::IO::SplitPathExt(std::string(argv[1])).second;
+	const int image_ext_num = 18;
+	const string image_ext[image_ext_num] = {"JPG", "JPEG", "PNG", "TIFF", "BMP", "PPM", "PGM", "PNM", "GIF",
+	                                         "jpg", "jpeg", "png", "tiff", "bmp", "ppm", "pgm", "pnm", "gif"};
+	for(int i = 0; i < image_ext_num; i++)
+	{
+		if(image_list_ext == image_ext[i])
+		{
+			cerr << "[Extract Feature] " << argv[0] << " takes a image filename list as input, convert image to list!\n";
+			exit(-1);
+		}
+	}
+
 	vector<string> image_filenames, feat_filenames;
 	tw::IO::ExtractLines(c_image_list, image_filenames);
 	int num_images = image_filenames.size();
@@ -144,7 +158,11 @@ int main(int argc, char** argv)
 				tw::SiftData sift_data;
 				tw::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
 
-				sift_data.SaveSiftFile(feat_filenames[i]);
+				if(!sift_data.SaveSiftFile(feat_filenames[i]))
+				{
+					cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
+					exit(-1);
+				}
 				cout << "[Extract Feature] Save sift data (" << sift_data.getFeatureNum()
 				     << " features) to " <<  feat_filenames[i] << "\n";
 			}

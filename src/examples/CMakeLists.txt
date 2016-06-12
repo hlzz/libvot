@@ -41,10 +41,11 @@ set_property(TARGET euclidean_matrix PROPERTY CXX_STANDARD 11)
 set_property(TARGET euclidean_matrix PROPERTY CXX_STANDARD_REQUIRED on)
 install (TARGETS euclidean_matrix DESTINATION bin CONFIGURATIONS Release)
 
-add_executable(web_search web_search.cpp ../vocab_tree/vocab_tree.cpp ../vocab_tree/clustering.cpp)
+# output a single ranked list for each query sift file
+add_executable(web_search web_search.cpp)
 set_property(TARGET web_search PROPERTY CXX_STANDARD 11)
 set_property(TARGET web_search PROPERTY CXX_STANDARD_REQUIRED on)
-target_link_libraries(web_search vot_utils)
+target_link_libraries(web_search vot_utils vot_vocabtree ${GFLAGS_LIBRARY})
 install (TARGETS web_search DESTINATION bin CONFIGURATIONS Release)
 
 # using vlfeat feature in libvot

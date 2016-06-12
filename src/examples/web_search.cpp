@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Tianwei Shen
+Copyright (c) 2015 - 2016, Tianwei Shen
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -39,27 +39,33 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <numeric>
 #include <algorithm>
 
+#include "gflags/gflags.h"
 #include "vocab_tree/vocab_tree.h"
 #include "utils/io_utils.h"
 #include "utils/data_structures.h"
 
 using namespace std;
 
+DEFINE_string(output_folder, "", "Output folder for ranked list");
+DEFINE_int32(match_num, 200, "The length of the ranked list (top-k)");
+DEFINE_bool(output_filename, true, "Output image name instead of image index");
+
 int main(int argc, char **argv)
 {
-    if (argc < 5) 
+	gflags::ParseCommandLineFlags(&argc, &argv, true);
+    if (argc < 4)
     {
-        printf("Usage: %s <sift_filename> <db_image_list> <db_path> <output_path> [num_matches]\n", argv[0]);
+        printf("Usage: %s <input_sift_file> <db_image_list> <db_path> "
+		       "[--output_folder <output_folder>] [num_matches <num_matches>]\n", argv[0]);
         return -1;
     }
 
     const char *sift_filename = argv[1];
     const char *db_image_list = argv[2];
     const char *image_db = argv[3];
-    const char *output_path = argv[4];
-
-    int num_matches = 5;
-    if(argc > 5) num_matches = atoi(argv[5]);
+    const std::string output_folder = FLAGS_output_folder;
+	const int num_matches = FLAGS_match_num;
+	const bool is_output_name = FLAGS_output_filename;
 
     // get db image filenames
     std::vector<std::string> db_image_filenames;
@@ -72,12 +78,36 @@ int main(int argc, char **argv)
 
     tw::SiftData sift;
     std::string sift_str(sift_filename);
-    sift.ReadSiftFile(sift_str);
+	const std::string sift_str_ext = tw::IO::SplitPathExt(sift_str).second;
+	if(sift_str_ext == "sift")
+	{
+		if(!sift.ReadSiftFile(sift_str))
+		{
+			std::cout << "[VocabMatch] ReadSiftFile error\n";
+			exit(-1);
+		}
+	}
+	else if(sift_str_ext == "desc")
+	{
+		if(!sift.ReadOpenmvgDesc<DTYPE, FDIM>(sift_str))
+		{
+			std::cout << "[VocabMatch] ReadOpenmvgDesc error\n";
+			exit(-1);
+		}
+	}
+	else
+		std::cout << "[VocabMatch] Ext not supported by libvot\n";
 
-    FILE *match_file = fopen(output_path, "w");
+	// get rank list output path from sift_filename
+	std::string output_path = sift_str;
+	output_path = tw::IO::GetFilename(sift_str) + ".rank";
+	output_path = tw::IO::JoinPath(output_folder, output_path);
+
+    FILE *match_file = fopen(output_path.c_str(), "w");
     if(match_file == NULL)
     {
         std::cout << "[VocabMatch] Fail to open the match file.\n";
+		return -1;
     }
     int db_image_num = tree->database_image_num;
     float *scores = new float[db_image_num];
@@ -90,8 +120,20 @@ int main(int argc, char **argv)
 		return scores[i0] > scores[i1];
 	});
     int top = num_matches > db_image_num ? db_image_num : num_matches;
-	for (size_t j = 0; j < top; j++)
-		fprintf(match_file, "%s\n", db_image_filenames[indexed_scores[j]].c_str());
+	if(is_output_name)
+	{
+		for (size_t j = 0; j < top; j++)
+		{
+			std::string image_name = tw::IO::GetFilename(db_image_filenames[indexed_scores[j]]);
+			fprintf(match_file, "%s\n", image_name.c_str());
+		}
+	}
+	else
+	{
+		for (size_t j = 0; j < top; j++)
+			fprintf(match_file, "%zu\n", indexed_scores[j]);
+	}
+	std::cout << "[VocabMatch] Succesful query and the rank list is output to " << output_path << ".\n";
 
     delete [] scores;
     delete [] indexed_scores;

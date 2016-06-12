@@ -68,6 +68,7 @@ namespace tw
 
         static std::pair<std::string, std::string> SplitPath(std::string path);		//!< separate the folder from the filename
         static std::pair<std::string, std::string> SplitPathExt(std::string path); 	//!< separate the basename from the file type (extension)
+		static std::string GetFilename(std::string path);		//!< get filename without folder path and suffix file format
 
 		static bool Mkdir(const std::string path);      //!< make a directory
         static size_t GetAvailMem();                    //!< return the total availbale memory that can be used 
