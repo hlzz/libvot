@@ -1,0 +1,4 @@
+src/*
+build/*
+test_data/*
+CMakeLists.txt.user
