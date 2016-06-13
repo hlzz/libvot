@@ -12,7 +12,7 @@ var searchData=
   ['getversion',['getVersion',['../classtw_1_1_sift_data.html#a48901f374b307c645ebd557e3ed69b13',1,'tw::SiftData']]],
   ['global_5fparams_2ecpp',['global_params.cpp',['../global__params_8cpp.html',1,'']]],
   ['global_5fparams_2eh',['global_params.h',['../global__params_8h.html',1,'']]],
-  ['globalparam',['GlobalParam',['../class_global_param.html',1,'']]],
+  ['globalparam',['GlobalParam',['../classvot_1_1_global_param.html',1,'vot']]],
   ['graph_5fpartition_2ecpp',['graph_partition.cpp',['../graph__partition_8cpp.html',1,'']]],
   ['graphvizu',['graphvizu',['../classvot_1_1_image_graph.html#afc9d0c9174c3c7afcb5794c98c26a693',1,'vot::ImageGraph']]]
 ];

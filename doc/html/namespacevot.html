@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libvot
-   &#160;<span id="projectnumber">0.1.2</span>
+   &#160;<span id="projectnumber">0.1.3</span>
    </div>
    <div id="projectbrief">A C++11 multithread library for image retrieval</div>
   </td>
@@ -98,14 +98,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvot_1_1_global_param.html">GlobalParam</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">global parameters  <a href="classvot_1_1_global_param.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvot_1_1_image_count.html">ImageCount</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This class contains a index for an image and a count for image.  <a href="classvot_1_1_image_count.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvot_1_1_image_graph.html">ImageGraph</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Image graph class.  <a href="classvot_1_1_image_graph.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvot_1_1_image_node.html">ImageNode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">the image node used in image graph class  <a href="structvot_1_1_image_node.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvot_1_1_link_edge.html">LinkEdge</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">edge struct used in image graph class  <a href="structvot_1_1_link_edge.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classvot_1_1_tree_in_node.html">TreeInNode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interior node class of the tree.  <a href="classvot_1_1_tree_in_node.html#details">More...</a><br /></td></tr>
@@ -122,6 +128,16 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:a8103c0198bf83e51cc9ab321711473db"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a8103c0198bf83e51cc9ab321711473db">LIBVOT_FEATURE_TYPE</a> { <a class="el" href="namespacevot.html#a8103c0198bf83e51cc9ab321711473dbab4dec3f601be7e4b0eb116eb4a23af82">OPENCV_SIFT</a> = 0, 
+<a class="el" href="namespacevot.html#a8103c0198bf83e51cc9ab321711473dba4fe5b503b339161a1ba5ce521b709b6b">VLFEAT_SIFT</a> = 1
+ }<tr class="memdesc:a8103c0198bf83e51cc9ab321711473db"><td class="mdescLeft">&#160;</td><td class="mdescRight">feature type used in libvot_feature  <a href="namespacevot.html#a8103c0198bf83e51cc9ab321711473db">More...</a><br /></td></tr>
+<tr class="separator:a8103c0198bf83e51cc9ab321711473db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</td></tr>
+<tr class="memitem:afa8f73721606db607a4c932a11d9265d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">SiftType</a> { <a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda">E3D_SIFT</a> = 0, 
+<a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265da2377bc8db54d4f8d323c60735d636a58">OPENMVG_FEAT</a> = 1
+ }<tr class="memdesc:afa8f73721606db607a4c932a11d9265d"><td class="mdescLeft">&#160;</td><td class="mdescRight">sift feature type used in vocabulary tree  <a href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">More...</a><br /></td></tr>
+<tr class="separator:afa8f73721606db607a4c932a11d9265d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</td></tr>
 <tr class="memitem:a921bb2c6bc27b381961467c0436a3a4e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a921bb2c6bc27b381961467c0436a3a4e">DistanceType</a> { <a class="el" href="namespacevot.html#a921bb2c6bc27b381961467c0436a3a4ea36782d94017293014bb3ecd9c865b05f">L1</a> = 1, 
 <a class="el" href="namespacevot.html#a921bb2c6bc27b381961467c0436a3a4ea1e907f266259cbd8b2c80a7007b6dbf8">L2</a> = 2
  }<tr class="separator:a921bb2c6bc27b381961467c0436a3a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,21 +145,31 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aa084b0b606dfd064e05468c0b91e2e94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#aa084b0b606dfd064e05468c0b91e2e94">showi</a> (int i)</td></tr>
+<tr class="separator:aa084b0b606dfd064e05468c0b91e2e94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0ee72096f32c506dcea22a9f10a863b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#af0ee72096f32c506dcea22a9f10a863b">showd</a> (double d)</td></tr>
+<tr class="separator:af0ee72096f32c506dcea22a9f10a863b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac72d7ee463982353736b03cc2e42e8a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#ac72d7ee463982353736b03cc2e42e8a0">showf</a> (float f)</td></tr>
+<tr class="separator:ac72d7ee463982353736b03cc2e42e8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7351021d5df2341511094d1971e248d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#aa7351021d5df2341511094d1971e248d">shows</a> (std::string s)</td></tr>
+<tr class="separator:aa7351021d5df2341511094d1971e248d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2748401aa933edefe336fb4fab9b0a24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a2748401aa933edefe336fb4fab9b0a24">showf</a> (double f)</td></tr>
+<tr class="separator:a2748401aa933edefe336fb4fab9b0a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa8386a6130e1a4f4ce03737968d8c87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#aaa8386a6130e1a4f4ce03737968d8c87">MultiRecursiveBuild</a> (<a class="el" href="classvot_1_1_tree_node.html">TreeNode</a> *children, size_t num_keys, int dim, int depth, int depth_curr, int bf, <a class="el" href="global__params_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> **p, double *means, int *assign, int sub_thread_num)</td></tr>
 <tr class="separator:aaa8386a6130e1a4f4ce03737968d8c87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b94e780cf642eb52c70ad54e4c67045"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a5b94e780cf642eb52c70ad54e4c67045">MultiAddImage</a> (<a class="el" href="classvot_1_1_tree_node.html">TreeNode</a> *root, float *scores, <a class="el" href="global__params_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a> *v, size_t image_index, int num_feature, int branch_num, int dim, bool add)</td></tr>
 <tr class="separator:a5b94e780cf642eb52c70ad54e4c67045"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a840305c7ff23fb85130e0bb776146476"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a840305c7ff23fb85130e0bb776146476">RandomSample</a> (size_t total, size_t sample_num)</td></tr>
 <tr class="separator:a840305c7ff23fb85130e0bb776146476"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a1682b01b84c7d8c8ca80be6b4e6bb32b">BuildVocabTree</a> (const char *sift_list, const char *output_filename, int depth=6, int branch_num=8, <a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a> sift_type=<a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a>, int thread_num=1)</td></tr>
+<tr class="memitem:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a1682b01b84c7d8c8ca80be6b4e6bb32b">BuildVocabTree</a> (const char *sift_list, const char *output_filename, int depth=6, int branch_num=8, <a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">SiftType</a> sift_type=<a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda">E3D_SIFT</a>, int thread_num=1)</td></tr>
 <tr class="memdesc:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="mdescLeft">&#160;</td><td class="mdescRight">BuildVocabTree: build a vocabulary tree using a set of sift files.  <a href="#a1682b01b84c7d8c8ca80be6b4e6bb32b">More...</a><br /></td></tr>
 <tr class="separator:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a50f87fdcda35c5a9c2d2acf5d03cf3e6">BuildImageDatabase</a> (const char *sift_list, const char *input_tree, const char *output_filename, <a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a> sift_type=<a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a>, size_t start_id=0, int thread_num=1)</td></tr>
+<tr class="memitem:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a50f87fdcda35c5a9c2d2acf5d03cf3e6">BuildImageDatabase</a> (const char *sift_list, const char *input_tree, const char *output_filename, <a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">SiftType</a> sift_type=<a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda">E3D_SIFT</a>, size_t start_id=0, int thread_num=1)</td></tr>
 <tr class="memdesc:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">BuildImageDatabase: build a image database with pre-trained vocabulary tree.  <a href="#a50f87fdcda35c5a9c2d2acf5d03cf3e6">More...</a><br /></td></tr>
 <tr class="separator:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa04dfb2525b5daeba744cbd1de19f703"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#aa04dfb2525b5daeba744cbd1de19f703">MultiQueryDatabase</a> (<a class="el" href="classvot_1_1_vocab_tree.html">vot::VocabTree</a> *tree, std::vector&lt; std::string &gt; *sift_filenames, int sift_type, size_t first_index, size_t num_images, float *scores, size_t *indexed_scores, FILE *match_file, std::mutex *match_file_mutex)</td></tr>
 <tr class="separator:aa04dfb2525b5daeba744cbd1de19f703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad191aadd07dc60a9fd462cbe48e59791"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#ad191aadd07dc60a9fd462cbe48e59791">QueryDatabase</a> (const char *image_db, const char *query_sift_list, const char *match_output, <a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a> sift_type=<a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a>, int thread_num=1)</td></tr>
+<tr class="memitem:ad191aadd07dc60a9fd462cbe48e59791"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#ad191aadd07dc60a9fd462cbe48e59791">QueryDatabase</a> (const char *image_db, const char *query_sift_list, const char *match_output, <a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">SiftType</a> sift_type=<a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda">E3D_SIFT</a>, int thread_num=1)</td></tr>
 <tr class="memdesc:ad191aadd07dc60a9fd462cbe48e59791"><td class="mdescLeft">&#160;</td><td class="mdescRight">QueryDatabase: query the image database with a sift list file.  <a href="#ad191aadd07dc60a9fd462cbe48e59791">More...</a><br /></td></tr>
 <tr class="separator:ad191aadd07dc60a9fd462cbe48e59791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d3e103bb024d0567498eb5ecf6ed7c8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a3d3e103bb024d0567498eb5ecf6ed7c8">FilterMatchList</a> (const char *sift_list, const char *match_list, const char *output, size_t num_matches)</td></tr>
@@ -176,6 +202,50 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a8103c0198bf83e51cc9ab321711473db"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacevot.html#a8103c0198bf83e51cc9ab321711473db">vot::LIBVOT_FEATURE_TYPE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>feature type used in libvot_feature </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a8103c0198bf83e51cc9ab321711473dbab4dec3f601be7e4b0eb116eb4a23af82"></a>OPENCV_SIFT&#160;</td><td class="fielddoc">
+<p>opencv sift feature type </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a8103c0198bf83e51cc9ab321711473dba4fe5b503b339161a1ba5ce521b709b6b"></a>VLFEAT_SIFT&#160;</td><td class="fielddoc">
+<p>vlfeat sift feature type </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="afa8f73721606db607a4c932a11d9265d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">vot::SiftType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>sift feature type used in vocabulary tree </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda"></a>E3D_SIFT&#160;</td><td class="fielddoc">
+<p>the standard internal sift data structure of libvot </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="afa8f73721606db607a4c932a11d9265da2377bc8db54d4f8d323c60735d636a58"></a>OPENMVG_FEAT&#160;</td><td class="fielddoc">
+<p>the sift data structure used in openmvg </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a50f87fdcda35c5a9c2d2acf5d03cf3e6"></a>
 <div class="memitem">
@@ -202,8 +272,8 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a>&#160;</td>
-          <td class="paramname"><em>sift_type</em> = <code><a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a></code>, </td>
+          <td class="paramtype"><a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">SiftType</a>&#160;</td>
+          <td class="paramname"><em>sift_type</em> = <code><a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda">E3D_SIFT</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -272,8 +342,8 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a>&#160;</td>
-          <td class="paramname"><em>sift_type</em> = <code><a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a></code>, </td>
+          <td class="paramtype"><a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">SiftType</a>&#160;</td>
+          <td class="paramname"><em>sift_type</em> = <code><a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda">E3D_SIFT</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -584,8 +654,8 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a>&#160;</td>
-          <td class="paramname"><em>sift_type</em> = <code><a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a></code>, </td>
+          <td class="paramtype"><a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265d">SiftType</a>&#160;</td>
+          <td class="paramname"><em>sift_type</em> = <code><a class="el" href="namespacevot.html#afa8f73721606db607a4c932a11d9265dae5cf108a937760cb8cd2bedfd4fa2fda">E3D_SIFT</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -640,6 +710,86 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Random sample "sample_num" number of numbers from [0, 1, ... , total] (total &gt;= sample_num) </p>
+
+</div>
+</div>
+<a class="anchor" id="af0ee72096f32c506dcea22a9f10a863b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vot::showd </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac72d7ee463982353736b03cc2e42e8a0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vot::showf </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a2748401aa933edefe336fb4fab9b0a24"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vot::showf </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa084b0b606dfd064e05468c0b91e2e94"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vot::showi </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa7351021d5df2341511094d1971e248d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vot::shows </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

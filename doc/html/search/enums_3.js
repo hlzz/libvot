@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sifttype',['SiftType',['../global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748',1,'global_params.h']]]
+  ['sifttype',['SiftType',['../namespacevot.html#afa8f73721606db607a4c932a11d9265d',1,'vot']]]
 ];

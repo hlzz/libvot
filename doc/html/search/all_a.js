@@ -6,7 +6,7 @@ var searchData=
   ['leaves_5fcount',['leaves_count',['../namespacevot.html#ae078fe0abe521ec8eed52242ec258b56',1,'vot']]],
   ['libvot_5fconfig_2eh',['libvot_config.h',['../libvot__config_8h.html',1,'']]],
   ['libvot_5ffeature_2ecpp',['libvot_feature.cpp',['../libvot__feature_8cpp.html',1,'']]],
-  ['libvot_5ffeature_5ftype',['LIBVOT_FEATURE_TYPE',['../global__params_8h.html#af527e7a54d2d80b79c8129ae3efad5e5',1,'global_params.h']]],
+  ['libvot_5ffeature_5ftype',['LIBVOT_FEATURE_TYPE',['../namespacevot.html#a8103c0198bf83e51cc9ab321711473db',1,'vot']]],
   ['libvot_5fversion_5fmajor',['LIBVOT_VERSION_MAJOR',['../libvot__config_8h.html#aaee125c87ba80cb059843263501b304c',1,'libvot_config.h']]],
   ['libvot_5fversion_5fminor',['LIBVOT_VERSION_MINOR',['../libvot__config_8h.html#aabf72f4519c7bffa3e5e61410040020f',1,'libvot_config.h']]],
   ['libvot_5fversion_5fpatch',['LIBVOT_VERSION_PATCH',['../libvot__config_8h.html#a44af9182fb3094c7219e34b387e9a92f',1,'libvot_config.h']]],

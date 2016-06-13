@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libvot
-   &#160;<span id="projectnumber">0.1.2</span>
+   &#160;<span id="projectnumber">0.1.3</span>
    </div>
    <div id="projectbrief">A C++11 multithread library for image retrieval</div>
   </td>
@@ -95,6 +95,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">vot_pipeline.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>vocabulary tree pipeline implementation.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;string&gt;</code><br />
@@ -128,22 +131,25 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a840305c7ff23fb85130e0bb776146476"><td class="memItemLeft" align="right" valign="top">std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a840305c7ff23fb85130e0bb776146476">vot::RandomSample</a> (size_t total, size_t sample_num)</td></tr>
 <tr class="separator:a840305c7ff23fb85130e0bb776146476"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a1682b01b84c7d8c8ca80be6b4e6bb32b">vot::BuildVocabTree</a> (const char *sift_list, const char *output_filename, int depth=6, int branch_num=8, <a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a> sift_type=<a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a>, int thread_num=1)</td></tr>
+<tr class="memitem:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a1682b01b84c7d8c8ca80be6b4e6bb32b">vot::BuildVocabTree</a> (const char *sift_list, const char *output_filename, int depth=6, int branch_num=8, SiftType sift_type=E3D_SIFT, int thread_num=1)</td></tr>
 <tr class="memdesc:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="mdescLeft">&#160;</td><td class="mdescRight">BuildVocabTree: build a vocabulary tree using a set of sift files.  <a href="namespacevot.html#a1682b01b84c7d8c8ca80be6b4e6bb32b">More...</a><br /></td></tr>
 <tr class="separator:a1682b01b84c7d8c8ca80be6b4e6bb32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a50f87fdcda35c5a9c2d2acf5d03cf3e6">vot::BuildImageDatabase</a> (const char *sift_list, const char *input_tree, const char *output_filename, <a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a> sift_type=<a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a>, size_t start_id=0, int thread_num=1)</td></tr>
+<tr class="memitem:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a50f87fdcda35c5a9c2d2acf5d03cf3e6">vot::BuildImageDatabase</a> (const char *sift_list, const char *input_tree, const char *output_filename, SiftType sift_type=E3D_SIFT, size_t start_id=0, int thread_num=1)</td></tr>
 <tr class="memdesc:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">BuildImageDatabase: build a image database with pre-trained vocabulary tree.  <a href="namespacevot.html#a50f87fdcda35c5a9c2d2acf5d03cf3e6">More...</a><br /></td></tr>
 <tr class="separator:a50f87fdcda35c5a9c2d2acf5d03cf3e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa04dfb2525b5daeba744cbd1de19f703"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#aa04dfb2525b5daeba744cbd1de19f703">vot::MultiQueryDatabase</a> (<a class="el" href="classvot_1_1_vocab_tree.html">vot::VocabTree</a> *tree, std::vector&lt; std::string &gt; *sift_filenames, int sift_type, size_t first_index, size_t num_images, float *scores, size_t *indexed_scores, FILE *match_file, std::mutex *match_file_mutex)</td></tr>
 <tr class="separator:aa04dfb2525b5daeba744cbd1de19f703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad191aadd07dc60a9fd462cbe48e59791"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#ad191aadd07dc60a9fd462cbe48e59791">vot::QueryDatabase</a> (const char *image_db, const char *query_sift_list, const char *match_output, <a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748">SiftType</a> sift_type=<a class="el" href="global__params_8h.html#a5ddf380ca9146e20df644f5712b9f748ad1a8cd96afc6ae5bc0d92248dca65996">E3D_SIFT</a>, int thread_num=1)</td></tr>
+<tr class="memitem:ad191aadd07dc60a9fd462cbe48e59791"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#ad191aadd07dc60a9fd462cbe48e59791">vot::QueryDatabase</a> (const char *image_db, const char *query_sift_list, const char *match_output, SiftType sift_type=E3D_SIFT, int thread_num=1)</td></tr>
 <tr class="memdesc:ad191aadd07dc60a9fd462cbe48e59791"><td class="mdescLeft">&#160;</td><td class="mdescRight">QueryDatabase: query the image database with a sift list file.  <a href="namespacevot.html#ad191aadd07dc60a9fd462cbe48e59791">More...</a><br /></td></tr>
 <tr class="separator:ad191aadd07dc60a9fd462cbe48e59791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d3e103bb024d0567498eb5ecf6ed7c8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacevot.html#a3d3e103bb024d0567498eb5ecf6ed7c8">vot::FilterMatchList</a> (const char *sift_list, const char *match_list, const char *output, size_t num_matches)</td></tr>
 <tr class="memdesc:a3d3e103bb024d0567498eb5ecf6ed7c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">FilterMatchList: filter output match file and output TOP-k rank lists.  <a href="namespacevot.html#a3d3e103bb024d0567498eb5ecf6ed7c8">More...</a><br /></td></tr>
 <tr class="separator:a3d3e103bb024d0567498eb5ecf6ed7c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>vocabulary tree pipeline implementation. </p>
+<p>This file contains the complete pipeline of vocabulary tree. </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a40af4217190d59d7145e58a278f9f87d"></a>
 <div class="memitem">
 <div class="memproto">

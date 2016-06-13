@@ -1,10 +1,10 @@
 var searchData=
 [
   ['vector_5fto_5fset',['vector_to_set',['../oxford5k_8cpp.html#a92321a3593f090b45cc515200cde53ec',1,'oxford5k.cpp']]],
-  ['verbose',['Verbose',['../class_global_param.html#ac5c1bfdcc53db2821ac617f545b30c8c',1,'GlobalParam']]],
+  ['verbose',['Verbose',['../classvot_1_1_global_param.html#a29ac12fe323cb5b172e930a294771bfa',1,'vot::GlobalParam']]],
   ['vlfeat_5flibvot_5fapi_2ecpp',['vlfeat_libvot_api.cpp',['../vlfeat__libvot__api_8cpp.html',1,'']]],
   ['vlfeat_5flibvot_5fapi_2eh',['vlfeat_libvot_api.h',['../vlfeat__libvot__api_8h.html',1,'']]],
-  ['vlfeat_5fsift',['VLFEAT_SIFT',['../global__params_8h.html#af527e7a54d2d80b79c8129ae3efad5e5aa5bb845d442acc191859d43903c0f906',1,'global_params.h']]],
+  ['vlfeat_5fsift',['VLFEAT_SIFT',['../namespacevot.html#a8103c0198bf83e51cc9ab321711473dba4fe5b503b339161a1ba5ce521b709b6b',1,'vot']]],
   ['vlfeatparam',['VlFeatParam',['../structtw_1_1_vl_feat_param.html',1,'tw']]],
   ['vlfeatparam',['VlFeatParam',['../structtw_1_1_vl_feat_param.html#abaf5ac44b687f910f80e7fe437369305',1,'tw::VlFeatParam']]],
   ['vlfeature',['Vlfeature',['../structtw_1_1_vlfeature.html',1,'tw']]],

@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libvot
-   &#160;<span id="projectnumber">0.1.2</span>
+   &#160;<span id="projectnumber">0.1.3</span>
    </div>
    <div id="projectbrief">A C++11 multithread library for image retrieval</div>
   </td>
@@ -122,36 +122,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment"></span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">*/</span></div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifndef DATA_STRUCTURES_HEADER</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#define DATA_STRUCTURES_HEADER</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetw.html">tw</a> </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classtw_1_1_union_find.html">   38</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classtw_1_1_union_find.html">UnionFind</a> </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    {</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="classtw_1_1_union_find.html#a8f3b1779442440a6ef1a3aff5ed6cdf3">UnionFind</a>(<span class="keywordtype">size_t</span> n);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="classtw_1_1_union_find.html#a0cac2f47890d9e45bebb5d4d4369e1de">~UnionFind</a>();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">size_t</span> <a class="code" href="classtw_1_1_union_find.html#a4203503c9af239550a7ebb7326889114">Find</a>(<span class="keywordtype">size_t</span> x);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="classtw_1_1_union_find.html#aff0ad29c2d50ef9ba41b2f7f919276e5">UnionSet</a>(<span class="keywordtype">size_t</span> x, <span class="keywordtype">size_t</span> y);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="classtw_1_1_union_find.html#a53653ec31e0bcf26fc05517dcb2b2a71">   46</a></span>&#160;        <span class="keywordtype">size_t</span> *<a class="code" href="classtw_1_1_union_find.html#a53653ec31e0bcf26fc05517dcb2b2a71">father</a>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classtw_1_1_union_find.html#a5d2e0d6749bd544270db825ea97a9bfd">   47</a></span>&#160;        <span class="keywordtype">size_t</span> <a class="code" href="classtw_1_1_union_find.html#a5d2e0d6749bd544270db825ea97a9bfd">size</a>;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    };</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifndef DATA_STRUCTURES_HEADER</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#define DATA_STRUCTURES_HEADER</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetw.html">tw</a> </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classtw_1_1_union_find.html">   42</a></span>&#160;    <span class="keyword">class </span><a class="code" href="classtw_1_1_union_find.html">UnionFind</a> </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="classtw_1_1_union_find.html#a8f3b1779442440a6ef1a3aff5ed6cdf3">UnionFind</a>(<span class="keywordtype">size_t</span> n);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <a class="code" href="classtw_1_1_union_find.html#a0cac2f47890d9e45bebb5d4d4369e1de">~UnionFind</a>();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordtype">size_t</span> <a class="code" href="classtw_1_1_union_find.html#a4203503c9af239550a7ebb7326889114">Find</a>(<span class="keywordtype">size_t</span> x);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="classtw_1_1_union_find.html#aff0ad29c2d50ef9ba41b2f7f919276e5">UnionSet</a>(<span class="keywordtype">size_t</span> x, <span class="keywordtype">size_t</span> y);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}   <span class="comment">// end of namespace tw</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif  //DATA_STRUCTURES_HEADER</span></div>
-<div class="ttc" id="classtw_1_1_union_find_html"><div class="ttname"><a href="classtw_1_1_union_find.html">tw::UnionFind</a></div><div class="ttdef"><b>Definition:</b> data_structures.h:38</div></div>
-<div class="ttc" id="classtw_1_1_union_find_html_a0cac2f47890d9e45bebb5d4d4369e1de"><div class="ttname"><a href="classtw_1_1_union_find.html#a0cac2f47890d9e45bebb5d4d4369e1de">tw::UnionFind::~UnionFind</a></div><div class="ttdeci">~UnionFind()</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:47</div></div>
-<div class="ttc" id="classtw_1_1_union_find_html_a5d2e0d6749bd544270db825ea97a9bfd"><div class="ttname"><a href="classtw_1_1_union_find.html#a5d2e0d6749bd544270db825ea97a9bfd">tw::UnionFind::size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> data_structures.h:47</div></div>
-<div class="ttc" id="classtw_1_1_union_find_html_a53653ec31e0bcf26fc05517dcb2b2a71"><div class="ttname"><a href="classtw_1_1_union_find.html#a53653ec31e0bcf26fc05517dcb2b2a71">tw::UnionFind::father</a></div><div class="ttdeci">size_t * father</div><div class="ttdef"><b>Definition:</b> data_structures.h:46</div></div>
-<div class="ttc" id="classtw_1_1_union_find_html_aff0ad29c2d50ef9ba41b2f7f919276e5"><div class="ttname"><a href="classtw_1_1_union_find.html#aff0ad29c2d50ef9ba41b2f7f919276e5">tw::UnionFind::UnionSet</a></div><div class="ttdeci">bool UnionSet(size_t x, size_t y)</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:59</div></div>
-<div class="ttc" id="classtw_1_1_union_find_html_a8f3b1779442440a6ef1a3aff5ed6cdf3"><div class="ttname"><a href="classtw_1_1_union_find.html#a8f3b1779442440a6ef1a3aff5ed6cdf3">tw::UnionFind::UnionFind</a></div><div class="ttdeci">UnionFind(size_t n)</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:39</div></div>
-<div class="ttc" id="namespacetw_html"><div class="ttname"><a href="namespacetw.html">tw</a></div><div class="ttdoc">namespace tw is mostly related to some utility functions developed by the repository owner...</div><div class="ttdef"><b>Definition:</b> opencv_libvot_api.cpp:6</div></div>
-<div class="ttc" id="classtw_1_1_union_find_html_a4203503c9af239550a7ebb7326889114"><div class="ttname"><a href="classtw_1_1_union_find.html#a4203503c9af239550a7ebb7326889114">tw::UnionFind::Find</a></div><div class="ttdeci">size_t Find(size_t x)</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:52</div></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="classtw_1_1_union_find.html#a53653ec31e0bcf26fc05517dcb2b2a71">   50</a></span>&#160;        <span class="keywordtype">size_t</span> *<a class="code" href="classtw_1_1_union_find.html#a53653ec31e0bcf26fc05517dcb2b2a71">father</a>;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classtw_1_1_union_find.html#a5d2e0d6749bd544270db825ea97a9bfd">   51</a></span>&#160;        <span class="keywordtype">size_t</span> <a class="code" href="classtw_1_1_union_find.html#a5d2e0d6749bd544270db825ea97a9bfd">size</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    };</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}   <span class="comment">// end of namespace tw</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif  //DATA_STRUCTURES_HEADER</span></div>
+<div class="ttc" id="classtw_1_1_union_find_html"><div class="ttname"><a href="classtw_1_1_union_find.html">tw::UnionFind</a></div><div class="ttdoc">Union-find data structure, used in various graph algorithms. </div><div class="ttdef"><b>Definition:</b> data_structures.h:42</div></div>
+<div class="ttc" id="classtw_1_1_union_find_html_a0cac2f47890d9e45bebb5d4d4369e1de"><div class="ttname"><a href="classtw_1_1_union_find.html#a0cac2f47890d9e45bebb5d4d4369e1de">tw::UnionFind::~UnionFind</a></div><div class="ttdeci">~UnionFind()</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:49</div></div>
+<div class="ttc" id="classtw_1_1_union_find_html_a5d2e0d6749bd544270db825ea97a9bfd"><div class="ttname"><a href="classtw_1_1_union_find.html#a5d2e0d6749bd544270db825ea97a9bfd">tw::UnionFind::size</a></div><div class="ttdeci">size_t size</div><div class="ttdef"><b>Definition:</b> data_structures.h:51</div></div>
+<div class="ttc" id="classtw_1_1_union_find_html_a53653ec31e0bcf26fc05517dcb2b2a71"><div class="ttname"><a href="classtw_1_1_union_find.html#a53653ec31e0bcf26fc05517dcb2b2a71">tw::UnionFind::father</a></div><div class="ttdeci">size_t * father</div><div class="ttdef"><b>Definition:</b> data_structures.h:50</div></div>
+<div class="ttc" id="classtw_1_1_union_find_html_aff0ad29c2d50ef9ba41b2f7f919276e5"><div class="ttname"><a href="classtw_1_1_union_find.html#aff0ad29c2d50ef9ba41b2f7f919276e5">tw::UnionFind::UnionSet</a></div><div class="ttdeci">bool UnionSet(size_t x, size_t y)</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:61</div></div>
+<div class="ttc" id="classtw_1_1_union_find_html_a8f3b1779442440a6ef1a3aff5ed6cdf3"><div class="ttname"><a href="classtw_1_1_union_find.html#a8f3b1779442440a6ef1a3aff5ed6cdf3">tw::UnionFind::UnionFind</a></div><div class="ttdeci">UnionFind(size_t n)</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:41</div></div>
+<div class="ttc" id="namespacetw_html"><div class="ttname"><a href="namespacetw.html">tw</a></div><div class="ttdoc">namespace tw is mostly related to some utility functions developed by the repository owner...</div><div class="ttdef"><b>Definition:</b> opencv_libvot_api.cpp:12</div></div>
+<div class="ttc" id="classtw_1_1_union_find_html_a4203503c9af239550a7ebb7326889114"><div class="ttname"><a href="classtw_1_1_union_find.html#a4203503c9af239550a7ebb7326889114">tw::UnionFind::Find</a></div><div class="ttdeci">size_t Find(size_t x)</div><div class="ttdef"><b>Definition:</b> data_structures.cpp:54</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

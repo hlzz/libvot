@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
    <div id="projectname">libvot
-   &#160;<span id="projectnumber">0.1.2</span>
+   &#160;<span id="projectnumber">0.1.3</span>
    </div>
    <div id="projectbrief">A C++11 multithread library for image retrieval</div>
   </td>
@@ -91,27 +91,27 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">opencv_libvot_api.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="opencv__libvot__api_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">// Some utility functions for the use of opencv in libvot</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef OPENCV_LIBVOT_API_H</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#define OPENCV_LIBVOT_API_H</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;opencv2/core/core.hpp&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;opencv2/highgui/highgui.hpp&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;opencv2/nonfree/features2d.hpp&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetw.html">tw</a>  {</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">class </span>SiftData;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespacetw.html#a15735702dcc37ff5cc096098e09a7976">OpencvKeyPoints2libvotSift</a>(std::vector&lt;cv::KeyPoint&gt; &amp;key_points,</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;                                cv::Mat &amp;descriptors,</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;                                <a class="code" href="classtw_1_1_sift_data.html">tw::SiftData</a> &amp;sift_data);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}   <span class="comment">// end of namespace tw</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="namespacetw_html_a15735702dcc37ff5cc096098e09a7976"><div class="ttname"><a href="namespacetw.html#a15735702dcc37ff5cc096098e09a7976">tw::OpencvKeyPoints2libvotSift</a></div><div class="ttdeci">bool OpencvKeyPoints2libvotSift(std::vector&lt; cv::KeyPoint &gt; &amp;key_points, cv::Mat &amp;descriptors, tw::SiftData &amp;sift_data)</div><div class="ttdef"><b>Definition:</b> opencv_libvot_api.cpp:7</div></div>
-<div class="ttc" id="classtw_1_1_sift_data_html"><div class="ttname"><a href="classtw_1_1_sift_data.html">tw::SiftData</a></div><div class="ttdoc">Sift data structure used in libvot. </div><div class="ttdef"><b>Definition:</b> data_types.h:18</div></div>
-<div class="ttc" id="namespacetw_html"><div class="ttname"><a href="namespacetw.html">tw</a></div><div class="ttdoc">namespace tw is mostly related to some utility functions developed by the repository owner...</div><div class="ttdef"><b>Definition:</b> opencv_libvot_api.cpp:6</div></div>
+<a href="opencv__libvot__api_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#ifndef OPENCV_LIBVOT_API_H</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#define OPENCV_LIBVOT_API_H</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;opencv2/core/core.hpp&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;opencv2/highgui/highgui.hpp&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;opencv2/nonfree/features2d.hpp&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacetw.html">tw</a>  {</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">class </span>SiftData;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespacetw.html#a15735702dcc37ff5cc096098e09a7976">OpencvKeyPoints2libvotSift</a>(std::vector&lt;cv::KeyPoint&gt; &amp;key_points,</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                                cv::Mat &amp;descriptors,</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;                                <a class="code" href="classtw_1_1_sift_data.html">tw::SiftData</a> &amp;sift_data);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;}   <span class="comment">// end of namespace tw</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="namespacetw_html_a15735702dcc37ff5cc096098e09a7976"><div class="ttname"><a href="namespacetw.html#a15735702dcc37ff5cc096098e09a7976">tw::OpencvKeyPoints2libvotSift</a></div><div class="ttdeci">bool OpencvKeyPoints2libvotSift(std::vector&lt; cv::KeyPoint &gt; &amp;key_points, cv::Mat &amp;descriptors, tw::SiftData &amp;sift_data)</div><div class="ttdef"><b>Definition:</b> opencv_libvot_api.cpp:13</div></div>
+<div class="ttc" id="classtw_1_1_sift_data_html"><div class="ttname"><a href="classtw_1_1_sift_data.html">tw::SiftData</a></div><div class="ttdoc">Sift data structure used in libvot. </div><div class="ttdef"><b>Definition:</b> data_types.h:22</div></div>
+<div class="ttc" id="namespacetw_html"><div class="ttname"><a href="namespacetw.html">tw</a></div><div class="ttdoc">namespace tw is mostly related to some utility functions developed by the repository owner...</div><div class="ttdef"><b>Definition:</b> opencv_libvot_api.cpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
