@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['_7eatomicwritehelper',['~AtomicWriteHelper',['../classtw_1_1_atomic_write_helper.html#a2aba1cd097458dab2475a4c4f45d467b',1,'tw::AtomicWriteHelper']]],
   ['_7esiftdata',['~SiftData',['../classtw_1_1_sift_data.html#adac485774142e19c04cd166589760484',1,'tw::SiftData']]],
   ['_7etreeinnode',['~TreeInNode',['../classvot_1_1_tree_in_node.html#a4de48a05f753cd34528e261cd196e8f0',1,'vot::TreeInNode']]],
   ['_7etreeleafnode',['~TreeLeafNode',['../classvot_1_1_tree_leaf_node.html#aa3ae7420f65867eb457e910e9d6d1f4e',1,'vot::TreeLeafNode']]],

@@ -5,6 +5,5 @@ var searchData=
   ['imagenode',['ImageNode',['../structvot_1_1_image_node.html#a14b40f3378e506490d68d65d220cf5fd',1,'vot::ImageNode::ImageNode(int idx_=-1, const std::string &amp;iname=&quot;&quot;, const std::string &amp;sname=&quot;&quot;)'],['../structvot_1_1_image_node.html#ad2efb453a02e69b683ee0a785fa97690',1,'vot::ImageNode::ImageNode(const ImageNode &amp;node)']]],
   ['indexleaves',['IndexLeaves',['../classvot_1_1_tree_node.html#a9cb64a5d8970de143c114c5d0589afbb',1,'vot::TreeNode::IndexLeaves()'],['../classvot_1_1_tree_in_node.html#afc7d95f3d89fcbe80a65de4eda032851',1,'vot::TreeInNode::IndexLeaves()'],['../classvot_1_1_tree_leaf_node.html#a28618d5ee157e49f343c6e700aa80f8d',1,'vot::TreeLeafNode::IndexLeaves()'],['../classvot_1_1_vocab_tree.html#a1fe1f0b575a776172c10ed778ebb5efe',1,'vot::VocabTree::IndexLeaves()']]],
   ['isemptystring',['IsEmptyString',['../classtw_1_1_i_o.html#a5ef78ae007937f8ba5dfbaa1afffbf5f',1,'tw::IO']]],
-  ['isfileexist',['IsFileExist',['../classtw_1_1_i_o.html#a2d967a2ded6b7a7fb9213d6312eb5b53',1,'tw::IO']]],
-  ['isopen',['IsOpen',['../classtw_1_1_atomic_write_helper.html#a1131aebed5fc850864dccd879af0a773',1,'tw::AtomicWriteHelper']]]
+  ['isfileexist',['IsFileExist',['../classtw_1_1_i_o.html#a2d967a2ded6b7a7fb9213d6312eb5b53',1,'tw::IO']]]
 ];

@@ -10,7 +10,5 @@ var searchData=
   ['allocate_5f2d_3c_20double_20_3e',['allocate_2d&lt; double &gt;',['../namespacetw.html#a56c81836c5ef4365e5b092610bd73dd3',1,'tw']]],
   ['allocate_5f2d_3c_20float_20_3e',['allocate_2d&lt; float &gt;',['../namespacetw.html#aeb86035fd7e1b389ec805472f2363a94',1,'tw']]],
   ['allocate_5f2d_3c_20int_20_3e',['allocate_2d&lt; int &gt;',['../namespacetw.html#aed80da26cf960b7f7a3f168d1dcc0e2f',1,'tw']]],
-  ['allocate_5f2d_3c_20vot_3a_3alinkedge_20_3e',['allocate_2d&lt; vot::LinkEdge &gt;',['../namespacetw.html#a4d8b52d5bfad83c897a0b221536b2db8',1,'tw']]],
-  ['atomicwritehelper',['AtomicWriteHelper',['../classtw_1_1_atomic_write_helper.html#a60ed51bbb7762c042e4592f36eb8ec74',1,'tw::AtomicWriteHelper']]],
-  ['atomicwritehelper',['AtomicWriteHelper',['../classtw_1_1_atomic_write_helper.html',1,'tw']]]
+  ['allocate_5f2d_3c_20vot_3a_3alinkedge_20_3e',['allocate_2d&lt; vot::LinkEdge &gt;',['../namespacetw.html#a4d8b52d5bfad83c897a0b221536b2db8',1,'tw']]]
 ];
