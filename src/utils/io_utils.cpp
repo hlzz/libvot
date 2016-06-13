@@ -28,6 +28,11 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+/*! \file io_utils.cpp
+ * \brief I/O utilities implementations
+ *
+ * This file contains some utility classes and functions to facilitate file read/write.
+ */
 
 #include <cstdlib>
 #include <fstream>
