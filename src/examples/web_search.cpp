@@ -29,8 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-// web_search: an image search interface specifically used for online viewer
-
+/** \file web_search.cpp
+ *	\brief an image search interface specifically used for single image query (exe)
+ */
 #include <stdio.h>
 #include <iostream>
 #include <string>

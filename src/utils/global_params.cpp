@@ -29,6 +29,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/*! \file global_params.cpp
+ * \brief global parameters and utility functions implementation
+ *
+ * This file contains some global parameters shared by the whole libvot project, such as feature type enum, etc.
+ */
 #include <iostream>
 #include <string>
 
@@ -36,6 +41,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using std::cout;
 using std::endl;
+
+namespace vot{
 
 int GlobalParam::Verbose = 1;
 
@@ -58,3 +65,5 @@ void shows(std::string s)
 {
 	cout << s << endl;
 }
+
+}	// end of namespace vot

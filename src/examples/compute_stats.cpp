@@ -28,6 +28,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/** \file compute_stats.cpp
+ *	\brief compute statistics of the retrieval results (exe)
+ */
 #include <iostream>
 #include <stdio.h>
 #include <fstream>

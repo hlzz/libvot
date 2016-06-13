@@ -29,6 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/*! \file global_params.h
+ * \brief global parameters and utility functions
+ *
+ * This file contains some global parameters shared by the whole libvot project, such as feature type enum, etc.
+ */
+
 #ifndef GLOBAL_PARAMS_HEADER
 #define GLOBAL_PARAMS_HEADER
 
@@ -36,22 +42,32 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define LTYPE float
 #define FDIM 128
 
+namespace vot{
+/**
+ * @brief global parameters
+ */
 class GlobalParam
 {
     public:
         static int Verbose;
 };
 
+/**
+ * @brief feature type used in libvot_feature
+ */
 enum LIBVOT_FEATURE_TYPE
 {
-	OPENCV_SIFT = 0,
-	VLFEAT_SIFT = 1,
+	OPENCV_SIFT = 0,	//!< opencv sift feature type
+	VLFEAT_SIFT = 1,	//!< vlfeat sift feature type
 };
 
+/**
+ * @brief sift feature type used in vocabulary tree
+ */
 enum SiftType
 {
-	E3D_SIFT = 0,
-	OPENMVG_FEAT = 1
+	E3D_SIFT = 0,		//!< the standard internal sift data structure of libvot
+	OPENMVG_FEAT = 1	//!< the sift data structure used in openmvg
 };
 
 // some debug functions
@@ -60,4 +76,5 @@ void showd(double d);
 void showf(double f);
 void shows(std::string s);
 
+}	// end of namespace vot
 #endif  //HEADER_GLOBAL_PARAMS

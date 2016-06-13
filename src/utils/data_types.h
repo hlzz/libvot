@@ -1,3 +1,7 @@
+
+/** \file data_types.h
+ *	\brief internal data types (structs and classes) used in libvot
+ */
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
 

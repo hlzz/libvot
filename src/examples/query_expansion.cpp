@@ -29,8 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-// query_expansion.cpp: query expansion on the image graph
-
+/** \file query_expansion.cpp
+ *	\brief query expansion on the image graph (exe)
+ */
 #include <stdio.h>
 #include <iostream>
 #include <string>

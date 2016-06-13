@@ -28,12 +28,12 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+
 /*! \file io_utils.h
  * \brief I/O utilities
  *
  * This file contains some utility classes and functions to facilitate file read/write.
  */
-
 
 #ifndef IO_UTILS_HEADER
 #define IO_UTILS_HEADER

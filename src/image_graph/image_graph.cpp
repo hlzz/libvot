@@ -29,6 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/** \file image_graph.cpp
+ *	\brief a simple image graph implementation
+ */
 #include <iostream>
 #include <fstream>
 #include <string>

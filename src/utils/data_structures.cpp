@@ -29,7 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
+/** \file data_structures.cpp
+ *	\brief data structures used in libvot implementation
+ */
 #include <cstring>
 
 #include "data_structures.h"

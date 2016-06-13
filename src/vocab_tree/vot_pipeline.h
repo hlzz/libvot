@@ -29,6 +29,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/*! \file vot_pipeline.h
+ * \brief vocabulary tree pipeline, including training, building and querying.
+ *
+ * This file contains the complete pipeline of vocabulary tree.
+ */
 #ifndef VOT_PIPELINE_HEADER
 #define VOT_PIPELINE_HEADER
 

@@ -29,6 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/*! \file clustering.h
+ * \brief clustering algorithms, such as k-means
+ */
 #ifndef CLUSTERING_HEADER
 #define CLUSTERING_HEADER
 

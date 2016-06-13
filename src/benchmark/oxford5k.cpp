@@ -1,6 +1,9 @@
 // Tianwei Shen <shentianweipku@gmail.com>
 // adapted from http://www.robots.ox.ac.uk/~vgg/data/oxbuildings/compute_ap.cpp
 
+/** \file oxford5k.cpp
+ *	\brief a program to compute mAP of Oxford5k dataset (exe)
+ */
 #include <fstream>
 #include <iostream>
 #include <set>

@@ -13,7 +13,7 @@ endif()
 # The version number.
 set(LIBVOT_VERSION_MAJOR 0)
 set(LIBVOT_VERSION_MINOR 1)
-set(LIBVOT_VERSION_PATCH 2)
+set(LIBVOT_VERSION_PATCH 3)
 set(LIBVOT_VERSION ${LIBVOT_VERSION_MAJOR}.${LIBVOT_VERSION_MINOR}.${LIBVOT_VERSION_PATCH})
 
 # ================= Set policy ======================================

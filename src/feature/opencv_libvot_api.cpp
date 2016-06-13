@@ -1,3 +1,9 @@
+
+/** \file opencv_libvot_api.cpp
+ *	\brief libvot-side APIs of opencv feature implementation
+ *
+ * 	It contains Some utility functions for the use of opencv in libvot
+ */
 #include "opencv_libvot_api.h"
 
 #include "utils/global_params.h"

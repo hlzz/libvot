@@ -28,6 +28,9 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/** \file euclidean_matrix.cpp
+ *	\brief euclidean matrix completion (exe)
+ */
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -42,10 +45,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using namespace std;
 
+/**
+ * @brief An ad-hoc simple 2d point struct
+ */
+namespace {
 struct point2d
 {
 	float x,y;
 };
+}	// end of namespace vot
 
 float EuclideanDistance(point2d x1, point2d x2)
 {

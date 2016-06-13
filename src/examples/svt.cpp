@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Tianwei Shen
+Copyright (c) 2015 - 2016, Tianwei Shen
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,9 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-// Singular Value Threshold
-// Tianwei Shen, 2015
-
+/** \file svt.cpp
+ *	\brief singular value threshold (immature)
+ */
 #include <iostream>
 #include <vector>
 #include <sstream>

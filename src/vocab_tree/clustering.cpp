@@ -29,6 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/*! \file clustering.cpp
+ * \brief clustering algorithms, such as k-means, implementations
+ */
 #include <iostream>
 #include <limits>
 #include <cassert>

@@ -29,7 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-// build_tree.cpp: build a vocabulary tree of visual words
+/** \file image_search.cpp
+ * 	\brief image retrieval demo program (exe)
+ */
 
 #include <stdio.h>
 #include <iostream>
@@ -83,7 +85,7 @@ int main(int argc, char **argv)
     // optional parameters
     int depth = 6;
     int branch_num = 8;
-    SiftType sift_type = E3D_SIFT;
+    vot::SiftType sift_type = vot::E3D_SIFT;
     int thread_num = std::thread::hardware_concurrency();
     int start_id = 0;
     int num_matches = 100;
@@ -93,7 +95,7 @@ int main(int argc, char **argv)
     if(argc > 4)
         branch_num = atoi(argv[4]);
     if(argc > 5)
-        sift_type = SiftType(atoi(argv[5]));
+        sift_type = vot::SiftType(atoi(argv[5]));
     if(argc > 6)
         num_matches = atoi(argv[6]);
     if(argc > 7)

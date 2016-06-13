@@ -29,6 +29,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/*! \file vot_pipeline.cpp
+ * \brief vocabulary tree pipeline implementation.
+ *
+ * This file contains the complete pipeline of vocabulary tree.
+ */
 #include <stdio.h>
 #include <iostream>
 #include <string>

@@ -29,6 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/** \file sequence_match.cpp
+ *	\brief generate sequential match pair (exe)
+ */
 #include <iostream>
 #include <vector>
 #include <string>

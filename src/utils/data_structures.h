@@ -29,12 +29,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
+/** \file data_structures.h
+ *	\brief data structures used in libvot
+ */
 #ifndef DATA_STRUCTURES_HEADER
 #define DATA_STRUCTURES_HEADER
 
 namespace tw 
 {
+	/** @brief Union-find data structure, used in various graph algorithms
+	 */
 	class UnionFind 
 	{
 	public:

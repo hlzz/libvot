@@ -29,7 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-//graph_partition
+/** \file graph_partition.cpp
+ *	\brief graph partition example (exe)
+ */
 
 #include <iostream>
 #include <vector>

@@ -7,3 +7,24 @@
 /*! \namespace vot
     \brief namespace vot contains libvot functions and classes.
 */
+
+/*! \dir src
+    \brief libvot source code
+        \dir benchmark
+        \brief benchmark tests
+
+        \dir examples
+        \brief executable files and demo programs
+
+        \dir feature
+        \brief feature-related files, such as APIs and libvot own feature development
+
+        \dir image_graph
+        \brief a simple image graph folder
+
+        \dir \utils
+        \brief a utility toolbox for dealing with file I/O and low-level APIs
+
+        \dir \vocab_tree
+        \brief vocabulary tree engine
+*/

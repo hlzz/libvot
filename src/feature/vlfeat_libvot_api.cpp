@@ -1,3 +1,9 @@
+
+/** \file vlfeat_libvot_api.cpp
+ *	\brief libvot-side APIs of vlfeat feature implementation
+ *
+ * 	It contains some utility functions for the use of vlfeat in libvot
+ */
 #include "vlfeat_libvot_api.h"
 
 #include <cmath>

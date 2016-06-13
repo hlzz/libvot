@@ -29,6 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/** \file image_graph.h
+ *	\brief a simple image graph
+ */
 #ifndef IMAGEGRAPH_HEADER
 #define IMAGEGRAPH_HEADER
 
@@ -41,6 +44,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace vot
 {
+/**
+ * @brief edge struct used in image graph class
+ */
 struct LinkEdge
 {
     size_t src;
@@ -63,6 +69,9 @@ struct LinkEdge
     }
 };
 
+/**
+ * @brief the image node used in image graph class
+ */
 struct ImageNode
 {
     int idx;                    //!< the optional original index (maybe in the image_list)
@@ -79,6 +88,9 @@ struct ImageNode
     }
 };
 
+/**
+ * @brief Image graph class
+ */
 class ImageGraph
 {
     typedef std::unordered_map<int, LinkEdge> EdgeMap;

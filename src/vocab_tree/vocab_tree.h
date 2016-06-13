@@ -29,6 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+/*! \file vocab_tree.h
+ * \brief vocabulary tree functions
+ */
 #ifndef VOCAB_TREE_HEADER
 #define VOCAB_TREE_HEADER
 

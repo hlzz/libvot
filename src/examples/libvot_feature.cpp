@@ -1,6 +1,10 @@
 // Tianwei Shen, HKUST.
 // extract vlfeat sift feature and save them in libvot's format
 
+/** \file libvot_feature.cpp
+ *	\brief libvot feature generater (exe)
+ */
+
 #include <iostream>
 #include <vector>
 #include <thread>
@@ -142,7 +146,7 @@ int main(int argc, char** argv)
 #ifdef LIBVOT_USE_OPENCV
 	switch (FLAGS_feature_type)
 	{
-		case LIBVOT_FEATURE_TYPE::OPENCV_SIFT:
+		case vot::LIBVOT_FEATURE_TYPE::OPENCV_SIFT:
 		{
 			cout << "[Extract Feature] Compute SIFT features using opencv sift\n";
 			cv::SiftDescriptorExtractor cv_sift_detector;
@@ -168,7 +172,7 @@ int main(int argc, char** argv)
 			}
 			break;
 		}
-		case LIBVOT_FEATURE_TYPE::VLFEAT_SIFT:
+		case vot::LIBVOT_FEATURE_TYPE::VLFEAT_SIFT:
 		{
 			if(FLAGS_thread_num == 1)		// single thread version
 			{
