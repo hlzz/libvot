@@ -23,6 +23,7 @@
 
 * Better engineering  
     - command line system (e.g. gflags)  
+    - doxygen documentation
     - python export
 
 * Add option to support opencv

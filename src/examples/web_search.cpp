@@ -133,7 +133,7 @@ int main(int argc, char **argv)
 		for (size_t j = 0; j < top; j++)
 			fprintf(match_file, "%zu\n", indexed_scores[j]);
 	}
-	std::cout << "[VocabMatch] Succesful query and the rank list is output to " << output_path << ".\n";
+	std::cout << "[VocabMatch] Successful query and the rank list is output to " << output_path << ".\n";
 
     delete [] scores;
     delete [] indexed_scores;

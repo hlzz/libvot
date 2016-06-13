@@ -33,6 +33,10 @@
 # Build directory
 build/*
 
+# generated doxygen files
+doc/html/*
+doc/latex/*
+
 # test_data ignores
 test_data/lena.sift
 

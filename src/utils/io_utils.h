@@ -47,8 +47,10 @@ namespace tw
      */
     template<typename T> void free_2d(T ***array, T *data);
 
-    /**
-     *  To safely read and write files
+    /** @brief To safely read and write files
+     *
+     * IO class contains a set of utility function for dealing with file read/write. It also has some utility function
+     * related to operating system, such as getting the maximum available memory.
      */
     class IO
     {

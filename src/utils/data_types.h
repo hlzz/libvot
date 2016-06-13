@@ -14,6 +14,7 @@
 
 namespace tw
 {
+/** @brief Sift data structure used in libvot */
 class SiftData
 {
 public:

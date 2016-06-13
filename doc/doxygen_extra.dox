@@ -1,0 +1,9 @@
+/*! \namespace tw
+    \brief namespace tw is mostly related to some utility functions developed by the repository owner, Tianwei Shen.
+
+    It includes some utility classes and functions, such as the file I/O class.
+*/
+
+/*! \namespace vot
+    \brief namespace vot contains libvot functions and classes.
+*/
