@@ -53,7 +53,7 @@ Since the library is multi-threaded, the rank is unordered with respect to the f
 *match_pairs* saves the ordered similarity ranks, from *0*th image to *n-1*th image.  
 
 ## Documentation
-We have a [homepage](http://hlzz.github.io/libvot/) hosted by github-pages. See the documentation [here](http://hlzz.github.io/libvot/doc/html/index.html).
+The [homepage](http://hlzz.github.io/libvot/) of libvot is hosted by github-pages. See the documentation [here](http://hlzz.github.io/libvot/doc/html/index.html).
 
 ## Contributing
 We are working toward the next major release (0.2.0). 
