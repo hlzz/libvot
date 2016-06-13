@@ -52,6 +52,9 @@ Each line in *match.out* contains three numbers “first_index second_index simi
 Since the library is multi-threaded, the rank is unordered with respect to the first index (they are ordered w.r.t the second index). 
 *match_pairs* saves the ordered similarity ranks, from *0*th image to *n-1*th image.  
 
+## Documentation
+We have a [homepage](http://hlzz.github.io/libvot/) hosted by github-pages. See the documentation [here](http://hlzz.github.io/libvot/doc/html/index.html).
+
 ## Contributing
 We are working toward the next major release (0.2.0). 
 If you are interested in contributing, please have a look at [Roadmap.md](Roadmap.md). 
