@@ -40,3 +40,21 @@ sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib/libcudnn*
 ```
 
 You may also put cuDNN libs and includes in another folder. Then you have to change the CMake configurations to reflect this path.
+
+## Install from Source
+The build system of libvot is based on [CMake](http://cmake.org). To take full advantages of the new features in C++11, we require the version of CMake to be 2.8.12 or above. Current we have tested our project under Linux (Ubuntu 14.04, CentOS 7) and MacOS (10.10) using gcc. The common steps to build the library are:
+
+1. Extract source files.
+2. Create build directory and change to it.
+3. Run CMake to configure the build tree.
+4. Build the software using selected build tool.
+5. Run "make test"
+6. See src/example for some demo programs of this library.
+
+On Unix-like systems with GNU Make as the build tool, the following sequence of commands can be used to compile the source code.
+
+    $ cd libvot
+    $ git submodule init & git submodule update  
+    $ mkdir build && cd build
+    $ cmake ..
+    $ make && make test
