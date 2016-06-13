@@ -55,6 +55,12 @@ Since the library is multi-threaded, the rank is unordered with respect to the f
 ## Documentation
 The [homepage](http://hlzz.github.io/libvot/) of libvot is hosted by github-pages. See the documentation [here](http://hlzz.github.io/libvot/doc/html/index.html).
 
+## Optional Dependencies
+* NVIDIA's Cuda Toolkit 7.5
+* NVIDIA's cuDNNv5 for CUDA 7.5
+
+See the [installation](doc/installation.md) guide for details.
+
 ## Contributing
 We are working toward the next major release (0.2.0). 
 If you are interested in contributing, please have a look at [Roadmap.md](Roadmap.md). 
