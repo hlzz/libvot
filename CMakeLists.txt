@@ -35,7 +35,7 @@ option(LIBVOT_BUILD_SHARED "Build libvot shared libs" ON)
 option(LIBVOT_BUILD_DOC "Build libvot documentations" ON)
 option(LIBVOT_USE_OPENCV "Build libvot with OpenCV support" ON)
 option(LIBVOT_USE_CUDA "Build libvot with cuda support" ON)
-
+option(LIBVOT_USE_CUDNN "Build libvot with cuda and cuDNN" ON)
 
 # ================= Configure libvot options =========================
 if(LIBVOT_USE_OPENCV)
@@ -50,6 +50,7 @@ if(LIBVOT_USE_OPENCV)
     endif (OpenCV_FOUND)
 endif()
 
+# configure cuda
 if(LIBVOT_USE_CUDA)
 	find_package(CUDA QUIET REQUIRED)
 	if(CUDA_FOUND)
@@ -60,7 +61,12 @@ if(LIBVOT_USE_CUDA)
         set(LIBVOT_USE_CUDA OFF)
 		remove_definitions(-DLIBVOT_USE_CUDA)
 	endif (CUDA_FOUND)
-endif()
+endif(LIBVOT_USE_CUDA)
+
+# configure cuDNN
+if(LIBVOT_USE_CUDNN)
+	# TOOD(tianwei): a cmake find module for cuDNN
+endif(LIBVOT_USE_CUDNN)
 
 # by default build in release mode
 if(NOT CMAKE_BUILD_TYPE)
