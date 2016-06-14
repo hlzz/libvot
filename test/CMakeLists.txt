@@ -27,6 +27,7 @@ target_link_libraries(unit_test gtest_main)
 
 add_test(unit_test unit_test)
 
+# tests related to opencv
 if(LIBVOT_USE_OPENCV)
 	# opencv basic test
     add_executable(opencv_test opencv_test.cpp)
@@ -38,3 +39,13 @@ if(LIBVOT_USE_OPENCV)
     target_link_libraries(libvot_feature_test vot_feature vot_utils)
     add_test(libvot_feature_test libvot_feature_test ${CMAKE_SOURCE_DIR}/test_data/lena.jpg)
 endif(LIBVOT_USE_OPENCV)
+
+# tests related to cuda
+if(LIBVOT_USE_CUDA)
+	# add c++11 flag and sm_20 to nvcc flags
+	list(APPEND CUDA_NVCC_FLAGS "-arch=sm_20;-std=c++11;-O2;-DVERBOSE")
+	SET(CUDA_PROPAGATE_HOST_FLAGS OFF)
+
+	cuda_add_executable(cuda_basic_test cuda_basic_test.cu)
+	add_test(cuda_basic_test cuda_basic_test)	# cuda hello world test
+endif(LIBVOT_USE_CUDA)

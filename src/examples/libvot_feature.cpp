@@ -69,8 +69,8 @@ void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
 int main(int argc, char** argv)
 {
 	char c_program_usage[50], c_program_version[20];
-	sprintf(c_program_usage, "Usage: %s <image_list>", argv[0]);
-	sprintf(c_program_version, "%d.%d.%d", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
+	snprintf(c_program_usage, 50, "Usage: %s <image_list>", argv[0]);
+	snprintf(c_program_version, 20, "%d.%d.%d", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
 	string program_usage(c_program_usage), program_version(c_program_version);
 	gflags::SetVersionString(program_version);
 	gflags::SetUsageMessage(program_usage);		// this has to appear before ParseCommandLineFlags

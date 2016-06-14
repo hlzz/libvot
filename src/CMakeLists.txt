@@ -28,6 +28,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # the third parth libs
 add_subdirectory(third_party)
+# gpu related code
+add_subdirectory(gpu)
 # feature lib
 add_subdirectory(feature)
 # utility functions
