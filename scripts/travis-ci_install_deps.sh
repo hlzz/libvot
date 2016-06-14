@@ -44,6 +44,6 @@ cuda-cudart-dev-$CUDA_PKG_VERSION \
 cuda-cublas-dev-$CUDA_PKG_VERSION \
 cuda-curand-dev-$CUDA_PKG_VERSION
 # manually create CUDA symlink
-ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
+sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
 
 sudo apt-get install -y --no-install-recommends libcudnn5-dev
