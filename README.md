@@ -31,7 +31,6 @@ On Unix-like systems with GNU Make as the build tool, the following sequence of 
     $ cmake ..
     $ make && make test
 
-Optional dependencies include *OpenCV*, but it is not required to run the core functions in *libvot*.
 
 ##First try
 libvot now also has a feature extractor in development. You can use `./libvot_feature <image_list>` to first generate a set of descriptor files and use them as inputs to `image_search`.
@@ -56,6 +55,7 @@ Since the library is multi-threaded, the rank is unordered with respect to the f
 The [homepage](http://hlzz.github.io/libvot/) of libvot is hosted by github-pages. See the documentation [here](http://hlzz.github.io/libvot/doc/html/index.html).
 
 ## Optional Dependencies
+* OpenCV (>2.4)
 * NVIDIA's Cuda Toolkit 7.5
 * NVIDIA's cuDNNv5 for CUDA 7.5
 
@@ -72,6 +72,6 @@ The BSD 3-Clause License
 ##Contact and Donation
 For inquiries and suggestions, please send your emails to <tshenaa@ust.hk>.
 
-If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/campaigns/30901). Thanks
+If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/
 
 <a href='https://pledgie.com/campaigns/30901'><img alt='Click here to lend your support to: Open-Source Image Retrieval Project and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30901.png?skin_name=chrome' border='0' ></a>

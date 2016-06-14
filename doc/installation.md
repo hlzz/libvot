@@ -16,7 +16,7 @@ cuDNN (v5 for cuda 7.5) need to be installed.
 
 #### Check NVIDIA Compute Capability of your GPU card
 
-Check compute capability at [here](https://developer.nvidia.com/cuda-gpus).
+Check compute capability [here](https://developer.nvidia.com/cuda-gpus).
 
 #### Download and install Cuda Toolkit
 
