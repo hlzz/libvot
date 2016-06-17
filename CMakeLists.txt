@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)  # newest gflags needs 2.8.12
 
-project(libvot)
+project(libvot C CXX)
 
 # Disable in-source build
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
@@ -29,6 +29,15 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(warnings "/W4 /WX /EHsc")
 endif()
 
+# Additional cmake modules
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+
+# by default build in release mode
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif(NOT CMAKE_BUILD_TYPE)
+
 # ================= libvot build options =============================
 option(LIBVOT_BUILD_TESTS "Build libvot tests" ON)
 option(LIBVOT_BUILD_SHARED "Build libvot shared libs" ON)
@@ -37,7 +46,7 @@ option(LIBVOT_USE_OPENCV "Build libvot with OpenCV support" ON)
 option(LIBVOT_USE_CUDA "Build libvot with cuda support" ON)
 option(LIBVOT_USE_CUDNN "Build libvot with cuda and cuDNN" ON)
 
-# ================= Configure libvot options =========================
+# ================= Configure libvot dependencies =========================
 if(LIBVOT_USE_OPENCV)
     find_package( OpenCV REQUIRED )
     if (OpenCV_FOUND)
@@ -50,37 +59,10 @@ if(LIBVOT_USE_OPENCV)
     endif (OpenCV_FOUND)
 endif()
 
-# configure cuda
-if(LIBVOT_USE_CUDA)
-	find_package(CUDA QUIET REQUIRED)
-	if(CUDA_FOUND)
-		include_directories(${CUDA_INCLUDE_DIRS})
-		add_definitions(-DLIBVOT_USE_CUDA)
-	elseif(CUDA_FOUND)
-        message(STATUS "Could not locate cuda, disabling cuda support.")
-        set(LIBVOT_USE_CUDA OFF)
-		remove_definitions(-DLIBVOT_USE_CUDA)
-	endif (CUDA_FOUND)
-endif(LIBVOT_USE_CUDA)
-
-# configure cuDNN
-if(LIBVOT_USE_CUDNN)
-	# TOOD(tianwei): a cmake find module for cuDNN
-endif(LIBVOT_USE_CUDNN)
-
-# by default build in release mode
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
-endif(NOT CMAKE_BUILD_TYPE)
-
-# Additional cmake modules
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR/cmake}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-
-# Specify output bin_path and lib_path
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# configure cuda and cuDNN
+set(CUDA_LINKER_LIBS "")
+include(scripts/cmake/Cuda.cmake)
+# ================= Configure libvot dependencies end =========================
 
 # ==============================================================================
 # Set includes and libraries begin
@@ -108,7 +90,13 @@ include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 # use the built-in gflags include directory, defined in gflags CMakefile
 include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
 set(GFLAGS_LIBRARY gflags)
+add_definitions(-DLIBVOT_USE_GFLAGS)
 # =============================== Set libraries end ==============================
+
+# Specify output bin_path and lib_path
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # The source files
 add_subdirectory(src)
@@ -131,6 +119,9 @@ if(LIBVOT_USE_OPENCV)
     message("** Compile with OpenCV, headers found in ${OpenCV_INCLUDE_DIRS}.")
 endif(LIBVOT_USE_OPENCV)
 if(LIBVOT_USE_CUDA)
-    message("** Compile with CUDA ${CUDA_VERSION_STRING}, CUDA SDK root at ${CUDA_TOOLKIT_ROOT_DIR}.")
+    message( "** Compile with CUDA ${CUDA_VERSION_STRING}, CUDA SDK root at ${CUDA_TOOLKIT_ROOT_DIR}, linker libs: ${CUDA_LINKER_LIBS}")
 endif(LIBVOT_USE_CUDA)
+if(LIBVOT_USE_CUDNN)
+    message( "** Compile with CUDNN ${CUDNN_VERSION}, include: ${CUDNN_INCLUDE}, library: ${CUDNN_LIBRARY}")
+endif(LIBVOT_USE_CUDNN)
 message("\n")

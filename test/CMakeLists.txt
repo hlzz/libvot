@@ -42,10 +42,6 @@ endif(LIBVOT_USE_OPENCV)
 
 # tests related to cuda
 if(LIBVOT_USE_CUDA)
-	# add c++11 flag and sm_20 to nvcc flags
-	list(APPEND CUDA_NVCC_FLAGS "-arch=sm_20;-std=c++11;-O2;-DVERBOSE")
-	SET(CUDA_PROPAGATE_HOST_FLAGS OFF)
-
 	cuda_add_executable(cuda_basic_test cuda_basic_test.cu)
 	add_test(cuda_basic_test cuda_basic_test)	# cuda hello world test
 endif(LIBVOT_USE_CUDA)
