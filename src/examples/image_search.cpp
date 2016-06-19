@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <fstream>
 #include <thread>
-#include <gflags/gflags.h>
+#include "gflags/gflags.h"
 
 #include "libvot_config.h"
 #include "vocab_tree/vot_pipeline.h"

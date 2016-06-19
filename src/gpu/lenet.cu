@@ -8,6 +8,9 @@
  * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Author: Tianwei Shen <shentianweipku@gmail.com>
+ * This code example is adapted from Tal Ben-Nun's cudnn training example
  */
 
 #include <cstdio>
@@ -34,6 +37,8 @@
 #include <cudnn.h>
 
 #include "readubyte.h"
+#include "cuda_utils.h"
+#include "utils/io_utils.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Definitions and helper utilities
@@ -41,19 +46,9 @@
 // Block width for CUDA kernels
 #define BW 128
 
-#ifdef LIBVOT_USE_GFLAGS
-    #include <gflags/gflags.h>
-
-    #ifndef _WIN32
-        #define gflags google
-    #endif
-#else
-    // Constant versions of gflags
-    #define DEFINE_int32(flag, default_value, description) const int FLAGS_##flag = (default_value)
-    #define DEFINE_uint64(flag, default_value, description) const unsigned long long FLAGS_##flag = (default_value)
-    #define DEFINE_bool(flag, default_value, description) const bool FLAGS_##flag = (default_value)
-    #define DEFINE_double(flag, default_value, description) const double FLAGS_##flag = (default_value)
-    #define DEFINE_string(flag, default_value, description) const std::string FLAGS_##flag ((default_value))
+#include "gflags/gflags.h"
+#ifndef _WIN32
+#define gflags google
 #endif
 
 /**
@@ -123,16 +118,16 @@ DEFINE_uint64(batch_size, 64, "Batch size for training");
 
 // Filenames
 DEFINE_bool(pretrained, false, "Use the pretrained CUDNN model as input");
-DEFINE_string(train_images, "train-images.idx3-ubyte", "Training images filename");
-DEFINE_string(train_labels, "train-labels.idx1-ubyte", "Training labels filename");
-DEFINE_string(test_images, "t10k-images.idx3-ubyte", "Test images filename");
-DEFINE_string(test_labels, "t10k-labels.idx1-ubyte", "Test labels filename");
+DEFINE_string(data_folder, "", "The folder of dataset (mnist)");
+DEFINE_string(train_images, "train-images-idx3-ubyte", "Training images filename");
+DEFINE_string(train_labels, "train-labels-idx1-ubyte", "Training labels filename");
+DEFINE_string(test_images, "t10k-images-idx3-ubyte", "Test images filename");
+DEFINE_string(test_labels, "t10k-labels-idx1-ubyte", "Test labels filename");
 
 // Solver parameters
 DEFINE_double(learning_rate, 0.01, "Base learning rate");
 DEFINE_double(lr_gamma, 0.0001, "Learning rate policy gamma");
 DEFINE_double(lr_power, 0.75, "Learning rate policy power");
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Layer representations
@@ -726,14 +721,20 @@ struct TrainingContext
 
 int main(int argc, char **argv)
 {
-#ifdef LIBVOT_USE_GFLAGS
     gflags::ParseCommandLineFlags(&argc, &argv, true);
-#endif
 
     size_t width, height, channels = 1;
 
     // Open input data
     printf("Reading input data\n");
+
+	if(FLAGS_data_folder != "")
+	{
+		FLAGS_train_images = tw::IO::JoinPath(FLAGS_data_folder, FLAGS_train_images);
+		FLAGS_train_labels = tw::IO::JoinPath(FLAGS_data_folder, FLAGS_train_labels);
+		FLAGS_test_images = tw::IO::JoinPath(FLAGS_data_folder, FLAGS_test_images);
+		FLAGS_test_labels = tw::IO::JoinPath(FLAGS_data_folder, FLAGS_test_labels);
+	}
     
     // Read dataset sizes
     size_t train_size = ReadUByteDataset(FLAGS_train_images.c_str(), FLAGS_train_labels.c_str(), nullptr, nullptr, width, height);
@@ -954,7 +955,7 @@ int main(int argc, char **argv)
     checkCudaErrors(cudaDeviceSynchronize());
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    printf("Iteration time: %f ms\n", std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000.0f / FLAGS_iterations);
+    printf("Iteration time: %f s\n", std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() / 1000.0f / FLAGS_iterations);
     
     float classification_error = 1.0f;
 

@@ -81,16 +81,25 @@ include_directories(BEFORE ${LIBVOT_INCLUDES})
 
 # Setup vlfeat for feature detection
 set(VLFEAT_INCLUDE_DIRS
-    ${CMAKE_SOURCE_DIR}/src/third_party/vlfeat
-    )
+    ${CMAKE_SOURCE_DIR}/src/third_party/vlfeat)
 set(VLFEAT_LIBRARY vlfeat)
 include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 
 # Setup gflags for command line tools
 # use the built-in gflags include directory, defined in gflags CMakefile
+set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
 include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
 set(GFLAGS_LIBRARY gflags)
 add_definitions(-DLIBVOT_USE_GFLAGS)
+
+# output include directories for debug
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	message(STATUS "INCLUDE_DIRECTORIES:")
+	get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+	foreach(dir ${dirs})
+		message(STATUS "dir='${dir}'")
+	endforeach()
+endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 # =============================== Set libraries end ==============================
 
 # Specify output bin_path and lib_path
@@ -119,9 +128,9 @@ if(LIBVOT_USE_OPENCV)
     message("** Compile with OpenCV, headers found in ${OpenCV_INCLUDE_DIRS}.")
 endif(LIBVOT_USE_OPENCV)
 if(LIBVOT_USE_CUDA)
-    message( "** Compile with CUDA ${CUDA_VERSION_STRING}, CUDA SDK root at ${CUDA_TOOLKIT_ROOT_DIR}, linker libs: ${CUDA_LINKER_LIBS}")
+    message( "** Compile with CUDA ${CUDA_VERSION_STRING}, CUDA SDK root at ${CUDA_TOOLKIT_ROOT_DIR}, linker libs ${CUDA_LINKER_LIBS}")
 endif(LIBVOT_USE_CUDA)
 if(LIBVOT_USE_CUDNN)
-    message( "** Compile with CUDNN ${CUDNN_VERSION}, include: ${CUDNN_INCLUDE}, library: ${CUDNN_LIBRARY}")
+    message( "** Compile with CUDNN ${CUDNN_VERSION}, include ${CUDNN_INCLUDE}, library ${CUDNN_LIBRARY}")
 endif(LIBVOT_USE_CUDNN)
 message("\n")
