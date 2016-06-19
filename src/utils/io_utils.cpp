@@ -230,6 +230,12 @@ namespace tw
         return (stat(filename, &buffer) == 0);
     }
 
+	bool IO::IsFileExist(const std::string& filename)
+	{
+		std::ifstream infile(filename);
+		return infile.good();
+	}
+
     std::string IO::JoinPath(std::string folder, std::string filename)
     {
         #ifdef WIN32

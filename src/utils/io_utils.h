@@ -71,7 +71,8 @@ namespace tw
         static void Trim(std::basic_string<charType> & str, const char *chars2remove = NULL);       // it consists TrimLeft and TrimRight
         static bool IsEmptyString(const std::string & str);                                     // judge whether the string is empty
         static int ExtractLines(const char *input_file_path, std::vector<std::string> & lines); //!< extract lines from a text file
-        static bool IsFileExist(const char *filename);                          //!< judge whether the file exists
+        static bool IsFileExist(const char *filename);				//!< judge whether the file exists
+		static bool IsFileExist(const std::string& filename);		//!< judge whether the file exists
         static std::string JoinPath(std::string folder, std::string filename);  //!< join a filename with a directory name
 
         static std::pair<std::string, std::string> SplitPath(std::string path);		//!< separate the folder from the filename

@@ -7,7 +7,8 @@ using namespace std;
 
 int main(int argc, char **argv){
 
-    if (argc < 3 || argc >10){
+    if (argc < 3 || argc > 10)
+	{
         cout<<"Usage:"<<endl;
         cout<<argv[0]<<" train network.json [model1.marvin[,model2.marvin,...]] [snapshot_iteration]"<<endl;
         cout<<"       example: "<<argv[0]<<" train examples/mnist/lenet.json"<<endl;

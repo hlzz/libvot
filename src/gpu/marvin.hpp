@@ -89,7 +89,9 @@
 #include <curand.h>
 #include <cudnn.h>
 #include <sys/time.h>
+
 #include "cuda_utils.h"
+#include "utils/io_utils.h"
 
 namespace marvin {
 
@@ -108,7 +110,6 @@ enum SolverAlgorithm { SGD, AdaDelta, AdaGrad, Adam, NAG, RMSprop};
 enum Regularizer { L2, L1 };
 enum LRN { CrossChannel, DivisiveNormalization };
 enum ElementWiseOp { ElementWise_EQL, ElementWise_MUL, ElementWise_SUM, ElementWise_MIN, ElementWise_MAX };
-
 
 ComputeT anyval;
 ComputeT oneval = 1;
@@ -764,15 +765,9 @@ void parseNetworkJSON(std::string filename, JSON* train_obj, JSON* test_obj, JSO
 
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // Utility
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
-bool is_file_exist(const std::string& fileName){
-    std::ifstream infile(fileName);
-    return infile.good();
-}
 
 void memorySizePrint(size_t bytes){
     if (bytes<512){
@@ -7396,7 +7391,7 @@ public:
                 std::cout<<std::endl;
 
                 std::string Fname = saveFilePrefix + responseNames[i] + "_" + std::to_string(responseChannels[i][j]) + ".tensor";
-                while (is_file_exist(Fname)){
+                while (tw::IO::IsFileExist(Fname)){
                     std::cerr<<"File "<<Fname<<" exists. Please delete it first. Will retry after 5 seconds."<<std::endl;
                     std::this_thread::sleep_for (std::chrono::seconds(5));
                 }
@@ -7471,7 +7466,7 @@ public:
                             Fname = Fname + '_' + std::to_string(file_counter[i]) + ".tensor";
                         }
 
-                        while (is_file_exist(Fname)){
+                        while (tw::IO::IsFileExist(Fname)){
                             std::cerr<<"File "<<Fname<<" exists. Please delete it first. Will retry after 5 seconds."<<std::endl;
                             std::this_thread::sleep_for (std::chrono::seconds(5));
                         }
