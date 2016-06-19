@@ -48,3 +48,6 @@ CMakeLists.txt.user
 
 # ignore generated libvot config file
 src/libvot_config.h
+
+# ignore files in test_data unless specified.
+test_data/*
