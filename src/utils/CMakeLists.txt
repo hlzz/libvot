@@ -1,7 +1,3 @@
-if(POLICY CMP0042)
-    cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
-endif()
-
 file(GLOB_RECURSE utils_files_header *.h)
 file(GLOB_RECURSE utils_files_cpp *.cpp)
 
