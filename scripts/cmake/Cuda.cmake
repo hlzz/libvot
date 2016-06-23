@@ -19,8 +19,8 @@ function(detect_cuDNN)
 	endif()
 
     get_filename_component(__libpath_hist ${CUDA_CUDART_LIBRARY} PATH)
-    find_library(CUDNN_LIBRARY NAMES ${CUDNN_LIB_NAME} # libcudnn_static.a
-       PATHS ${CUDNN_ROOT} $ENV{CUDNN_ROOT} ${CUDNN_INCLUDE} ${__libpath_hist}
+    find_library(CUDNN_LIBRARY NAMES ${CUDNN_LIB_NAME}
+       PATHS ${CUDNN_ROOT} $ENV{CUDNN_ROOT} ${CUDNN_INCLUDE} ${__libpath_hist} ${__libpath_hist}/../lib
        DOC "Path to cuDNN library.")
 
     if(CUDNN_INCLUDE AND CUDNN_LIBRARY)
@@ -84,6 +84,7 @@ if(LIBVOT_USE_CUDNN)
 	else(HAVE_CUDNN)
         message(STATUS "Could not locate cuDNN, disabling cuDNN support.")
 		remove_definitions(-DLIBVOT_USE_CUDNN)
+        set(LIBVOT_USE_CUDNN OFF)
     endif()
 endif(LIBVOT_USE_CUDNN)
 
