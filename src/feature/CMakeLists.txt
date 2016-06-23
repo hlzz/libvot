@@ -1,7 +1,3 @@
-if(POLICY CMP0042)
-    cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
-endif()
-
 list(APPEND VOT_FEATURE_HEADER vlfeat_libvot_api.h)
 list(APPEND VOT_FEATURE_SOURCE vlfeat_libvot_api.cpp)
 
