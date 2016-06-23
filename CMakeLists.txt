@@ -16,11 +16,6 @@ set(LIBVOT_VERSION_MINOR 1)
 set(LIBVOT_VERSION_PATCH 3)
 set(LIBVOT_VERSION ${LIBVOT_VERSION_MAJOR}.${LIBVOT_VERSION_MINOR}.${LIBVOT_VERSION_PATCH})
 
-# ================= Set policy ======================================
-if(POLICY CMP0042)
-    cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
-endif()
-
 # set compiler options, output all warnings
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

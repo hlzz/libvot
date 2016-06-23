@@ -14,6 +14,11 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/src/third_party/gtest)
         "  > git submodule update -i\n")
 endif()
 
+# ================= Set policy ======================================
+if(POLICY CMP0042)
+    cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
+endif()
+
 # configure a header file to pass some of the CMake settings to the source code
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/libvot_config.h.in"
@@ -32,6 +37,8 @@ add_subdirectory(third_party)
 add_subdirectory(gpu)
 # feature lib
 add_subdirectory(feature)
+# matching lib
+add_subdirectory(matching)
 # utility functions
 add_subdirectory(utils)
 # the main vocabulary tree directory
