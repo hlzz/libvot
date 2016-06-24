@@ -163,7 +163,7 @@ public:
 
 	bool operator==(const SiftMatchPair &rhs)
 	{
-		//NOTICE(tianwei): this is a incomplete comparison
+		//NOTE(tianwei): this is a incomplete comparison
 		if(this->filename1_ == rhs.filename1_ && this->filename2_ == rhs.filename2_ &&
 		   this->nmatch_ == rhs.nmatch_ &&
 		   this->fundamental_inlier_num_ == rhs.fundamental_inlier_num_ &&
@@ -310,6 +310,7 @@ public:
 	{
 		image_num_ = 0;
 	}
+
 	SiftMatchFile(std::string mat_path)
 	{
 		mat_filename_ = mat_path;

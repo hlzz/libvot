@@ -2,7 +2,7 @@
 
 #### Why libvot?  
 *libvot* starts as a fast multi-threaded implementation of vocabulary tree, an algorithm widely used in image retrieval. 
-As there are growing interests about this project, the core developers would like to extend this project into a fully-functioned image retrieval library at the production level.
+As there are growing interests about this project, the core developers would like to extend this project into a fully-functioned image retrieval library at the production level. *libvot* is not a random piece of open-sourced research code. It is meant to be a dedicated library for image retrieval and facilitate 3D computer vision, in continuous development. For a detailed explanation of what it is, let's dive into the code to have a look!
 
 #### Why OpenCV is imported as a build option in the 0.2 release?  
 The goal of *libvot* is to provide cutting-edged algorithms in image retrieval at the production level. 
