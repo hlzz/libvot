@@ -186,13 +186,13 @@ namespace vot
             bool ClearTree();                   //!< release the memory
             bool Compare(VocabTree &v) const; //!< compare two vocabulary tree and returns whether they are the same
             // member function for building image database
-            double AddImage2Tree(size_t image_index, tw::SiftData &sift, int thread_num);   //!< add an image into the database (support multi-thread)
+            double AddImage2Tree(size_t image_index, vot::SiftData &sift, int thread_num);   //!< add an image into the database (support multi-thread)
             void Show() const;      //!< a test function
             bool SetConstantWeight();   //!< set a constant weight to the leaf nodes
             bool ComputeTFIDFWeight(size_t image_num);  //!< compute TF-IDF weight and pre-apply weight adjusting to inverted lists
             bool NormalizeDatabase(size_t start_id, size_t image_num);    //!< normalize the inverted list score by the magnitude of image vector
             // member function for querying database
-            bool Query(tw::SiftData &sift, float *scores);   //!< query database and return the scores
+            bool Query(vot::SiftData &sift, float *scores);   //!< query database and return the scores
             size_t IndexLeaves(); //!< index the leaf nodes
 
             // public data member 

@@ -11,12 +11,12 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/nonfree/features2d.hpp>
 
-namespace tw  {
+namespace vot {
 class SiftData;
 
 bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
                                 cv::Mat &descriptors,
-                                tw::SiftData &sift_data);
+                                SiftData &sift_data);
 
 }	// end of namespace tw
 

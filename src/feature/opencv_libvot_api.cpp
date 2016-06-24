@@ -9,10 +9,10 @@
 #include "utils/global_params.h"
 #include "utils/data_types.h"
 
-namespace tw {
+namespace vot {
 bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
                                 cv::Mat &descriptors,
-                                tw::SiftData &sift_data)
+                                SiftData &sift_data)
 {
 	sift_data.clear();
 	int num_features = key_points.size();
@@ -45,4 +45,4 @@ bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
 	return true;
 }
 
-} 	// end of namespace tw
+} 	// end of namespace vot

@@ -9,11 +9,11 @@
 #include <cmath>
 #include <cstring>
 
-namespace tw {
+namespace vot {
 bool Vlfeature2LibvotSift(std::vector<Vlfeature> const & vlfeature_vec,
                           unsigned char const * data,
                           int image_width, int image_height, int num_channel,
-                          tw::SiftData &sift_data)
+                          SiftData &sift_data)
 {
 	sift_data.clear();
 
@@ -192,4 +192,4 @@ int RunVlFeature(unsigned char *data, int image_width, int image_height, int num
     int num_features = (int)vlfeature_vec.size();
     return num_features;
 }
-}	// end of namespace tw
+}	// end of namespace vot
