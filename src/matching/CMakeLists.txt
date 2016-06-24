@@ -2,8 +2,12 @@ list(APPEND VOT_MATCHING_HEADER )
 list(APPEND VOT_MATCHING_SOURCE )
 
 if(LIBVOT_USE_OPENCV)
-	list(APPEND VOT_MATCHING_HEADER opencv_matching_api.h)
-	list(APPEND VOT_MATCHING_SOURCE opencv_matching_api.cpp)
+	list(APPEND VOT_MATCHING_HEADER
+		opencv_matching_api.h
+		matching_datatypes.h)
+	list(APPEND VOT_MATCHING_SOURCE
+		opencv_matching_api.cpp
+		matching_datatypes.cpp)
 endif(LIBVOT_USE_OPENCV)
 
 if(LIBVOT_BUILD_SHARED)
