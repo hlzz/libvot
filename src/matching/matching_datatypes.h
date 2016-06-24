@@ -14,6 +14,9 @@
 #include "utils/io_utils.h"
 
 namespace vot {
+/**
+ * @brief Match parameters
+ */
 struct MatchParam
 {
 	MatchParam()
@@ -93,11 +96,11 @@ public:
 		std::cout << first << " " << second << " ";
 		switch(flag)
 		{
-			case OUTLIER: std::cout << "OUTLIER\n";break;
-			case HINLIER: std::cout << "HINLIER\n";break;
-			case FINLIER: std::cout << "FINLIER\n";break;
-			case INLIER: std::cout << "INLIER\n";break;
-			default: std::cerr << "ERROR\n";break;
+			case OUTLIER: std::cout << "OUTLIER\n"; break;
+			case HINLIER: std::cout << "HINLIER\n"; break;
+			case FINLIER: std::cout << "FINLIER\n"; break;
+			case INLIER: std::cout << "INLIER\n"; break;
+			default: std::cerr << "ERROR\n";
 		}
 	}
 };
@@ -159,12 +162,15 @@ public:
 	}
 
 	bool operator==(const SiftMatchPair &rhs)
-	{   //NOTICE: this is a incomplete comparison
+	{
+		//NOTICE(tianwei): this is a incomplete comparison
 		if(this->filename1_ == rhs.filename1_ && this->filename2_ == rhs.filename2_ &&
 		   this->nmatch_ == rhs.nmatch_ &&
 		   this->fundamental_inlier_num_ == rhs.fundamental_inlier_num_ &&
-		   this->homography_inlier_num_ == rhs.homography_inlier_num_) { return true; }
-		else { return false; }
+		   this->homography_inlier_num_ == rhs.homography_inlier_num_)
+			return true;
+		else
+			return false;
 	}
 
 	// copy assignment operator
@@ -183,9 +189,7 @@ public:
 		{
 			match_pairs_ = new FeatureMatchPair [rhs.nmatch_];
 			for(int i = 0; i < rhs.nmatch_; i++)
-			{
 				match_pairs_[i] = rhs.match_pairs_[i];
-			}
 		}
 		else
 			match_pairs_ = NULL;
@@ -198,9 +202,7 @@ public:
 	~SiftMatchPair()
 	{
 		if(match_pairs_ != NULL)
-		{
 			delete [] match_pairs_;
-		}
 	}
 
 	// Helper functions
@@ -210,17 +212,20 @@ public:
 	inline std::string & fileNmae2() { return filename2_; }
 	inline const int & numMatches() const { return nmatch_; }
 	inline int & numMatches() { return nmatch_; }
-	inline const int & hInlierNumMatches() const { return homography_inlier_num_; }		// Homography inlier number of matches
+
+	inline const int & hInlierNumMatches() const { return homography_inlier_num_; } //!< Homography inlier number of matches
 	inline int & hInlierNumMatches() { return homography_inlier_num_; }
-	inline const int & fInlierNumMatches() const { return fundamental_inlier_num_; }	// Fundamental matrix_ inlier number of matches
+	inline const int & fInlierNumMatches() const { return fundamental_inlier_num_; }//!< Fundamental matrix_ inlier number of matches
 	inline int & fInlierNumMatches() { return fundamental_inlier_num_; }
 
-	const FeatureMatchPair * matchPairs() const { return match_pairs_; }
-	FeatureMatchPair * matchPairs() { return match_pairs_; }
+	const FeatureMatchPair* matchPairs() const { return match_pairs_; }
+	FeatureMatchPair* matchPairs() { return match_pairs_; }
 
-	/// @brief WriteSiftMatchPair
-	/// @param file is open with append mode
-	/// @return
+	/**
+	 * @brief WriteSiftMatchPair: write sift match pairs to file
+	 * @param file: the file path
+	 * @return true if success
+	 */
 	bool WriteSiftMatchPair(FILE *file) const
 	{
 		// write information
@@ -240,12 +245,35 @@ public:
 		return true;
 	}
 
-	/// @brief ReadSiftMatchPair reads from a file formatted with WriteSiftMatchPair, and then
-	///        initialize the SiftMatchPair class with the information extracted from the file
-	///
-	/// @param file is open with append mode
-	/// @return
-	bool ReadSiftMatchPair(FILE *file);
+	bool ReadSiftMatchPair(FILE *file)
+	{
+		char filename2_temp[256];
+		int filename2_length;
+
+		int check = fread((void*)&filename2_length, sizeof(int), 1, file);
+		if(check != 1)  return false;
+
+		fread((void*)filename2_temp, sizeof(char), filename2_length, file);
+		filename2_temp[filename2_length] = '\0';
+		filename2_ = std::string(filename2_temp);
+
+		fread((void*)&nmatch_, sizeof(int), 1, file);
+		fread((void*)&homography_inlier_num_, sizeof(int), 1, file);
+		fread((void*)&fundamental_inlier_num_, sizeof(int), 1, file);
+
+		fread((void*)homography_.data(), sizeof(double), 9, file);
+		fread((void*)fundamental_matrix_.data(), sizeof(double), 9, file);
+
+		// read match correspondence (int, int, char)
+		if(match_pairs_ != NULL)
+		{
+			delete [] match_pairs_;
+			match_pairs_ = NULL;
+		}
+		match_pairs_ = new FeatureMatchPair [nmatch_];
+		fread((void*)match_pairs_, nmatch_, sizeof(FeatureMatchPair), file);
+		return true;
+	}
 
 	void showInfo() const
 	{
@@ -258,9 +286,7 @@ public:
 		std::cout << "fundamental_matrix: " << fundamental_matrix_ << '\n';
 
 		// random shuffle
-		//        std::srand(unsigned (std::time(0)));
 		std::vector<int> index_array(nmatch_);
-		//        std::iota(index_array.begin(), index_array.end(), 0);
 		for (size_t i = 0; i < index_array.size(); ++i) index_array[i] = static_cast<int>(i);
 		std::random_shuffle(index_array.begin(), index_array.end());
 
@@ -290,11 +316,11 @@ public:
 		image_num_ = 0;
 	}
 
-	///
-	/// \brief ReadMatchFile: read a .mat file and save the matching infomation in a SiftMatchFile instance
-	/// \param mat_path: matching file path
-	/// \return
-	///
+	/**
+	 * @brief ReadMatchFile: read a .mat file and save the matching infomation in a SiftMatchFile instance
+	 * @param mat_path: matching file path
+	 * @return true if success
+	 */
 	bool ReadMatchFile(std::string mat_path)
 	{
 		FILE *fd = fopen(mat_path.c_str(), "rb");
