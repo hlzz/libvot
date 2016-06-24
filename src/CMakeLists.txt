@@ -33,12 +33,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # the third parth libs
 add_subdirectory(third_party)
+# utility functions
+add_subdirectory(utils)		# utils has to be added before other modules
 # feature lib
 add_subdirectory(feature)
 # matching lib
 add_subdirectory(matching)
-# utility functions
-add_subdirectory(utils)
 # the main vocabulary tree directory
 add_subdirectory(vocab_tree)
 # the image graph directory

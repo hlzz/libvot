@@ -40,6 +40,7 @@ endif(LIBVOT_USE_OPENCV)
 
 # test matching functions
 add_executable(sift_match_test sift_match_test.cpp)
+target_link_libraries(sift_match_test vot_matching vot_utils vot_feature)
 add_test(sift_match_test sift_match_test
 ${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift
 ${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift)

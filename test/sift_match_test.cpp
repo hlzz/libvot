@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include "utils/data_types.h"
+#include "matching/matching_datatypes.h"
+#include "matching/feature_matching.h"
 
 using namespace std;
 
@@ -21,6 +23,7 @@ int main(int argc, char **argv)
 	vot::SiftData sift1, sift2;
 	sift1.ReadSiftFile(sift_file1);
 	sift2.ReadSiftFile(sift_file2);
+
 
 	return 0;
 }
