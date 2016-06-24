@@ -24,7 +24,6 @@ set_property(TARGET unit_test PROPERTY CXX_STANDARD 11)
 set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
 target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(unit_test gtest_main)
-
 add_test(unit_test unit_test)
 
 if(LIBVOT_USE_OPENCV)
@@ -38,3 +37,7 @@ if(LIBVOT_USE_OPENCV)
     target_link_libraries(libvot_feature_test vot_feature vot_utils)
     add_test(libvot_feature_test libvot_feature_test ${CMAKE_SOURCE_DIR}/test_data/lena.jpg)
 endif(LIBVOT_USE_OPENCV)
+
+# test matching functions
+add_executable(sift_match_test sift_match_test.cpp)
+add_test(sift_match_test sift_match_test)
