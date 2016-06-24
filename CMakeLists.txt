@@ -82,8 +82,8 @@ include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 
 # Setup gflags for command line tools
 # use the built-in gflags include directory, defined in gflags CMakefile
-set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
-include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
+# set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
+# include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
 set(GFLAGS_LIBRARY gflags)
 add_definitions(-DLIBVOT_USE_GFLAGS)
 
