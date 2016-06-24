@@ -24,6 +24,12 @@ int main(int argc, char **argv)
 	sift1.ReadSiftFile(sift_file1);
 	sift2.ReadSiftFile(sift_file2);
 
+	vot::SiftMatchPair match_pair(sift_file1);
+	vot::MatchParam match_param;
+	if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
+	{
+		return -1;
+	}
 
 	return 0;
 }

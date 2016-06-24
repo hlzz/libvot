@@ -231,16 +231,10 @@ const std::vector<SiftMatchPair> & SiftMatchFile::getSiftMatchPairs() const { re
 // ====================================================
 // ---------------- SiftMatcher class ---------------
 // ====================================================
-SiftMatcher::SiftMatcher() {}
+SiftMatcher::SiftMatcher(int max_sift) { max_sift_ = max_sift; }
 
-void SiftMatcher::setMaxSift(int max_sift)
-{
-	max_sift_ = max_sift;
-}
+void SiftMatcher::setMaxSift(int max_sift) { max_sift_ = max_sift; }
 
-const int SiftMatcher::getMaxSift() const
-{
-	return (const int) max_sift_;
-}
+const int SiftMatcher::getMaxSift() const { return (const int) max_sift_; }
 
 }	// end of namespace vot

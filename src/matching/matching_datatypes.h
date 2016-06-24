@@ -177,10 +177,13 @@ private:
 	std::vector<SiftMatchPair> match_pairs_;
 };
 
+/**
+ * @brief The SiftMatcher class: sift feature matcher, inspired by Changchang Wu's SiftGPU
+ */
 class SiftMatcher
 {
 public:
-	SiftMatcher();
+	SiftMatcher(int max_sift);
 	void setMaxSift(int max_sift);
 	const int getMaxSift() const;
 

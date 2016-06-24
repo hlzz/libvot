@@ -15,7 +15,11 @@ namespace vot {
 bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match_pair, MatchParam &match_param)
 {
 	// get putative match
-	SiftMatcher matcher;
+	int num_feature1 = sift1.getFeatureNum();
+	int num_feature2 = sift2.getFeatureNum();
+	int max_feature = std::max(num_feature1, num_feature2) * 2;
+
+	SiftMatcher matcher(max_feature);
 
 	// geometric verification
 
