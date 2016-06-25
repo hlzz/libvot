@@ -19,7 +19,15 @@ bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match
 	int num_feature2 = sift2.getFeatureNum();
 	int max_feature = std::max(num_feature1, num_feature2) * 2;
 
+	// using sift matcher is easy, just new an matcher object
+	// set matching device and initialize the context
 	SiftMatcher matcher(max_feature);
+	matcher.SetMatchDevice(0);		// use cpu match
+	if(!matcher.Init())				// initialize context
+	{
+		std::cout << "[PairwiseSiftMatching] Initialize SiftMatcher context failed\n";
+		return false;
+	}
 
 	// geometric verification
 

@@ -231,10 +231,137 @@ const std::vector<SiftMatchPair> & SiftMatchFile::getSiftMatchPairs() const { re
 // ====================================================
 // ---------------- SiftMatcher class ---------------
 // ====================================================
-SiftMatcher::SiftMatcher(int max_sift) { max_sift_ = max_sift; }
+SiftMatcher::SiftMatcher(int max_sift)
+{
+	max_sift_ = max_sift;
+	match_device_ = 0;
+	matcher_ = nullptr;
+}
 
-void SiftMatcher::setMaxSift(int max_sift) { max_sift_ = max_sift; }
+SiftMatcher::~SiftMatcher()
+{
+	if(matcher_) delete matcher_;
+}
 
-const int SiftMatcher::getMaxSift() const { return (const int) max_sift_; }
+bool SiftMatcher::Init()
+{
+	if(matcher_) delete matcher_;
+	switch(match_device_)
+	{
+		case SiftMatcher::SIFT_MATCH_CPU:
+			matcher_ = new SiftMatcherCPU(max_sift_);
+			break;
+		case SiftMatcher::SIFT_MATCH_CUDA:
+			matcher_ = new SiftMatcherCUDA(max_sift_);
+			break;
+		case SiftMatcher::SIFT_MATCH_GLSL:
+			matcher_ = new SiftMatcherGL(max_sift_);
+			break;
+		default:
+			return false;
+	}
+
+	return true;
+}
+
+void SiftMatcher::SetMaxSift(int max_sift) { max_sift_ = max_sift; }
+
+const int SiftMatcher::GetMaxSift() const { return (const int) max_sift_; }
+
+bool SiftMatcher::SetMatchDevice(int device)
+{
+	switch (device)
+	{
+		case SiftMatcher::SIFT_MATCH_CPU:
+			match_device_ = device;
+			return true;
+		case SiftMatcher::SIFT_MATCH_CUDA:
+#ifdef LIBVOT_USE_CUDA				// if cude is available
+			match_device_ = device;
+			return true;
+#else
+			match_device_ = SiftMatcher::SIFT_MATCH_CPU;
+			return false;
+#endif
+		case SiftMatcher::SIFT_MATCH_GLSL:
+			match_device_ = device;
+			return true;
+		default:
+			match_device_ = SiftMatcher::SIFT_MATCH_CPU;
+			return false;
+	}
+}
+
+int SiftMatcher::GetMatchDevice(int device) const { return (int) match_device_; }
+
+int SiftMatcher::GetSiftMatch(int max_match,  int match_buffer[][2],
+							  float distmax, float ratiomax, int mutual_best_match)
+{
+	if(matcher_)
+		return matcher_->GetSiftMatch(max_match, match_buffer, distmax, ratiomax, mutual_best_match);
+}
+
+// ====================================================
+// ---------------- SiftMatcherCPU class ---------------
+// ====================================================
+SiftMatcherCPU::SiftMatcherCPU(int max_sift): SiftMatcher(max_sift)
+{
+}
+
+SiftMatcherCPU::~SiftMatcherCPU()
+{
+
+}
+
+int SiftMatcherCPU::GetSiftMatch(int max_match,
+                                 int match_buffer[][2],
+								 float distmax,
+								 float ratiomax,
+								 int mutual_best_match)
+{
+
+}
+
+// ====================================================
+// ---------------- SiftMatcherCUDA class ---------------
+// ====================================================
+SiftMatcherCUDA::SiftMatcherCUDA(int max_sift): SiftMatcher(max_sift)
+{
+}
+
+SiftMatcherCUDA::~SiftMatcherCUDA()
+{
+
+}
+
+int SiftMatcherCUDA::GetSiftMatch(int max_match,
+                                  int match_buffer[][2],
+								  float distmax,
+								  float ratiomax,
+								  int mutual_best_match)
+{
+
+}
+
+// ====================================================
+// ---------------- SiftMatcherGLSL class ---------------
+// ====================================================
+SiftMatcherGL::SiftMatcherGL(int max_sift): SiftMatcher(max_sift)
+{
+}
+
+SiftMatcherGL::~SiftMatcherGL()
+{
+
+}
+
+int SiftMatcherGL::GetSiftMatch(int max_match,
+                                int match_buffer[][2],
+								float distmax,
+								float ratiomax,
+								int mutual_best_match)
+{
+
+}
 
 }	// end of namespace vot

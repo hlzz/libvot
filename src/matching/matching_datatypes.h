@@ -183,14 +183,96 @@ private:
 class SiftMatcher
 {
 public:
-	SiftMatcher(int max_sift);
-	void setMaxSift(int max_sift);
-	const int getMaxSift() const;
+	enum MatcherDevice {
+		SIFT_MATCH_CPU = 0,
+		SIFT_MATCH_CUDA = 1,
+		SIFT_MATCH_GLSL = 2,
+	};
 
-private:
+	SiftMatcher(int max_sift);
+	virtual ~SiftMatcher();
+	bool Init();		//!< initialize matcher context
+	void SetMaxSift(int max_sift);	//!< set maximum buffer length
+	const int GetMaxSift() const;	//!< get maximum buffer length
+
+	/**
+	 * @brief SetMatchDevice: set match device (cpu, cuda, glsl)
+	 * @param device: 0 for cpu, 1 for cuda, 2 for glsl
+	 * @return: false if the device is not available, which means using cpu matcher
+	 */
+	bool SetMatchDevice(int device);
+	int GetMatchDevice(int device) const;	//!< get match device
+	/**
+	 * @brief SetDescriptors: set descriptors to match
+	 * @param index: index = [0/1] for two features sets respectively
+	 * @param num
+	 * @param descriptors: descriptor pointer
+	 * @param id
+	 */
+	virtual void SetDescriptors(int index, int num, const float* descriptors, int id  = -1) {}
+	/**
+	 * @brief SetDescriptors: descriptors are in unsigned char
+	 */
+	virtual void SetDescriptors(int index, int num, const unsigned char * descriptors, int id = -1) {}
+
+	/**
+	 * @brief GetSiftMatch: match two sets of features, and returns the number of matches.
+	 * Given two normalized descriptor d1,d2, the distance here is acos(d1 *d2);
+	 * @param max_match: the length of the match_buffer.
+	 * @param match_buffer: buffer to receive the matched feature indices
+	 * @param distmax: maximum distance of sift descriptor
+	 * @param ratiomax: maximum distance ratio
+	 * @param mutual_best_match: mutual best match or one way
+	 * @return the number of matches
+	 */
+	virtual int GetSiftMatch(int max_match,
+	                         int match_buffer[][2],
+							 float distmax = 0.7,
+	 						 float ratiomax = 0.8,
+							 int mutual_best_match = 1);
+
+protected:
 	int max_sift_;
+private:
+	int match_device_;
+	SiftMatcher *matcher_;
 };
 
+/**
+ * @brief The SiftMatcherCPU class: matcher using cpu
+ */
+class SiftMatcherCPU: public SiftMatcher
+{
+public:
+	SiftMatcherCPU(int max_sift);
+	~SiftMatcherCPU();
+	int GetSiftMatch(int max_match, int match_buffer[][2], float distmax, float ratiomax, int mutual_best_match);
+private:
+};
+
+/**
+ * @brief The SiftMatcherGL class: matcher using openGL
+ */
+class SiftMatcherGL: public SiftMatcher
+{
+public:
+	SiftMatcherGL(int max_sift);
+	~SiftMatcherGL();
+	int GetSiftMatch(int max_match, int match_buffer[][2], float distmax, float ratiomax, int mutual_best_match);
+private:
+};
+
+/**
+ * @brief The SiftMatcherCUDA class: matcher using cuda
+ */
+class SiftMatcherCUDA: public SiftMatcher
+{
+public:
+	SiftMatcherCUDA(int max_sift);
+	~SiftMatcherCUDA();
+	int GetSiftMatch(int max_match, int match_buffer[][2], float distmax, float ratiomax, int mutual_best_match);
+private:
+};
 }	// end of namespace vot
 
 #endif	// MATCHING_DATATYPES_H
