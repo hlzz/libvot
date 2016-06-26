@@ -42,7 +42,7 @@ DEFINE_double(peak_thresh, 2.5, "peak threshold for vlfeat parameter");
 
 void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
                             std::vector<std::string> *feat_filenames,
-                            tw::VlFeatParam *vlfeat_param,
+                            vot::VlFeatParam *vlfeat_param,
                             int first_index,
                             int num_images,
                             std::mutex *cout_mutex)
@@ -50,8 +50,8 @@ void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
 	for(size_t i = first_index; i < first_index + num_images; i++)
 	{
 		const cv::Mat input = cv::imread((*image_filenames)[i], CV_LOAD_IMAGE_COLOR);
-		tw::SiftData sift_data;
-		int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, *vlfeat_param);
+		vot::SiftData sift_data;
+		int num_features = vot::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, *vlfeat_param);
 		if(!sift_data.SaveSiftFile((*feat_filenames)[i]))
 		{
 			cout_mutex->lock();
@@ -159,8 +159,8 @@ int main(int argc, char** argv)
 				cv::Mat sift_descriptors;
 				cv_sift_detector.detect(input, cv_keypoints);
 				cv_sift_detector.compute(input, cv_keypoints, sift_descriptors);
-				tw::SiftData sift_data;
-				tw::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
+				vot::SiftData sift_data;
+				vot::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
 
 				if(!sift_data.SaveSiftFile(feat_filenames[i]))
 				{
@@ -177,14 +177,14 @@ int main(int argc, char** argv)
 			if(FLAGS_thread_num == 1)		// single thread version
 			{
 				cout << "[Extract Feature] Compute SIFT features using vlfeat sift\n";
-				tw::VlFeatParam vlfeat_param;
+				vot::VlFeatParam vlfeat_param;
 				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
 				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
 				for(int i = 0; i < num_images; i++)
 				{
 					const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
-					tw::SiftData sift_data;
-					int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
+					vot::SiftData sift_data;
+					int num_features = vot::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
 					if(!sift_data.SaveSiftFile(feat_filenames[i]))
 					{
 						cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 				std::vector<std::thread> threads;
 				std::mutex cout_mutex;
 
-				tw::VlFeatParam vlfeat_param;
+				vot::VlFeatParam vlfeat_param;
 				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
 				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
 

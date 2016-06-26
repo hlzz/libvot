@@ -259,7 +259,7 @@ TEST(OpenmvgDescriptor, BINARY) {
 
 TEST(DataTypes, ReadOpenmvgDesc)
 {
-	tw::SiftData s1;
+	vot::SiftData s1;
 	bool res = s1.ReadOpenmvgDesc<DescType, 128>("tempDescsBin.desc");
 	EXPECT_EQ(true, res);
 }

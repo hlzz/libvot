@@ -14,7 +14,7 @@
 
 ##简介
 *libvot*是一套完整的图像检索工具箱，其中包含特征提取工具和一个高效的vocabulary tree实现。在这个工具箱中，我们用到C++11的标准多线程库来加速算法，
-取得了快速准确的检索结果。目前，这个库主要用于我们的科研和生产，并且在积极维护中。如果觉得有用，可以star或者fork这个项目。
+取得了快速准确的检索结果。目前，这个库主要用于我们的科研和生产，并且在积极维护中。如果觉得有用，欢迎star或者fork这个项目！
 
 ##安装
 编译安装libvot非常简单，整个编译安装基于[CMake](http://cmake.org)。为了保证能够使用全部的C++11特性，这个项目要求CMake版本高于2.8.12。
@@ -55,7 +55,7 @@ libvot包含一个特征提取工具。你可以用`./libvot_feature <image_list
 [主页](http://hlzz.github.io/libvot/)和[文档](http://hlzz.github.io/libvot/doc/html/index.html).
 
 ##贡献
-我们正在向下一个版本(0.2)迈进，如果你对这个项目的开发感兴趣，可以看一下当前的[开发计划](../Roadmap.md)。我们欢迎并感谢任何形式的贡献，包括文档编辑，测试，新功能开发，意见及建议等等[。](http://tianweishen.com)
+我们正在向下一个版本(0.2)迈进，如果你对这个项目的开发感兴趣，可以看一下当前的[开发计划](Roadmap.md)和libvot的[代码风格](coding_style.md)。我们欢迎并感谢任何形式的贡献，包括文档编辑，测试，新功能开发，意见及建议等等[。](http://tianweishen.com)
 
 ##协议
 The BSD 3-Clause License

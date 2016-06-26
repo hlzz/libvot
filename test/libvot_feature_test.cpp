@@ -34,16 +34,16 @@ int main( int argc, char** argv )
 	cv::Mat sift_descriptors;
 	cv_sift_detector.detect(input, cv_keypoints);
 	cv_sift_detector.compute(input, cv_keypoints, sift_descriptors);
-	tw::SiftData sift_data;
-	tw::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
+	vot::SiftData sift_data;
+	vot::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
 
 	sift_data.SaveSiftFile(feat_filename);
 
 	// ----------- VLfeat feature -----------------------
-	tw::VlFeatParam vlfeat_param;
+	vot::VlFeatParam vlfeat_param;
 	vlfeat_param.edge_thresh = 10;
 	vlfeat_param.peak_thresh = 2.5;
-	int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
+	int num_features = vot::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
 	if(!sift_data.SaveSiftFile(feat_filename))
 	{
 		cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";

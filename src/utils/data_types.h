@@ -16,7 +16,7 @@
 #include "global_params.h"
 #include "openmvg_descriptor.hpp"
 
-namespace tw
+namespace vot
 {
 /** @brief Sift data structure used in libvot */
 class SiftData
@@ -340,6 +340,6 @@ private:
     LTYPE *lp_;
 };
 
-}   // end of namespace tw
+}   // end of namespace vot
 
 #endif

@@ -44,7 +44,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "clustering.h"
 
-namespace tw
+namespace vot
 {
 	/** Random sample k indexes for [1...n] without replacement */
 	void GetIntialCenters(size_t n, int k, size_t *initial_idx)
@@ -335,7 +335,7 @@ namespace tw
 		while(total_iter--)
 		{
 			double dis = 0;
-			tw::GetIntialCenters(num, k, initial_idx);
+			GetIntialCenters(num, k, initial_idx);
 			for(int i = 0; i < k; i++)
 			{
 				CopyDes2Double(means_curr + i * dim, p[initial_idx[i]], dim);
@@ -374,4 +374,4 @@ namespace tw
 
 		return ComputeError(num, dim, k, p, means, assignment);
 	}
-}
+}	// end of namespace vot
