@@ -28,6 +28,7 @@ endif()
 option(LIBVOT_BUILD_TESTS "Build libvot tests" ON)
 option(LIBVOT_BUILD_SHARED "Build libvot shared libs" ON)
 option(LIBVOT_BUILD_DOC "Build libvot documentations" ON)
+option(LIBVOT_USE_BOOST "Build libvot with Boost" ON)
 option(LIBVOT_USE_OPENCV "Build libvot with OpenCV support" ON)
 
 
@@ -42,6 +43,19 @@ if(LIBVOT_USE_OPENCV)
         set(LIBVOT_USE_OPENCV OFF)
 		remove_definitions(-DLIBVOT_USE_OPENCV)
     endif (OpenCV_FOUND)
+endif()
+
+# Boost building option
+if(LIBVOT_USE_BOOST)
+    find_package(Boost 1.55 REQUIRED system serialization QUIET)
+    if (Boost_FOUND)
+        include_directories(${Boost_INCLUDE_DIR})
+        add_definitions(-DLIBVOT_USE_BOOST)
+    elseif(Boost_FOUND)
+        message(STATUS "Could not locate Boost, disabling Boost support.")
+        set(LIBVOT_USE_BOOST OFF)
+        remove_definitions(-DLIBVOT_USE_BOOST)
+    endif(Boost_FOUND)
 endif()
 
 # by default build in release mode
@@ -106,4 +120,8 @@ message("** Build type: " ${CMAKE_BUILD_TYPE})
 if(LIBVOT_USE_OPENCV)
     message("** Compile with OpenCV, headers found in " ${OpenCV_INCLUDE_DIRS} ".")
 endif(LIBVOT_USE_OPENCV)
+if(LIBVOT_USE_BOOST)
+    message("** Compile with Boost, version " ${Boost_MAJOR_VERSION} "." ${Boost_MINOR_VERSION} ", "
+            "headers found in " ${Boost_INCLUDE_DIRS} ".")
+endif(LIBVOT_USE_BOOST)
 message("\n")

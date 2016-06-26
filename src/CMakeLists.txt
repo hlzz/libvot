@@ -32,9 +32,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # the third parth libs
-add_subdirectory(third_party)
+add_subdirectory(third_party)	# third party libs have to be added first
 # utility functions
-add_subdirectory(utils)		# utils has to be added before other modules
+add_subdirectory(utils)			# utils has to be added before other modules
 # feature lib
 add_subdirectory(feature)
 # matching lib

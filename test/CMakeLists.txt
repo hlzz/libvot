@@ -44,3 +44,10 @@ target_link_libraries(sift_match_test vot_matching vot_utils vot_feature)
 add_test(sift_match_test sift_match_test
 ${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift
 ${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift)
+
+# Boost basic test
+if(LIBVOT_USE_BOOST)
+	add_executable(boost_basic_test boost_basic_test.cpp)
+	target_link_libraries(boost_basic_test ${Boost_LIBRARIES})
+	add_test(boost_basic_test boost_basic_test)
+endif(LIBVOT_USE_BOOST)

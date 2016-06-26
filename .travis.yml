@@ -21,6 +21,12 @@ addons:
     build_command_prepend: "mkdir build_coverity; cd build_coverity; cmake .."
     build_command:   "make -j4"
     branch_pattern: coverity_scan
+  apt:
+    sources:
+      - boost-latest
+      - ubuntu-toolchain-r-test 
+    packages:
+      - libboost1.55-all-dev
 
 before_install: scripts/travis-ci_update.sh
 
