@@ -1,3 +1,7 @@
+# include gflags
+set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
+include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
+
 set(GPU_INCLUDE .)
 set(SYS_INCLUDE )
 

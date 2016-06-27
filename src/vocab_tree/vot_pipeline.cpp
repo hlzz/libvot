@@ -91,7 +91,7 @@ namespace vot
 		std::vector<size_t> siftfile_samples = RandomSample(siftfile_num, sample_size);
 
 		size_t total_keys = 0; 
-		std::vector<tw::SiftData> sift_data; 
+		std::vector<SiftData> sift_data;
 		sift_data.resize(sample_size); 
 
 		std::cout << "[Build Tree] Reading sift (type " << (int)sift_type << ") files...\n";
@@ -218,7 +218,7 @@ namespace vot
 	    tree.SetConstantWeight();
 	    for(size_t i = 0; i < siftfile_num; ++i)
 	    {
-	    	tw::SiftData sift_data;
+	    	SiftData sift_data;
 	    	if(sift_type == E3D_SIFT)
 	    	{
 	        	if(sizeof(DTYPE) == 1)		// unsigned char
@@ -267,7 +267,7 @@ namespace vot
 
 			memset(scores, 0, sizeof(float) * db_image_num);
 			// read sift data
-			tw::SiftData sift_data;
+			SiftData sift_data;
 			if(sift_type == E3D_SIFT)
 			{
 				if(sizeof(DTYPE) == 1)
@@ -328,7 +328,7 @@ namespace vot
 		    	std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
 		    	memset(scores, 0, sizeof(float) * db_image_num);
 		    	// read sift data
-		    	tw::SiftData sift_data;
+		    	SiftData sift_data;
 		    	if(sift_type == E3D_SIFT)
 		    	{
 					if(sizeof(DTYPE) == 1)

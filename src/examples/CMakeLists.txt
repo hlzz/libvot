@@ -1,3 +1,7 @@
+# include gflags directory
+set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
+include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
+
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 

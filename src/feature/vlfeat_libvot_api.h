@@ -14,7 +14,7 @@ extern "C" {
 #include "utils/data_types.h"
 #include <string>
 
-namespace tw {
+namespace vot {
 /**
  * @brief a parameter struct used in calling vlfeat sift function
  */
@@ -38,6 +38,6 @@ struct Vlfeature {
 
 int RunVlFeature(unsigned char *data, int image_width, int image_height, int num_channel,
                  SiftData &sift_data, VlFeatParam const & vlfeat_param);
-}	// end of namespace tw
+}	// end of namespace vot
 
 #endif

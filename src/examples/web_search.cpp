@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     std::cout << "[VocabMatch] Successfully read vocabulary tree (with image database) file " << image_db << std::endl;
     tree->Show();
 
-    tw::SiftData sift;
+    vot::SiftData sift;
     std::string sift_str(sift_filename);
 	const std::string sift_str_ext = tw::IO::SplitPathExt(sift_str).second;
 	if(sift_str_ext == "sift")

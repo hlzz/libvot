@@ -197,7 +197,7 @@ namespace vot
         if(GlobalParam::Verbose && depth_curr < 3)
             std::cout << "[RecursiveBuild] K-means in depth " << depth_curr << "\n";
 
-        double error = tw::Kmeans(num_keys, dim, bf, p, means, assign, thread_num);
+        double error = Kmeans(num_keys, dim, bf, p, means, assign, thread_num);
         if(std::abs(error + 1) < 10e-6)
         {
             std::cerr << "[Error] Error in TreeInNode::RecursiveBuild\n";
@@ -668,7 +668,7 @@ namespace vot
         }
     }
 
-    double VocabTree::AddImage2Tree(size_t image_index, tw::SiftData &sift, int thread_num)
+    double VocabTree::AddImage2Tree(size_t image_index, SiftData &sift, int thread_num)
     {
         float *q = new float [num_leaves];
         for(size_t i = 0; i < num_leaves; i++)
@@ -946,7 +946,7 @@ namespace vot
     //                                                                          //
     //////////////////////////////////////////////////////////////////////////////
     size_t leaves_count = 0;    // global leaf counter 
-    bool VocabTree::Query(tw::SiftData &sift, float *scores)
+    bool VocabTree::Query(SiftData &sift, float *scores)
     {
         float *q = new float [num_leaves];
         for(size_t i = 0; i < num_leaves; i++)

@@ -1,3 +1,9 @@
+# install gcc because of c++11 support
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+sudo apt-get update -qq
+if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+
 # sudo add-apt-repository "deb http://ppa.launchpad.net/alexei.colin/opencv/ubuntu precise main" -y
 sudo add-apt-repository -y ppa:philip5/extra
 sudo apt-get install autoconf automake libtool unzip

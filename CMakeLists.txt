@@ -5,6 +5,10 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)  # newest gflags needs 2.8.12
 
 project(libvot C CXX)
 
+if(POLICY CMP0042)
+    cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
+endif()
+
 # Disable in-source build
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     message(FATAL_ERROR "In-source build is not allowed, please do out-of-source build.")
@@ -37,6 +41,8 @@ endif(NOT CMAKE_BUILD_TYPE)
 option(LIBVOT_BUILD_TESTS "Build libvot tests" ON)
 option(LIBVOT_BUILD_SHARED "Build libvot shared libs" ON)
 option(LIBVOT_BUILD_DOC "Build libvot documentations" ON)
+option(LIBVOT_BUILD_PYTHON "Build libvot with python export" ON)
+option(LIBVOT_USE_BOOST "Build libvot with Boost" ON)
 option(LIBVOT_USE_OPENCV "Build libvot with OpenCV support" ON)
 option(LIBVOT_USE_CUDA "Build libvot with cuda support" ON)
 option(LIBVOT_USE_CUDNN "Build libvot with cuda and cuDNN" ON)
@@ -57,7 +63,37 @@ endif()
 # configure cuda and cuDNN
 set(CUDA_LINKER_LIBS "")
 include(scripts/cmake/Cuda.cmake)
+
+# Boost building option
+if(LIBVOT_USE_BOOST)
+    find_package(Boost 1.55 REQUIRED system serialization QUIET)
+    if (Boost_FOUND)
+        include_directories(${Boost_INCLUDE_DIR})
+        add_definitions(-DLIBVOT_USE_BOOST)
+  		set(Boost_USE_STATIC_LIBS OFF)
+  		set(Boost_USE_MULTITHREADED ON)
+  		set(Boost_USE_STATIC_RUNTIME OFF)
+    elseif(Boost_FOUND)
+        message(STATUS "Could not locate Boost, disabling Boost support.")
+        set(LIBVOT_USE_BOOST OFF)
+        remove_definitions(-DLIBVOT_USE_BOOST)
+    endif(Boost_FOUND)
+endif()
 # ================= Configure libvot dependencies end =========================
+
+# by default build in release mode
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif(NOT CMAKE_BUILD_TYPE)
+
+# Additional cmake modules
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR/cmake}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+
+# Specify output bin_path and lib_path
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # ==============================================================================
 # Set includes and libraries begin
@@ -82,8 +118,8 @@ include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 
 # Setup gflags for command line tools
 # use the built-in gflags include directory, defined in gflags CMakefile
-set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
-include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
+# set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
+# include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
 set(GFLAGS_LIBRARY gflags)
 add_definitions(-DLIBVOT_USE_GFLAGS)
 
@@ -111,6 +147,12 @@ if(LIBVOT_BUILD_TESTS)
 	add_subdirectory(test)
 endif(LIBVOT_BUILD_TESTS)
 
+# python export (python export depends on boost)
+if(LIBVOT_USE_BOOST AND LIBVOT_BUILD_PYTHON)
+	add_subdirectory(python)
+endif(LIBVOT_USE_BOOST AND LIBVOT_BUILD_PYTHON)
+
+
 # ================= Output building configurations =========================
 message("\n")
 message("Building configurations:\n")
@@ -119,6 +161,7 @@ message("** Build shared libs: " ${LIBVOT_BUILD_SHARED})
 message("** Build tests: " ${LIBVOT_BUILD_TESTS})
 message("** Build docs: " ${LIBVOT_BUILD_DOC})
 message("** Build type: " ${CMAKE_BUILD_TYPE})
+message("** Build python export: " ${LIBVOT_BUILD_PYTHON})
 if(LIBVOT_USE_OPENCV)
     message("** Compile with OpenCV, headers found in ${OpenCV_INCLUDE_DIRS}.")
 endif(LIBVOT_USE_OPENCV)
@@ -128,4 +171,8 @@ endif(LIBVOT_USE_CUDA)
 if(LIBVOT_USE_CUDNN)
     message( "** Compile with CUDNN ${CUDNN_VERSION}, include ${CUDNN_INCLUDE}, library ${CUDNN_LIBRARY}")
 endif(LIBVOT_USE_CUDNN)
+if(LIBVOT_USE_BOOST)
+    message("** Compile with Boost, version " ${Boost_MAJOR_VERSION} "." ${Boost_MINOR_VERSION} ", "
+            "headers found in " ${Boost_INCLUDE_DIRS} ".")
+endif(LIBVOT_USE_BOOST)
 message("\n")
