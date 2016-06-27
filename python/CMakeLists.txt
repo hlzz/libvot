@@ -1,5 +1,5 @@
 # find boost-python
-find_package(Boost 1.55 REQUIRED python QUIET)
+find_package(Boost 1.53 REQUIRED python QUIET)
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
 elseif(Boost_FOUND)

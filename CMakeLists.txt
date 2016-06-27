@@ -52,7 +52,7 @@ endif()
 
 # Boost building option
 if(LIBVOT_USE_BOOST)
-    find_package(Boost 1.55 REQUIRED system serialization QUIET)
+    find_package(Boost 1.53 REQUIRED system serialization QUIET)
     if (Boost_FOUND)
         include_directories(${Boost_INCLUDE_DIR})
         add_definitions(-DLIBVOT_USE_BOOST)
