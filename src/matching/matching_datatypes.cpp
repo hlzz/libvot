@@ -298,12 +298,14 @@ bool SiftMatcher::SetDescriptors(int index, int num, const float *descriptors)
 {
 	if(matcher_)
 		return matcher_->SetDescriptors(index, num, descriptors);
+	return false;
 }
 
 bool SiftMatcher::SetDescriptors(int index, int num, const unsigned char *descriptors)
 {
 	if(matcher_)
 		return matcher_->SetDescriptors(index, num, descriptors);
+	return false;
 }
 
 int SiftMatcher::GetSiftMatch(int max_match,  int match_buffer[][2],
@@ -311,6 +313,7 @@ int SiftMatcher::GetSiftMatch(int max_match,  int match_buffer[][2],
 {
 	if(matcher_)
 		return matcher_->GetSiftMatch(max_match, match_buffer, distmax, ratiomax, mutual_best_match);
+	return false;
 }
 
 // ====================================================
@@ -371,7 +374,9 @@ int SiftMatcherCPU::GetSiftMatch(int max_match,
 								 float ratiomax,
 								 int mutual_best_match)
 {
+	int num_matches = 0;
 
+	return num_matches;
 }
 
 // ====================================================
@@ -392,7 +397,9 @@ int SiftMatcherCUDA::GetSiftMatch(int max_match,
 								  float ratiomax,
 								  int mutual_best_match)
 {
+	int num_matches = 0;
 
+	return num_matches;
 }
 
 // ====================================================
@@ -413,7 +420,9 @@ int SiftMatcherGL::GetSiftMatch(int max_match,
 								float ratiomax,
 								int mutual_best_match)
 {
+	int num_matches = 0;
 
+	return num_matches;
 }
 
 }	// end of namespace vot
