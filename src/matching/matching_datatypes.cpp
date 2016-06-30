@@ -294,6 +294,18 @@ bool SiftMatcher::SetMatchDevice(int device)
 
 int SiftMatcher::GetMatchDevice(int device) const { return (int) match_device_; }
 
+bool SiftMatcher::SetDescriptors(int index, int num, const float *descriptors)
+{
+	if(matcher_)
+		return matcher_->SetDescriptors(index, num, descriptors);
+}
+
+bool SiftMatcher::SetDescriptors(int index, int num, const unsigned char *descriptors)
+{
+	if(matcher_)
+		return matcher_->SetDescriptors(index, num, descriptors);
+}
+
 int SiftMatcher::GetSiftMatch(int max_match,  int match_buffer[][2],
 							  float distmax, float ratiomax, int mutual_best_match)
 {
@@ -313,6 +325,46 @@ SiftMatcherCPU::~SiftMatcherCPU()
 
 }
 
+bool SiftMatcherCPU::SetDescriptors(int index, int num, const unsigned char *descriptors)
+{
+	if(index != 0 && index != 1)
+	{
+		std::cerr << "[SiftMatcherCPU] SetDescriptors get index other than 0/1\n";
+		return false;
+	}
+	if(num > max_sift_)
+		num = max_sift_;
+	num_sift_[index] = num;
+
+	assert(sizeof(float) == 4);		// a float is 4 char
+	sift_buffer.resize(FDIM * num/4);
+	memcpy(&sift_buffer[0], descriptors, 128 * num);
+
+	return true;
+}
+
+bool SiftMatcherCPU::SetDescriptors(int index, int num, const float *descriptors)
+{
+	if(index != 0 || index != 1)
+	{
+		std::cerr << "[SiftMatcherCPU] SetDescriptors get index other than 0/1\n";
+		return false;
+	}
+	if(num > max_sift_)
+		num = max_sift_;
+	num_sift_[index] = num;
+
+	assert(sizeof(float) == 4);		// a float is 4 char
+	sift_buffer.resize(FDIM * num/4);
+	// convert float sift to unsigned char sift
+	unsigned char *pub = (unsigned char*) &sift_buffer[0];
+	for(size_t i = 0; i < 128 * num; i++)
+		pub[i] = int(512 * descriptors[i] + 0.5);
+
+	return true;
+}
+
+// brute force cpu matcher
 int SiftMatcherCPU::GetSiftMatch(int max_match,
                                  int match_buffer[][2],
 								 float distmax,
