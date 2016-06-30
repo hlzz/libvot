@@ -27,6 +27,7 @@ addons:
       - ubuntu-toolchain-r-test 
     packages:
       - libboost1.55-all-dev
+      - python-dev
 
 notifications:
     # Emails are sent to the committers' git-configured email address
