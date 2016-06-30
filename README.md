@@ -58,10 +58,10 @@ Since the library is multi-threaded, the rank is unordered with respect to the f
 The [homepage](http://hlzz.github.io/libvot/) of libvot is hosted by github-pages. See the documentation [here](http://hlzz.github.io/libvot/doc/html/index.html).
 
 ## Optional Dependencies
-* Boost (>1.55)
-* OpenCV (>2.4)
-* NVIDIA's Cuda Toolkit 7.5
-* NVIDIA's cuDNNv5 for CUDA 7.5
+* Boost (>1.55), for serialization, python-binding, etc.
+* OpenCV (>2.4), for feature detector and general utilities for image processing.
+* NVIDIA's Cuda Toolkit 7.5, for GPU-related code.
+* NVIDIA's cuDNNv5 for CUDA 7.5, for the deep learning module.
 
 See the [installation](doc/installation.md) guide for details.
 
@@ -76,6 +76,6 @@ The BSD 3-Clause License
 ##Contact and Donation
 For inquiries and suggestions, please send your emails to <tshenaa@ust.hk>.
 
-If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/
+If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/campaigns/30901). Thanks!
 
 <a href='https://pledgie.com/campaigns/30901'><img alt='Click here to lend your support to: Open-Source Image Retrieval Project and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30901.png?skin_name=chrome' border='0' ></a>

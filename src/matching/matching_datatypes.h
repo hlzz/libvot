@@ -209,11 +209,11 @@ public:
 	 * @param descriptors: descriptor pointer
 	 * @param id
 	 */
-	virtual void SetDescriptors(int index, int num, const float* descriptors, int id  = -1) {}
+	virtual bool SetDescriptors(int index, int num, const float *descriptors);
 	/**
 	 * @brief SetDescriptors: descriptors are in unsigned char
 	 */
-	virtual void SetDescriptors(int index, int num, const unsigned char * descriptors, int id = -1) {}
+	virtual bool SetDescriptors(int index, int num, const unsigned char *descriptors);
 
 	/**
 	 * @brief GetSiftMatch: match two sets of features, and returns the number of matches.
@@ -233,6 +233,7 @@ public:
 
 protected:
 	int max_sift_;
+	int num_sift_[2];
 private:
 	int match_device_;
 	SiftMatcher *matcher_;
@@ -247,7 +248,10 @@ public:
 	SiftMatcherCPU(int max_sift);
 	~SiftMatcherCPU();
 	int GetSiftMatch(int max_match, int match_buffer[][2], float distmax, float ratiomax, int mutual_best_match);
+	bool SetDescriptors(int index, int num, const unsigned char *descriptors);
+	bool SetDescriptors(int index, int num, const float *descriptors);
 private:
+	std::vector<float> sift_buffer;
 };
 
 /**
