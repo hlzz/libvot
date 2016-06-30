@@ -183,13 +183,26 @@ private:
 class SiftMatcher
 {
 public:
+	/**
+	 * @brief The MatcherDevice enum: computational device used in sift matching
+	 */
 	enum MatcherDevice {
-		SIFT_MATCH_CPU = 0,
-		SIFT_MATCH_CUDA = 1,
-		SIFT_MATCH_GLSL = 2,
+		SIFT_MATCH_CPU = 0,		//!< matching feature using cpu
+		SIFT_MATCH_CUDA = 1,	//!< matching feature using cuda
+		SIFT_MATCH_GLSL = 2,	//!< matching feature using glsl
 	};
 
-	SiftMatcher(int max_sift);
+	/**
+	 * @brief The DistanceType enum: distance function used measure sift difference
+	 */
+	enum DistanceType {
+		ARCCOS = 0,				//!< arccos(dot(d1, d2)), d1, d2 is normalized
+		L1float = 1,			//!< |d1 - d2|
+		L2float = 2,			//!< norml2(d1 - d2)
+	};
+
+	SiftMatcher(int max_sift, MatcherDevice match_device = SIFT_MATCH_CPU,
+	            int feature_dim = 128, DistanceType dist_type = ARCCOS);
 	virtual ~SiftMatcher();
 	bool Init();		//!< initialize matcher context
 	void SetMaxSift(int max_sift);	//!< set maximum buffer length
@@ -216,13 +229,13 @@ public:
 	virtual bool SetDescriptors(int index, int num, const unsigned char *descriptors);
 
 	/**
-	 * @brief GetSiftMatch: match two sets of features, and returns the number of matches.
-	 * Given two normalized descriptor d1,d2, the distance here is acos(d1 *d2);
-	 * @param max_match: the length of the match_buffer.
-	 * @param match_buffer: buffer to receive the matched feature indices
+	 * @brief GetSiftMatch: get sift match and save the results in match_buffer
+	 * @param max_match: maximum number of matches returned
+	 * @param match_buffer: match pair results, memory has to be allocated outside
 	 * @param distmax: maximum distance of sift descriptor
-	 * @param ratiomax: maximum distance ratio
-	 * @param mutual_best_match: mutual best match or one way
+	 * @param ratiomax: reject matches in which the distance ratio of the best match and the second best match
+	 * is greater than ratiomax
+	 * @param mutual_best_match: match iff. it is mutual best match
 	 * @return the number of matches
 	 */
 	virtual int GetSiftMatch(int max_match,
@@ -234,6 +247,8 @@ public:
 protected:
 	int max_sift_;
 	int num_sift_[2];
+	int dist_type_;
+	int feature_dim_;
 private:
 	int match_device_;
 	SiftMatcher *matcher_;
@@ -241,6 +256,9 @@ private:
 
 /**
  * @brief The SiftMatcherCPU class: matcher using cpu
+ *
+ * This is a extremely slow matcher and only support distance type of acos.
+ * In the future it may adopt some acceleration technique such as FLANN
  */
 class SiftMatcherCPU: public SiftMatcher
 {
@@ -251,7 +269,11 @@ public:
 	bool SetDescriptors(int index, int num, const unsigned char *descriptors);
 	bool SetDescriptors(int index, int num, const float *descriptors);
 private:
-	std::vector<float> sift_buffer;
+	/**
+	 * @brief GetDescriptorDist: a sub-routine used in GetSiftMatch
+	 */
+	float GetDescriptorDist(std::vector<float> vec1, std::vector<float> vec2);
+	std::vector<float> sift_buffer_[2];
 };
 
 /**

@@ -231,12 +231,15 @@ const std::vector<SiftMatchPair> & SiftMatchFile::getSiftMatchPairs() const { re
 // ====================================================
 // ---------------- SiftMatcher class ---------------
 // ====================================================
-SiftMatcher::SiftMatcher(int max_sift)
-{
-	max_sift_ = max_sift;
-	match_device_ = 0;
-	matcher_ = nullptr;
-}
+SiftMatcher::SiftMatcher(int max_sift,
+                         MatcherDevice match_device,
+                         int feature_dim,
+                         DistanceType dist_type):
+    max_sift_(max_sift),
+    dist_type_(dist_type),
+    feature_dim_(feature_dim),
+	match_device_(match_device),
+	matcher_(nullptr) {}
 
 SiftMatcher::~SiftMatcher()
 {
@@ -323,10 +326,7 @@ SiftMatcherCPU::SiftMatcherCPU(int max_sift): SiftMatcher(max_sift)
 {
 }
 
-SiftMatcherCPU::~SiftMatcherCPU()
-{
-
-}
+SiftMatcherCPU::~SiftMatcherCPU() {}
 
 bool SiftMatcherCPU::SetDescriptors(int index, int num, const unsigned char *descriptors)
 {
@@ -340,8 +340,8 @@ bool SiftMatcherCPU::SetDescriptors(int index, int num, const unsigned char *des
 	num_sift_[index] = num;
 
 	assert(sizeof(float) == 4);		// a float is 4 char
-	sift_buffer.resize(FDIM * num/4);
-	memcpy(&sift_buffer[0], descriptors, 128 * num);
+	sift_buffer_[index].resize(feature_dim_ * num/4);
+	memcpy(&sift_buffer_[index][0], descriptors, feature_dim_ * num);
 
 	return true;
 }
@@ -358,13 +358,47 @@ bool SiftMatcherCPU::SetDescriptors(int index, int num, const float *descriptors
 	num_sift_[index] = num;
 
 	assert(sizeof(float) == 4);		// a float is 4 char
-	sift_buffer.resize(FDIM * num/4);
+	sift_buffer_[index].resize(feature_dim_ * num/4);
 	// convert float sift to unsigned char sift
-	unsigned char *pub = (unsigned char*) &sift_buffer[0];
-	for(size_t i = 0; i < 128 * num; i++)
+	unsigned char *pub = (unsigned char*) &sift_buffer_[index][0];
+	const int num_char = feature_dim_ * num;
+	for(size_t i = 0; i < num_char; i++)
 		pub[i] = int(512 * descriptors[i] + 0.5);
 
 	return true;
+}
+
+float SiftMatcherCPU::GetDescriptorDist(std::vector<float> vec1, std::vector<float> vec2)
+{
+	float distance;
+	switch(dist_type_)
+	{
+		case ARCCOS:
+		{
+			// compute l2 norm of each descriptors
+			float vec1_norm = 0, vec2_norm = 0, dot_prod = 0;
+			for(int i = 0; i < feature_dim_; i++)
+			{
+				vec1_norm += vec1[i] * vec2[i];
+				vec2_norm += vec2[i] * vec2[i];
+			}
+			vec1_norm = std::sqrt(vec1_norm);
+			vec2_norm = std::sqrt(vec2_norm);
+			// normalize  each descriptor using l2norm
+			for(int i = 0; i < feature_dim_; i++)
+			{
+				vec1[i] /= vec1_norm;
+				vec2[i] /= vec2_norm;
+				dot_prod += vec1[i] * vec2[i];
+			}
+
+			distance = dot_prod;
+			break;
+		}
+		default:
+			break;
+	}
+	return distance;
 }
 
 // brute force cpu matcher
@@ -375,6 +409,61 @@ int SiftMatcherCPU::GetSiftMatch(int max_match,
 								 int mutual_best_match)
 {
 	int num_matches = 0;
+	std::vector<float> vec1, vec2;
+	vec1.resize(feature_dim_);
+	vec2.resize(feature_dim_);
+	unsigned char *pv1 = (unsigned char*) &sift_buffer_[0][0];
+	for(int i = 0, c1 = 0; i < num_sift_[0]; i++)
+	{
+		for(int j = 0; j < feature_dim_; j++, c1++)
+			vec1[j] = pv1[c1];
+
+		float best_match, sbest_match;
+		int best_index = -1, sbest_index = -1;
+		// initialize match distance
+		switch (dist_type_) {
+			case ARCCOS:
+				best_match = -1; sbest_match = -1;
+				break;
+			default:	// TODO(tianwei): other distance type is invalid
+				break;
+		}
+		unsigned char *pv2 = (unsigned char*) &sift_buffer_[1][0];
+		for(int j = 0, c2 = 0; j < num_sift_[1]; j++)
+		{
+			for(int k = 0; k < feature_dim_; k++, c2++)
+				vec2[k] = pv2[c2];
+			float dist = GetDescriptorDist(vec1, vec2);
+			if(dist > best_match)
+			{
+				sbest_match = best_match;
+				sbest_index = best_index;
+				best_match = dist;
+				best_index = j;
+			}
+		}
+		switch(dist_type_)
+		{
+			case ARCCOS:
+			{
+				if(best_match > distmax && (sbest_match/best_match) < ratiomax)
+				{
+					if(num_matches < max_match)
+					{
+						match_buffer[num_matches][0] = i;
+						match_buffer[num_matches][1] = best_index;
+						num_matches++;
+					}
+				}
+				else{
+					std::cout << i << " " << sbest_match << " " << best_match <<  " " << sbest_match /best_match << std::endl;
+				}
+				break;
+			}
+			default:
+				break;
+		}
+	}
 
 	return num_matches;
 }

@@ -28,7 +28,7 @@ bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match
 		std::cerr << "[PairwiseSiftMatching] Initialize SiftMatcher context failed\n";
 		return false;
 	}
-	if(!matcher.SetDescriptors(0, sift1.getFeatureNum(), sift2.getDesPointer()) ||
+	if(!matcher.SetDescriptors(0, sift1.getFeatureNum(), sift1.getDesPointer()) ||
 	   !matcher.SetDescriptors(1, sift2.getFeatureNum(), sift2.getDesPointer()))
 	{
 		std::cerr << "[PairwiseSiftMatching] Matcher set Descriptors failed\n";
@@ -36,6 +36,9 @@ bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match
 	}
 	int match_buf[max_feature][2];
 	int nmatch = matcher.GetSiftMatch(max_feature, match_buf);
+	std::cout << "[PairwiseSiftMatching] Get " << nmatch << " matches\n";
+	for(int i = 0; i < nmatch; i++)
+		std::cout << match_buf[i][0] << " " << match_buf[i][1] << "\n";
 
 	// geometric verification
 
