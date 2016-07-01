@@ -18,6 +18,9 @@ bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
                                 cv::Mat &descriptors,
                                 SiftData &sift_data);
 
+bool LibvotSift2OpencvKeyPoints(SiftData &sift_data,
+                                std::vector<cv::KeyPoint> &key_points,
+                                cv::Mat &descriptors);
 }	// end of namespace tw
 
 #endif

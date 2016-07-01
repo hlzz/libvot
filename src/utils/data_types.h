@@ -330,6 +330,23 @@ public:
     LTYPE* &getLocPointer() {return lp_;}
     DTYPE* &getDesPointer() {return dp_;}
 
+	/**
+	 * @brief showDesc: output a single descriptor, a debugging function
+	 * @param i: the index of descriptor
+	 */
+	void showDesc(int i)
+	{
+		if(i >= npoint_)
+			return;
+		else
+			std::cout << "[";
+			for(int j = 0; j < FDIM; j++)
+			{
+				std::cout << (int)dp_[i*FDIM + j] << " ";
+			}
+			std::cout << "]\n";
+	}
+
 private:
     int name_;
     int version_;

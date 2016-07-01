@@ -159,6 +159,7 @@ int main(int argc, char** argv)
 				cv::Mat sift_descriptors;
 				cv_sift_detector.detect(input, cv_keypoints);
 				cv_sift_detector.compute(input, cv_keypoints, sift_descriptors);
+
 				vot::SiftData sift_data;
 				vot::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
 

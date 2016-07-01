@@ -41,6 +41,14 @@ if(LIBVOT_USE_OPENCV)
     add_executable(libvot_feature_test libvot_feature_test.cpp)
     target_link_libraries(libvot_feature_test vot_feature vot_utils)
     add_test(libvot_feature_test libvot_feature_test ${CMAKE_SOURCE_DIR}/test_data/lena.jpg)
+
+	# test matching functions
+	add_executable(sift_match_test sift_match_test.cpp)
+	target_link_libraries(sift_match_test vot_matching vot_utils vot_feature ${OpenCV_LIBS} ${GFLAGS_LIBRARY})
+	#add_test(sift_match_test sift_match_test
+	#		${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift
+	#		${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift
+	#		--opencv_feature=false)
 endif(LIBVOT_USE_OPENCV)
 
 # tests related to cuda
@@ -48,13 +56,6 @@ if(LIBVOT_USE_CUDA)
 	cuda_add_executable(cuda_basic_test cuda_basic_test.cu)
 	add_test(cuda_basic_test cuda_basic_test)	# cuda hello world test
 endif(LIBVOT_USE_CUDA)
-
-# test matching functions
-add_executable(sift_match_test sift_match_test.cpp)
-target_link_libraries(sift_match_test vot_matching vot_utils vot_feature)
-add_test(sift_match_test sift_match_test
-${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift
-${CMAKE_SOURCE_DIR}/test_data/fountain_dense/0000.sift)
 
 # Boost basic test
 if(LIBVOT_USE_BOOST)

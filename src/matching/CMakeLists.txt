@@ -28,7 +28,7 @@ if(LIBVOT_USE_OPENCV)
 	target_link_libraries(vot_matching ${OpenCV_LIBS})
 endif(LIBVOT_USE_OPENCV)
 
-target_link_libraries(vot_matching vot_utils)
+target_link_libraries(vot_matching vot_utils vot_feature)
 set_target_properties(vot_matching PROPERTIES SOVERSION ${LIBVOT_VERSION_MAJOR}
 VERSION "${LIBVOT_VERSION_MAJOR}.${LIBVOT_VERSION_MINOR}")
 
