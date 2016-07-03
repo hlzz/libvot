@@ -447,17 +447,12 @@ int SiftMatcherCPU::GetSiftMatch(int max_match,
 			case ARCCOS:
 			{
 				if(best_match > distmax && (sbest_match/best_match) < ratiomax)
-				{
 					if(num_matches < max_match)
 					{
 						match_buffer[num_matches][0] = i;
 						match_buffer[num_matches][1] = best_index;
 						num_matches++;
 					}
-				}
-				else{
-					std::cout << i << " " << sbest_match << " " << best_match <<  " " << sbest_match /best_match << std::endl;
-				}
 				break;
 			}
 			default:

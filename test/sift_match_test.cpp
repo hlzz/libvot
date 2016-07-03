@@ -22,7 +22,8 @@
 #include "gflags/gflags.h"
 
 using namespace std;
-DEFINE_bool(opencv_feature, true, "generate opencv sift from images");
+DEFINE_bool(opencv_feature, false, "generate opencv sift from images");
+DEFINE_bool(show_matching, true, "show matching using opencv::imshow");
 
 int main(int argc, char **argv)
 {
@@ -88,6 +89,7 @@ int main(int argc, char **argv)
 		sift1.ReadSiftFile(sift_file1);
 		sift2.ReadSiftFile(sift_file2);
 
+		// prepare opencv matching
 		vot::LibvotSift2OpencvKeyPoints(sift1, key_points1, desc1);
 		vot::LibvotSift2OpencvKeyPoints(sift2, key_points2, desc2);
 		assert(key_points1.size() == desc1.rows());
@@ -95,7 +97,7 @@ int main(int argc, char **argv)
 		cout << "[sift_match_test] Convert " << key_points1.size() << " sift1 descriptors\n";
 		cout << "[sift_match_test] Convert " << key_points2.size() << " sift2 descriptors\n";
 
-		// TODO(tianwei): this is currently unavailable.
+		// test libvot matching (disable it for now)
 		//vot::SiftMatchPair match_pair(sift_file1);
 		//vot::MatchParam match_param;
 		//if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
@@ -124,30 +126,31 @@ int main(int argc, char **argv)
 	//-- or a small arbitary value ( 0.02 ) in the event that min_dist is very
 	//-- small)
 	//-- PS.- radiusMatch can also be used here.
-	std::vector< cv::DMatch > good_matches;
+	std::vector<cv::DMatch> good_matches;
 
 	for(int i = 0; i < desc1.rows; i++ )
 	{
 		if(matches[i].distance <= max(5*min_dist, 0.02) )
 		{
-			good_matches.push_back( matches[i]);
+			good_matches.push_back(matches[i]);
 		}
 	}
 	cout << "Good matches size: " << good_matches.size() << endl;
 
-	if(!is_image_exist)		// images not exist, return without showing matching
-		return 0;
-	//-- Draw only "good" matches
-	cv::Mat img_matches;
-	cv::drawMatches(img_1, key_points1, img_2, key_points2,
-	                good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
-	                vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+	if(FLAGS_show_matching && is_image_exist)	// if images not exist, return without showing matching
+	{
+		// Draw only "good" matches
+		cv::Mat img_matches;
+		cv::drawMatches(img_1, key_points1, img_2, key_points2,
+		                good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
+		                vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
-	//-- Show detected matches
-	cv::namedWindow("Good Matches", cv::WINDOW_NORMAL);
-	cv::resize(img_matches, img_matches, cv::Size(), 0.25, 0.25);
-	cv::imshow("Good Matches", img_matches);
-	cv::waitKey(0);
+		// Show detected matches
+		cv::namedWindow("Good Matches", cv::WINDOW_NORMAL);
+		cv::resize(img_matches, img_matches, cv::Size(), 0.25, 0.25);
+		cv::imshow("Good Matches", img_matches);
+		cv::waitKey(0);
+	}
 
 	return 0;
 }
