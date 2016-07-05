@@ -22,12 +22,14 @@ bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match
 	// using sift matcher is easy, just new an matcher object
 	// set matching device and initialize the context
 	SiftMatcher matcher(max_feature);
-	matcher.SetMatchDevice(SiftMatcher::SIFT_MATCH_CPU);		// use cpu match
-	if(!matcher.Init())				// initialize context
-	{
+	matcher.SetMatchDevice(match_param.match_device);		// use cpu match
+	if(!matcher.Init()) {				// initialize context
 		std::cerr << "[PairwiseSiftMatching] Initialize SiftMatcher context failed\n";
 		return false;
 	}
+	else
+		std::cout << "[PairwiseSiftMatching] Matching device: " << matcher.GetMatchDevice() << "\n";
+
 	if(!matcher.SetDescriptors(0, sift1.getFeatureNum(), sift1.getDesPointer()) ||
 	   !matcher.SetDescriptors(1, sift2.getFeatureNum(), sift2.getDesPointer()))
 	{
@@ -37,8 +39,6 @@ bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match
 	int match_buf[max_feature][2];
 	int nmatch = matcher.GetSiftMatch(max_feature, match_buf);
 	std::cout << "[PairwiseSiftMatching] Get " << nmatch << " matches\n";
-	for(int i = 0; i < nmatch; i++)
-		std::cout << match_buf[i][0] << " " << match_buf[i][1] << "\n";
 
 	// geometric verification
 

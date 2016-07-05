@@ -21,6 +21,7 @@ struct MatchParam
 {
 	MatchParam()
 	{
+		match_device = 3;	// opencv_matcher
 		cuda_device = -1;
 		thread_num = 1;
 		num_sequece_match = 0;
@@ -45,13 +46,14 @@ struct MatchParam
 	}
 
 	// Match configuration param
-	int cuda_device;
-	size_t thread_num;
-	size_t num_sequece_match;
-	size_t max_sift;
-	bool is_sequnce_match;
-	bool is_optional_match;
-	std::string optional_match_path;
+	int match_device;					//!< matching device (cpu, gpu, opencv, cuda...)
+	int cuda_device;					//!< cude device number
+	size_t thread_num;					//!< number of thread
+	size_t num_sequece_match;			//!< number of adjacent images for matching in sequence matching mode
+	size_t max_sift;					//!< max number of sift features
+	bool is_sequnce_match;				//!< whether do matching in sequence mode
+	bool is_optional_match;				//!< whether has a optional matching pair list
+	std::string optional_match_path;	//!< the optional matching pair file path
 
 	// Match error params
 	size_t min_num_inlier;
@@ -190,6 +192,7 @@ public:
 		SIFT_MATCH_CPU = 0,		//!< matching feature using cpu
 		SIFT_MATCH_CUDA = 1,	//!< matching feature using cuda
 		SIFT_MATCH_GLSL = 2,	//!< matching feature using glsl
+		SIFT_MATCH_OPENCV = 3,	//!< matching feature using opencv flann matcher
 	};
 
 	/**
@@ -214,7 +217,7 @@ public:
 	 * @return: false if the device is not available, which means using cpu matcher
 	 */
 	bool SetMatchDevice(int device);
-	int GetMatchDevice(int device) const;	//!< get match device
+	int GetMatchDevice() const;	//!< get match device
 	/**
 	 * @brief SetDescriptors: set descriptors to match
 	 * @param index: index = [0/1] for two features sets respectively
@@ -269,17 +272,6 @@ private:
 	 * @brief GetDescriptorDist: a sub-routine used in GetSiftMatch
 	 */
 	float GetDescriptorDist(std::vector<float> vec1, std::vector<float> vec2);
-	std::vector<float> sift_buffer_[2];
-};
-
-class SiftMatcherOpencv: public SiftMatcher
-{
-public:
-	SiftMatcherOpencv(int max_sift);
-	int GetSiftMatch(int max_match, int match_buffer[][2], int mutual_best_match);
-	bool SetDescriptors(int index, int num, const unsigned char *descriptors);
-	bool SetDescriptors(int index, int num, const float *descriptors);
-private:
 	std::vector<float> sift_buffer_[2];
 };
 

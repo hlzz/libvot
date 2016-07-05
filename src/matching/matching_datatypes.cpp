@@ -10,6 +10,10 @@
 #include "utils/data_types.h"
 #include "utils/io_utils.h"
 
+#ifdef LIBVOT_USE_OPENCV
+#include "opencv_matching_api.h"
+#endif
+
 namespace vot {
 
 // ====================================================
@@ -265,6 +269,14 @@ bool SiftMatcher::Init()
 		case SiftMatcher::SIFT_MATCH_GLSL:
 			matcher_ = new SiftMatcherGL(max_sift_);
 			break;
+		case SiftMatcher::SIFT_MATCH_OPENCV:
+#ifdef LIBVOT_USE_OPENCV
+			matcher_ = new SiftMatcherOpencv(max_sift_);
+			break;
+#else
+			match_device_ = SiftMatcher::SIFT_MATCH_CPU;
+			return false;
+#endif
 		default:
 			return false;
 	}
@@ -294,13 +306,21 @@ bool SiftMatcher::SetMatchDevice(int device)
 		case SiftMatcher::SIFT_MATCH_GLSL:
 			match_device_ = device;
 			return true;
+		case SiftMatcher::SIFT_MATCH_OPENCV:
+#ifdef LIBVOT_USE_OPENCV
+			match_device_ = device;
+			return true;
+#else
+			match_device_ = SiftMatcher::SIFT_MATCH_CPU;
+			return false;
+#endif
 		default:
 			match_device_ = SiftMatcher::SIFT_MATCH_CPU;
 			return false;
 	}
 }
 
-int SiftMatcher::GetMatchDevice(int device) const { return (int) match_device_; }
+int SiftMatcher::GetMatchDevice() const { return (int) match_device_; }
 
 bool SiftMatcher::SetDescriptors(int index, int num, const float *descriptors)
 {

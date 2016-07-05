@@ -97,11 +97,11 @@ int main(int argc, char **argv)
 		cout << "[sift_match_test] Convert " << key_points1.size() << " sift1 descriptors\n";
 		cout << "[sift_match_test] Convert " << key_points2.size() << " sift2 descriptors\n";
 
-		// test libvot matching (disable it for now)
-		//vot::SiftMatchPair match_pair(sift_file1);
-		//vot::MatchParam match_param;
-		//if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
-		//	return -1;
+		// test libvot matching
+		vot::SiftMatchPair match_pair(sift_file1);
+		vot::MatchParam match_param;
+		if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
+			return -1;
 	}
 	// opencv match
 	cv::FlannBasedMatcher matcher;
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
 	double max_dist = 0; double min_dist = 100;
 
 	//-- Quick calculation of max and min distances between keypoints
-	for( int i = 0; i < desc1.rows; i++ )
+	for (int i = 0; i < desc1.rows; i++)
 	{
 		double dist = matches[i].distance;
 		if( dist < min_dist ) min_dist = dist;
