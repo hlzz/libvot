@@ -42,10 +42,22 @@ option(LIBVOT_BUILD_TESTS "Build libvot tests" ON)
 option(LIBVOT_BUILD_SHARED "Build libvot shared libs" ON)
 option(LIBVOT_BUILD_DOC "Build libvot documentations" ON)
 option(LIBVOT_BUILD_PYTHON "Build libvot with python export" ON)
+option(LIBVOT_BUILD_COVERAGE "Build libvot with code coverage generation (gcc only)" OFF)
 option(LIBVOT_USE_BOOST "Build libvot with Boost" ON)
 option(LIBVOT_USE_OPENCV "Build libvot with OpenCV support" ON)
 option(LIBVOT_USE_CUDA "Build libvot with cuda support" ON)
 option(LIBVOT_USE_CUDNN "Build libvot with cuda and cuDNN" ON)
+
+# ==============================================================================
+# enable code coverage generation (only with GCC)
+# ==============================================================================
+if(LIBVOT_BUILD_COVERAGE AND CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_BUILD_TYPE "Debug")
+    add_definitions(--coverage -fprofile-arcs -ftest-coverage)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+else()
+    set(LIBVOT_BUILD_COVERAGE OFF)
+endif()
 
 # ================= Configure libvot dependencies =========================
 if(LIBVOT_USE_OPENCV)
@@ -80,11 +92,6 @@ if(LIBVOT_USE_BOOST)
     endif(Boost_FOUND)
 endif()
 # ================= Configure libvot dependencies end =========================
-
-# by default build in release mode
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
-endif(NOT CMAKE_BUILD_TYPE)
 
 # Additional cmake modules
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR/cmake}")
@@ -158,6 +165,7 @@ message("\n")
 message("Building configurations:\n")
 message("** libvot version: " ${LIBVOT_VERSION})
 message("** Build shared libs: " ${LIBVOT_BUILD_SHARED})
+message("** Build wth code coverage (gcc only): " ${LIBVOT_BUILD_COVERAGE})
 message("** Build tests: " ${LIBVOT_BUILD_TESTS})
 message("** Build docs: " ${LIBVOT_BUILD_DOC})
 message("** Build type: " ${CMAKE_BUILD_TYPE})
