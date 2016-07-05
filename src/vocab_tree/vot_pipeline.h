@@ -34,8 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This file contains the complete pipeline of vocabulary tree.
  */
-#ifndef VOT_PIPELINE_HEADER
-#define VOT_PIPELINE_HEADER
+#ifndef VOT_PIPELINE_H
+#define VOT_PIPELINE_H
 
 #include "utils/global_params.h"
 
@@ -100,4 +100,4 @@ bool FilterMatchList(const char *sift_list, const char *match_list, const char *
 
 }
 
-#endif	// VOT_PIPELINE_HEADER
+#endif	// VOT_PIPELINE_H
