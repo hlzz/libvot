@@ -4,8 +4,8 @@
  */
 // Author: Tianwei Shen <shentianweipku@gmail.com>
 
-#ifndef FEATURE_MATCHING_H
-#define FEATURE_MATCHING_H
+#ifndef VOT_FEATURE_MATCHING_H
+#define VOT_FEATURE_MATCHING_H
 
 namespace vot {
 class SiftData;
@@ -24,4 +24,4 @@ class MatchParam;
 bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match_pair, MatchParam &match_param);
 }	// end of namespace vot
 
-#endif	// FEATURE_MATCHING_H
+#endif	// VOT_FEATURE_MATCHING_H

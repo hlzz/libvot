@@ -5,11 +5,11 @@
  */
 // Author: Tianwei Shen <shentianweipku@gmail.com>
 
-#ifndef OPENCV_MATCHING_API_H
-#define OPENCV_MATCHING_API_H
+#ifndef VOT_OPENCV_MATCHING_API_H
+#define VOT_OPENCV_MATCHING_API_H
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
 
-#endif	// OPENCV_MATCHING_API_H
+#endif	// VOT_OPENCV_MATCHING_API_H

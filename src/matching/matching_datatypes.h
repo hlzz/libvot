@@ -4,8 +4,8 @@
  */
 // Author: Tianwei Shen <shentianweipku@gmail.com>
 
-#ifndef MATCHING_DATATYPES_H
-#define MATCHING_DATATYPES_H
+#ifndef VOT_MATCHING_DATATYPES_H
+#define VOT_MATCHING_DATATYPES_H
 
 #include <iostream>
 #include <Eigen/Dense>
@@ -232,16 +232,12 @@ public:
 	 * @brief GetSiftMatch: get sift match and save the results in match_buffer
 	 * @param max_match: maximum number of matches returned
 	 * @param match_buffer: match pair results, memory has to be allocated outside
-	 * @param distmax: maximum distance of sift descriptor
-	 * @param ratiomax: reject matches in which the distance ratio of the best match and the second best match
 	 * is greater than ratiomax
 	 * @param mutual_best_match: match iff. it is mutual best match
 	 * @return the number of matches
 	 */
 	virtual int GetSiftMatch(int max_match,
 	                         int match_buffer[][2],
-							 float distmax = 0.7,
-	 						 float ratiomax = 0.8,
 							 int mutual_best_match = 1);
 
 protected:
@@ -265,7 +261,7 @@ class SiftMatcherCPU: public SiftMatcher
 public:
 	SiftMatcherCPU(int max_sift);
 	~SiftMatcherCPU();
-	int GetSiftMatch(int max_match, int match_buffer[][2], float distmax, float ratiomax, int mutual_best_match);
+	int GetSiftMatch(int max_match, int match_buffer[][2], int mutual_best_match);
 	bool SetDescriptors(int index, int num, const unsigned char *descriptors);
 	bool SetDescriptors(int index, int num, const float *descriptors);
 private:
@@ -273,6 +269,17 @@ private:
 	 * @brief GetDescriptorDist: a sub-routine used in GetSiftMatch
 	 */
 	float GetDescriptorDist(std::vector<float> vec1, std::vector<float> vec2);
+	std::vector<float> sift_buffer_[2];
+};
+
+class SiftMatcherOpencv: public SiftMatcher
+{
+public:
+	SiftMatcherOpencv(int max_sift);
+	int GetSiftMatch(int max_match, int match_buffer[][2], int mutual_best_match);
+	bool SetDescriptors(int index, int num, const unsigned char *descriptors);
+	bool SetDescriptors(int index, int num, const float *descriptors);
+private:
 	std::vector<float> sift_buffer_[2];
 };
 
@@ -284,7 +291,7 @@ class SiftMatcherGL: public SiftMatcher
 public:
 	SiftMatcherGL(int max_sift);
 	~SiftMatcherGL();
-	int GetSiftMatch(int max_match, int match_buffer[][2], float distmax, float ratiomax, int mutual_best_match);
+	int GetSiftMatch(int max_match, int match_buffer[][2], int mutual_best_match);
 private:
 };
 
@@ -296,9 +303,9 @@ class SiftMatcherCUDA: public SiftMatcher
 public:
 	SiftMatcherCUDA(int max_sift);
 	~SiftMatcherCUDA();
-	int GetSiftMatch(int max_match, int match_buffer[][2], float distmax, float ratiomax, int mutual_best_match);
+	int GetSiftMatch(int max_match, int match_buffer[][2], int mutual_best_match);
 private:
 };
 }	// end of namespace vot
 
-#endif	// MATCHING_DATATYPES_H
+#endif	// VOT_MATCHING_DATATYPES_H

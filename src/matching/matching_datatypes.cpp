@@ -255,8 +255,13 @@ bool SiftMatcher::Init()
 			matcher_ = new SiftMatcherCPU(max_sift_);
 			break;
 		case SiftMatcher::SIFT_MATCH_CUDA:
+#ifdef LIBVOT_USE_CUDA
 			matcher_ = new SiftMatcherCUDA(max_sift_);
 			break;
+#else
+			matcher_ = NULL;
+			return false;
+#endif
 		case SiftMatcher::SIFT_MATCH_GLSL:
 			matcher_ = new SiftMatcherGL(max_sift_);
 			break;
@@ -311,11 +316,10 @@ bool SiftMatcher::SetDescriptors(int index, int num, const unsigned char *descri
 	return false;
 }
 
-int SiftMatcher::GetSiftMatch(int max_match,  int match_buffer[][2],
-							  float distmax, float ratiomax, int mutual_best_match)
+int SiftMatcher::GetSiftMatch(int max_match,  int match_buffer[][2], int mutual_best_match)
 {
 	if(matcher_)
-		return matcher_->GetSiftMatch(max_match, match_buffer, distmax, ratiomax, mutual_best_match);
+		return matcher_->GetSiftMatch(max_match, match_buffer, mutual_best_match);
 	return false;
 }
 
@@ -404,8 +408,6 @@ float SiftMatcherCPU::GetDescriptorDist(std::vector<float> vec1, std::vector<flo
 // brute force cpu matcher
 int SiftMatcherCPU::GetSiftMatch(int max_match,
                                  int match_buffer[][2],
-								 float distmax,
-								 float ratiomax,
 								 int mutual_best_match)
 {
 	int num_matches = 0;
@@ -446,6 +448,8 @@ int SiftMatcherCPU::GetSiftMatch(int max_match,
 		{
 			case ARCCOS:
 			{
+				const float distmax = 0.7;
+				const float ratiomax = 0.8;
 				if(best_match > distmax && (sbest_match/best_match) < ratiomax)
 					if(num_matches < max_match)
 					{
@@ -477,8 +481,6 @@ SiftMatcherCUDA::~SiftMatcherCUDA()
 
 int SiftMatcherCUDA::GetSiftMatch(int max_match,
                                   int match_buffer[][2],
-								  float distmax,
-								  float ratiomax,
 								  int mutual_best_match)
 {
 	int num_matches = 0;
@@ -500,8 +502,6 @@ SiftMatcherGL::~SiftMatcherGL()
 
 int SiftMatcherGL::GetSiftMatch(int max_match,
                                 int match_buffer[][2],
-								float distmax,
-								float ratiomax,
 								int mutual_best_match)
 {
 	int num_matches = 0;

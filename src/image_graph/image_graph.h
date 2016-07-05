@@ -32,8 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /** \file image_graph.h
  *	\brief a simple image graph
  */
-#ifndef IMAGEGRAPH_HEADER
-#define IMAGEGRAPH_HEADER
+#ifndef VOT_IMAGEGRAPH_HEADER
+#define VOT_IMAGEGRAPH_HEADER
 
 #include <iostream>
 #include <cstdlib>
@@ -130,4 +130,4 @@ private:
 };
 }	// end of namespace vot
 
-#endif	// IMAGEGRAPH_HEADER
+#endif	// VOT_IMAGEGRAPH_HEADER

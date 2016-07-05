@@ -100,4 +100,4 @@ bool FilterMatchList(const char *sift_list, const char *match_list, const char *
 
 }
 
-#endif
+#endif	// VOT_PIPELINE_HEADER

@@ -32,8 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /*! \file vocab_tree.h
  * \brief vocabulary tree functions
  */
-#ifndef VOCAB_TREE_HEADER
-#define VOCAB_TREE_HEADER
+#ifndef VOT_VOCAB_TREE_HEADER
+#define VOT_VOCAB_TREE_HEADER
 
 #include <vector>
 #include <cstdlib>
@@ -208,4 +208,4 @@ namespace vot
 
 }   // end of namespace vot
 
-#endif  //VOCAB_TREE_HEADER
+#endif  // VOT_VOCAB_TREE_HEADER

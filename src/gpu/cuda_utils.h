@@ -1,5 +1,5 @@
-#ifndef CUDA_UTILS_H
-#define CUDA_UTILS_H
+#ifndef VOT_CUDA_UTILS_H
+#define VOT_CUDA_UTILS_H
 
 #include <iostream>
 #include <cstdint>
@@ -88,4 +88,4 @@ void checkCUBLAS(const int lineNumber, cublasStatus_t status) {
 
 }	// end of namespace vot
 
-#endif  // CUDA_UTILS_H
+#endif  // VOT_CUDA_UTILS_H
