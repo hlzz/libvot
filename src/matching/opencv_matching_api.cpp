@@ -64,6 +64,21 @@ bool SiftMatcherOpencv::SetDescriptors(int index, int num, const float *descript
 	return true;
 }
 
+bool SiftMatcherOpencv::SetLocation(int index, int feature_num, const float *lp, const int loc_dim)
+{
+	keypoints_[index].resize(feature_num);
+	for(int i = 0; i < feature_num; i++)
+	{
+		cv::KeyPoint &kp = keypoints_[index][i];
+		kp.pt.x = lp[i*loc_dim + 0];
+		kp.pt.y = lp[i*loc_dim + 1];
+		//color = lp[i*loc_dim + 2];
+		kp.size = lp[i*loc_dim + 3];
+		kp.angle = lp[i*loc_dim + 4];
+	}
+	return true;
+}
+
 // flann-based opencv matcher
 int SiftMatcherOpencv::GetSiftMatch(int max_match,
                                     int match_buffer[][2],
@@ -79,8 +94,8 @@ int SiftMatcherOpencv::GetSiftMatch(int max_match,
 	for (int i = 0; i < des_mat_[0].rows; i++)
 	{
 		double dist = matches[i].distance;
-		if( dist < min_dist ) min_dist = dist;
-		if( dist > max_dist ) max_dist = dist;
+		if(dist < min_dist) min_dist = dist;
+		if(dist > max_dist) max_dist = dist;
 	}
 
 	printf("-- Max dist : %f \n", max_dist);
@@ -92,10 +107,12 @@ int SiftMatcherOpencv::GetSiftMatch(int max_match,
 	//-- small)
 
 	int match_num = 0;
+	good_matches_.clear();
 	for(int i = 0; i < des_mat_[0].rows && match_num < max_match; i++ )
 	{
 		if(matches[i].distance <= std::max(5*min_dist, 0.02) )
 		{
+			good_matches_.push_back(matches[i]);
 			match_buffer[match_num][0] = matches[i].queryIdx;
 			match_buffer[match_num][1] = matches[i].trainIdx;
 			match_num++;
@@ -103,6 +120,41 @@ int SiftMatcherOpencv::GetSiftMatch(int max_match,
 	}
 
 	return match_num;
+}
+
+bool SiftMatcherOpencv::ShowMatches(std::string imagefile1,
+                                    std::string imagefile2)
+{
+	// descriptors not available
+	if(des_mat_[0].rows <= 0)
+		return false;
+
+	// location not available
+	if(keypoints_[0].size() <= 0 || keypoints_[1].size() <= 0)
+		return false;
+
+	// location and descriptors are inconsistent
+	if(des_mat_[0].rows != keypoints_[0].size() || des_mat_[1].rows != keypoints_[1].size())
+		return false;
+
+	// read image error
+	img_[0] = cv::imread(imagefile1, CV_LOAD_IMAGE_COLOR);
+	img_[1] = cv::imread(imagefile2, CV_LOAD_IMAGE_COLOR);
+	if(img_[0].empty() || img_[1].empty())
+		return false;
+
+	// Draw only "good" matches
+	cv::Mat img_matches;
+	cv::drawMatches(img_[0], keypoints_[0], img_[1], keypoints_[1],
+	                good_matches_, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
+	                std::vector<char>(), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+	// Show detected matches
+	cv::namedWindow("Good Matches", cv::WINDOW_NORMAL);
+	cv::resize(img_matches, img_matches, cv::Size(), 0.25, 0.25);
+	cv::imshow("Good Matches", img_matches);
+	cv::waitKey(0);
+	return true;
 }
 
 } 	// end of namespace vot

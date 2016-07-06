@@ -100,56 +100,17 @@ int main(int argc, char **argv)
 		// test libvot matching
 		vot::SiftMatchPair match_pair(sift_file1);
 		vot::MatchParam match_param;
-		if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
-			return -1;
-	}
-	// opencv match
-	cv::FlannBasedMatcher matcher;
-	std::vector<cv::DMatch> matches;
-	matcher.match(desc1, desc2, matches);
-
-	double max_dist = 0; double min_dist = 100;
-
-	//-- Quick calculation of max and min distances between keypoints
-	for (int i = 0; i < desc1.rows; i++)
-	{
-		double dist = matches[i].distance;
-		if( dist < min_dist ) min_dist = dist;
-		if( dist > max_dist ) max_dist = dist;
-	}
-
-	printf("-- Max dist : %f \n", max_dist);
-	printf("-- Min dist : %f \n", min_dist);
-	cout << "Matches size: " << matches.size() << endl;
-
-	//-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
-	//-- or a small arbitary value ( 0.02 ) in the event that min_dist is very
-	//-- small)
-	//-- PS.- radiusMatch can also be used here.
-	std::vector<cv::DMatch> good_matches;
-
-	for(int i = 0; i < desc1.rows; i++ )
-	{
-		if(matches[i].distance <= max(5*min_dist, 0.02) )
+		if(FLAGS_show_matching && is_image_exist)	// show matches
 		{
-			good_matches.push_back(matches[i]);
+			if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param,
+			                              sift_imagefile1, sift_imagefile2))
+				return -1;
 		}
-	}
-	cout << "Good matches size: " << good_matches.size() << endl;
-
-	if(FLAGS_show_matching && is_image_exist)	// if images not exist, return without showing matching
-	{
-		// Draw only "good" matches
-		cv::Mat img_matches;
-		cv::drawMatches(img_1, key_points1, img_2, key_points2,
-		                good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1),
-		                vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-
-		// Show detected matches
-		cv::namedWindow("Good Matches", cv::WINDOW_NORMAL);
-		cv::resize(img_matches, img_matches, cv::Size(), 0.25, 0.25);
-		cv::imshow("Good Matches", img_matches);
-		cv::waitKey(0);
+		else	// don't show matches
+		{
+			if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
+				return -1;
+		}
 	}
 
 	return 0;

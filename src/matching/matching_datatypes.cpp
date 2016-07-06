@@ -336,10 +336,24 @@ bool SiftMatcher::SetDescriptors(int index, int num, const unsigned char *descri
 	return false;
 }
 
+bool SiftMatcher::SetLocation(int index, int feature_num, const float *loc, const int loc_dim)
+{
+	if(matcher_)
+		return matcher_->SetLocation(index, feature_num, loc, loc_dim);
+	return true;
+}
+
 int SiftMatcher::GetSiftMatch(int max_match,  int match_buffer[][2], int mutual_best_match)
 {
 	if(matcher_)
 		return matcher_->GetSiftMatch(max_match, match_buffer, mutual_best_match);
+	return false;
+}
+
+bool SiftMatcher::ShowMatches(std::string imagefile1, std::string imagefile2)
+{
+	if(matcher_)
+		return matcher_->ShowMatches(imagefile1, imagefile2);
 	return false;
 }
 

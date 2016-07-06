@@ -231,6 +231,8 @@ public:
 	 */
 	virtual bool SetDescriptors(int index, int num, const unsigned char *descriptors);
 
+	virtual bool SetLocation(int index, int feature_num, const float *loc, const int loc_dim);
+
 	/**
 	 * @brief GetSiftMatch: get sift match and save the results in match_buffer
 	 * @param max_match: maximum number of matches returned
@@ -242,6 +244,7 @@ public:
 	virtual int GetSiftMatch(int max_match,
 	                         int match_buffer[][2],
 							 int mutual_best_match = 1);
+	virtual bool ShowMatches(std::string imagefile1, std::string imagefile2);
 
 protected:
 	int max_sift_;

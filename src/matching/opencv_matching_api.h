@@ -23,8 +23,13 @@ public:
 	int GetSiftMatch(int max_match, int match_buffer[][2], int mutual_best_match);
 	bool SetDescriptors(int index, int num, const unsigned char *descriptors);
 	bool SetDescriptors(int index, int num, const float *descriptors);
+	bool SetLocation(int index, int feature_num, const float *lp, const int loc_dim);
+	bool ShowMatches(std::string imagefile1, std::string imagefile2);
 private:
+	std::vector<cv::KeyPoint> keypoints_[2];
 	cv::Mat des_mat_[2];
+	cv::Mat img_[2];
+	std::vector<cv::DMatch> good_matches_;
 };
 
 } // end of namespace vot
