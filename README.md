@@ -32,6 +32,13 @@ On Unix-like systems with GNU Make as the build tool, the following sequence of 
     $ cmake ..
     $ make && make test
 
+#### Optional Dependencies
+* Boost (>1.55), for serialization, python-binding, etc.
+* OpenCV (>2.4), for feature detector and general utilities for image processing.
+* NVIDIA's Cuda Toolkit 7.5, for GPU-related code.
+* NVIDIA's cuDNNv5 for CUDA 7.5, for the deep learning module.
+
+See the [installation](doc/installation.md) guide for details.
 
 ##First try
 Suppose `$LIBVOT_ROOT` represents the root directory of libvot, and it is successfully compiled in `build` subdirectory. You can use `./libvot_feature <image_list>` to first generate a set of descriptor files and use them as inputs to `image_search`. For example, you have some target .jpg image files to generate sift files. Just `cd` into that directory, prepare the `image_list`, and generate sift files in the same directory as the image files:
@@ -56,14 +63,6 @@ Since the library is multi-threaded, the rank is unordered with respect to the f
 
 ## Documentation
 The [homepage](http://hlzz.github.io/libvot/) of libvot is hosted by github-pages. See the documentation [here](http://hlzz.github.io/libvot/doc/html/index.html).
-
-## Optional Dependencies
-* Boost (>1.55), for serialization, python-binding, etc.
-* OpenCV (>2.4), for feature detector and general utilities for image processing.
-* NVIDIA's Cuda Toolkit 7.5, for GPU-related code.
-* NVIDIA's cuDNNv5 for CUDA 7.5, for the deep learning module.
-
-See the [installation](doc/installation.md) guide for details.
 
 ## Contributing
 We are working toward the next major release (0.2.0). 
