@@ -8,15 +8,19 @@ There are two important rules to follow:
 
 * Strive for clarity, even if it occasionally breaks the guidelines. After all, coding styles are applied to facilitate the development process, rather than against it.
 
-Other guidelines include:
-* We largely follow [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
+Specific guidelines are detailed in the following sections.
 
-* Tab size: 4 spaces, feel free to use tab or spaces, tab is set to 4 spaces.
+####Naming
+* We largely follow the variable naming style of [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html).
 
 * All file names are in lowercase letters, with hyphen ('-') to connect words.
 
-* Documentation: use [Doxygen comment style](http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html) to comment your code.
+####Indentation
+* Tab size: 4 spaces, feel free to use tab or spaces, tab is set to 4 spaces.
 
-* git usage:
-    - each commit message should start with '+' for bringing in new features, '*' for modification of existing code, and '-' for removal of a feature/module.
-    - use `git pull --rebase` to synchronize with upstream, because we are aiming for a linear commit history.
+####Documentation
+* Use [Doxygen comment style](http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html) to comment your code.
+
+####Git usage
+* Each commit message should start with '+' for bringing in new features, '*' for modification of existing code, and '-' for removal of a feature/module.
+* Use `git pull --rebase` to synchronize with upstream, because we are aiming for a linear commit history.
