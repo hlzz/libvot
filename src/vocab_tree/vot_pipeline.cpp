@@ -62,13 +62,11 @@ namespace vot
 	{
 		std::vector<size_t> samples;
 		std::vector<size_t> total_numbers;
-		for(size_t i = 0; i < total; i++)
-		{
+		for (size_t i = 0; i < total; i++) {
 			total_numbers.push_back(i);
 		}
 		std::random_shuffle(total_numbers.begin(), total_numbers.end());
-		for(size_t i = 0; i < sample_num; i++)
-		{
+		for (size_t i = 0; i < sample_num; i++) {
 			samples.push_back(total_numbers[i]);
 		}
 		return samples;
@@ -95,35 +93,29 @@ namespace vot
 		sift_data.resize(sample_size); 
 
 		std::cout << "[Build Tree] Reading sift (type " << (int)sift_type << ") files...\n";
-		for(size_t i = 0; i < sample_size; i++) 
-		{
-			if(sift_type == E3D_SIFT) 
-			{
+		for (size_t i = 0; i < sample_size; i++)  {
+			if (sift_type == E3D_SIFT)  {
 				std::string file_type = tw::IO::SplitPathExt(sift_filenames[i]).second;
-				if(file_type != "sift")
-				{
+				if (file_type != "sift") {
 					std::cout << "[Build Tree] Wrong sift type, should match 'sift'\n";
 					return false;
 				}
-				if(sizeof(DTYPE) == 1)
+				if (sizeof(DTYPE) == 1)
 					sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]); 
 				else
 					sift_data[i].ReadChar2DTYPE(sift_filenames[siftfile_samples[i]]);
 			} 
-			else if(sift_type == OPENMVG_FEAT)
-			{
+			else if (sift_type == OPENMVG_FEAT) {
 	    		sift_data[i].ReadOpenmvgDesc<DTYPE, FDIM>(sift_filenames[i]);
 			}
-	    	else //if(sift_type == 1) 
-	    	{
+	    	else {	//if(sift_type == 1)
 	    		std::cout << "[Build Tree] Sift type is not supported. Exit...\n";
 	    		return false;
 	    	}
 	    	total_keys += sift_data[i].getFeatureNum();
 	    } 
 	    std::cout << "[Build Tree] Total sift keys (Type SIFT5.0): " << total_keys << std::endl; 
-		if(total_keys == 0)
-		{
+		if (total_keys == 0) {
 			std::cerr << "[Build Tree] Error: No sift keys input, maybe the sift type is wrong. Exit...\n";
 			return false;
 		}
@@ -135,8 +127,7 @@ namespace vot
 	    std::cout << "[Build Tree] Allocate " << len << " bytes memory into " << num_arrays << " arrays\n";
 	    DTYPE **mem = new DTYPE *[num_arrays];       
 	    size_t remain_length = len;
-	    for(size_t i = 0; i < num_arrays; i++)
-	    {
+	    for (size_t i = 0; i < num_arrays; i++) {
 	    	size_t len_curr = remain_length > MAX_ARRAY_SIZE ? MAX_ARRAY_SIZE : remain_length;
 	    	mem[i] = new DTYPE [len_curr];
 	    	remain_length -= len_curr;
@@ -148,23 +139,18 @@ namespace vot
 	    size_t off = 0;
 	    size_t curr_key = 0;
 	    int curr_array = 0;
-	    for(size_t i = 0; i < sample_size; i++)
-	    {
+	    for (size_t i = 0; i < sample_size; i++) {
 	    	int num_keys = sift_data[i].getFeatureNum();
-	    	if(num_keys > 0	)
-	    	{
+	    	if (num_keys > 0) {
 	    		DTYPE *dp = sift_data[i].getDesPointer();
-	    		for(int j = 0; j < num_keys; j++)
-	    		{
-	    			for(int k = 0; k < FDIM; k++)
-	    			{
+	    		for (int j = 0; j < num_keys; j++) {
+	    			for (int k = 0; k < FDIM; k++) {
 	    				mem[curr_array][off+k] = dp[j * FDIM + k];
 	    			}
 	    			mem_pointer[curr_key] = mem[curr_array] + off;
 	    			curr_key++;
 	    			off += FDIM;
-	    			if(off == MAX_ARRAY_SIZE)
-	    			{
+	    			if (off == MAX_ARRAY_SIZE) {
 	    				off = 0;
 	    				curr_array++;
 	    			}
@@ -179,19 +165,17 @@ namespace vot
 
 	    vot::VocabTree vt1;
 	    vt1.ReadTree(output_filename);
-	    if(vt1.Compare(vt))
-	    {
+	    if (vt1.Compare(vt)) {
 	    	std::cout << "[VocabTree IO test] vt and vt1 are the same\n";
 	    }
-	    else
-	    {
+	    else {
 	    	std::cout << "[vocabTree IO test] vt and vt1 are different\n";
 	    }
 
 	    vt.ClearTree();
 	    // free memory
 	    delete [] mem_pointer;
-	    for(size_t i = 0; i < num_arrays; i++)
+	    for (size_t i = 0; i < num_arrays; i++)
 	    	delete [] mem[i];
 	    delete [] mem;
 	    return true;
@@ -216,22 +200,18 @@ namespace vot
 	    std::cout << "[BuildDB] Successfully read vocabulary tree file " << input_tree << std::endl;
 	    tree.Show();
 	    tree.SetConstantWeight();
-	    for(size_t i = 0; i < siftfile_num; ++i)
-	    {
+	    for (size_t i = 0; i < siftfile_num; ++i) {
 	    	SiftData sift_data;
-	    	if(sift_type == E3D_SIFT)
-	    	{
-	        	if(sizeof(DTYPE) == 1)		// unsigned char
+	    	if (sift_type == E3D_SIFT) {
+	        	if (sizeof(DTYPE) == 1)		// unsigned char
 	        		sift_data.ReadSiftFile(sift_filenames[i]);
 	        	else
 	        		sift_data.ReadChar2DTYPE(sift_filenames[i]);
 	    	}
-	    	else if(sift_type == OPENMVG_FEAT)
-	    	{
+	    	else if (sift_type == OPENMVG_FEAT) {
 	    		sift_data.ReadOpenmvgDesc<DTYPE, FDIM>(sift_filenames[i]);
 	    	}
-	    	else
-	    	{
+	    	else {
 	    		std::cout << "[BuildDB] Sift type is wrong (should be 0). Exit...\n";
 	    		return false;
 	    	}
@@ -259,8 +239,7 @@ namespace vot
 							std::mutex *match_file_mutex)
 	{
 		size_t db_image_num = tree->database_image_num;
-		for(size_t i = first_index; i < first_index + num_images; i++)
-		{
+		for (size_t i = first_index; i < first_index + num_images; i++) {
 			match_file_mutex->lock();
 			std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
 			match_file_mutex->unlock();
@@ -268,19 +247,16 @@ namespace vot
 			memset(scores, 0, sizeof(float) * db_image_num);
 			// read sift data
 			SiftData sift_data;
-			if(sift_type == E3D_SIFT)
-			{
-				if(sizeof(DTYPE) == 1)
+			if (sift_type == E3D_SIFT) {
+				if (sizeof(DTYPE) == 1)
 					sift_data.ReadSiftFile((*sift_filenames)[i]);
 				else
 					sift_data.ReadChar2DTYPE((*sift_filenames)[i]);
 			}
-			else if(sift_type == OPENMVG_FEAT)
-			{
+			else if (sift_type == OPENMVG_FEAT) {
 				sift_data.ReadOpenmvgDesc<DTYPE, FDIM>((*sift_filenames)[i]);
 			}
-			else
-			{
+			else {
 				std::cout << "[VocabMatch] Sift type is wrong (should be 0). Exit...\n";
 				exit(-1);
 			}
@@ -289,7 +265,7 @@ namespace vot
 				return scores[i0] > scores[i1];
 			});
 			match_file_mutex->lock();
-		    for(size_t j = 0; j < db_image_num; j++)
+		    for (size_t j = 0; j < db_image_num; j++)
 		    	fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j], scores[indexed_scores[j]]);
 			match_file_mutex->unlock();
 		}
@@ -312,36 +288,30 @@ namespace vot
 		size_t siftfile_num = sift_filenames.size();
 
 	    FILE *match_file = fopen(match_output, "w");
-	    if(match_file == NULL)
-	    {
+	    if (match_file == NULL) {
 	    	std::cout << "[VocabMatch] Fail to open the match file.\n";
 	    }
 	    size_t db_image_num = tree->database_image_num;
-	    if(thread_num == 1)
-	    {
+	    if (thread_num == 1) {
 		    float *scores = new float[db_image_num];
 			size_t *indexed_scores = new size_t[db_image_num];
 			std::iota(indexed_scores, indexed_scores+db_image_num, 0);
 
-		    for(size_t i = 0; i < siftfile_num; i++)
-		    {
+		    for (size_t i = 0; i < siftfile_num; i++) {
 		    	std::cout << "[VocabMatch] Querying image #" << i << " to database\n";
 		    	memset(scores, 0, sizeof(float) * db_image_num);
 		    	// read sift data
 		    	SiftData sift_data;
-		    	if(sift_type == E3D_SIFT)
-		    	{
-					if(sizeof(DTYPE) == 1)
+		    	if (sift_type == E3D_SIFT) {
+					if (sizeof(DTYPE) == 1)
 						sift_data.ReadSiftFile(sift_filenames[i]);
 					else
 						sift_data.ReadChar2DTYPE(sift_filenames[i]);
 		    	}
-		    	else if(sift_type == OPENMVG_FEAT)
-		    	{
+		    	else if (sift_type == OPENMVG_FEAT) {
 		    		sift_data.ReadOpenmvgDesc<DTYPE, FDIM>(sift_filenames[i]);
 		    	}
-		    	else
-		    	{
+		    	else {
 			    	std::cout << "[VocabMatch] Sift type is wrong (should be 0). Exit...\n";
 			    	exit(-1);
 		    	}
@@ -349,7 +319,7 @@ namespace vot
 				std::sort(indexed_scores, indexed_scores+db_image_num, [&](size_t i0, size_t i1) {
 					return scores[i0] > scores[i1];
 				});
-		    	for(size_t j = 0; j < db_image_num; j++)
+		    	for (size_t j = 0; j < db_image_num; j++)
 		    		fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j], scores[indexed_scores[j]]);
 		    }
 
@@ -362,18 +332,16 @@ namespace vot
 	    	std::vector<std::thread> threads;
 	    	float **scores = new float* [thread_num];
 	    	size_t **indexed_scores = new size_t* [thread_num];
-	    	for(int i = 0; i < thread_num; i++)
-	    	{
+	    	for (int i = 0; i < thread_num; i++) {
 	    		scores[i] = new float[db_image_num];
 	    		indexed_scores[i] = new size_t[db_image_num];
 				std::iota(indexed_scores[i], indexed_scores[i]+db_image_num, 0);
 			}
 
 	    	size_t off = 0;
-	    	for(int i = 0; i < thread_num; i++)
-	    	{
+	    	for (int i = 0; i < thread_num; i++) {
 	    		size_t thread_image = siftfile_num / thread_num;
-	    		if(i == thread_num - 1)
+	    		if (i == thread_num - 1)
 	    			thread_image = siftfile_num - (thread_num - 1) * thread_image;
 		    	threads.push_back(std::thread(MultiQueryDatabase, tree, &sift_filenames, sift_type, off, thread_image, 
 		    								  scores[i], indexed_scores[i], match_file, &match_file_mutex));
@@ -382,8 +350,7 @@ namespace vot
 	    	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
 	    	// release memory
-	    	for(int i = 0; i < thread_num; i++)
-	    	{
+	    	for (int i = 0; i < thread_num; i++) {
 	    		delete [] scores[i];
 	    		delete [] indexed_scores[i];
 	    	}
@@ -406,13 +373,11 @@ namespace vot
 		num_matches = num_matches > image_num ? image_num : num_matches;
 
 	    std::ifstream fin(match_list);
-	    if(!fin.is_open())
-	    {
+	    if (!fin.is_open()) {
 	        std::cout << "[FilterMatchList] Fail to open the vocabulary tree match output\n";
 	        return false;
 	    }
-	    else 
-	    {
+	    else  {
 	        std::cout << "[FilterMatchList] Read the vocabulary tree match file: " << match_list << '\n';
 	    }
 
@@ -421,21 +386,19 @@ namespace vot
 	    float score;
 	    std::vector<std::vector<size_t> > top_matches;
 	    top_matches.resize(image_num);
-	    while(!fin.eof())
-	    {
+	    while (!fin.eof()) {
 	    	std::getline(fin, line);
-	    	if(line == "")
+	    	if (line == "")
 	    		continue;
 	    	std::stringstream line_stream;
 	    	line_stream << line;
 	    	line_stream >> index0 >> index1 >> score;
-	        if(index0 >= sift_filenames.size() || index1 >= sift_filenames.size())
-	        {
+	        if (index0 >= sift_filenames.size() || index1 >= sift_filenames.size()) {
 	            std::cout << "[FilterMatchList] Invalid index pair: " << index0 << " " << index1 << '\n';
 	            continue;
 	        }
 	        // find top-'num_matches' pairs
-	        if(top_matches[index0].size() < num_matches && index0 != index1 && score > 0)
+	        if (top_matches[index0].size() < num_matches && index0 != index1 && score > 0)
 	        {
 	        	top_matches[index0].push_back(index1);
 	        }
@@ -444,21 +407,18 @@ namespace vot
 
 	    std::vector<std::vector<size_t> > filtered_matches;
 	    filtered_matches.resize(image_num);
-	    for(size_t i = 0; i < image_num; i++)
-	    {
-	    	for(size_t j = 0; j < top_matches[i].size(); j++)
-	    	{
+	    for (size_t i = 0; i < image_num; i++) {
+	    	for (size_t j = 0; j < top_matches[i].size(); j++) {
 	    		index0 = i; 
 	    		index1 = top_matches[i][j];
-	    		if(index0 > index1)
+	    		if (index0 > index1)
 		    		std::swap(index0, index1);
 	    		filtered_matches[index0].push_back(index1);
 	    	}
 	    }
 
 	    // get unique match pairs
-	    for(size_t i = 0; i < image_num; i++)
-	    {
+	    for (size_t i = 0; i < image_num; i++) {
 	    	std::sort(filtered_matches[i].begin(), filtered_matches[i].end());
 	    	filtered_matches[i].erase(std::unique(filtered_matches[i].begin(), filtered_matches[i].end()), filtered_matches[i].end());
 	    }
@@ -468,29 +428,23 @@ namespace vot
 	    std::string sift_name_file = sift_index_file+".txt";
 		std::ofstream fout(sift_name_file);				// used for match (sift filenames pairs)
 		std::ofstream fout1(sift_index_file);			// used for query expansion (sift index pairs)
-		if(!fout.is_open() || !fout1.is_open())
-	    {
+		if (!fout.is_open() || !fout1.is_open()) {
 	        std::cout << "[FilterMatchList] Fail to open the filtered match file\n";
 	        return false;
 	    }
-	    else 
-	    {
+	    else {
 	        std::cout << "[FilterMatchList] Write the filtered index file " << sift_index_file << '\n';
 	    }
 
-	    for(size_t i = 0; i < image_num; i++)
-	    {
-	    	for(size_t j = 0; j < filtered_matches[i].size(); j++)
-	    	{
+	    for (size_t i = 0; i < image_num; i++) {
+	    	for (size_t j = 0; j < filtered_matches[i].size(); j++) {
 	    		fout << sift_filenames[i] << " " << sift_filenames[filtered_matches[i][j]] << '\n';
 	    	}
 	    } 
 	    fout.close();
 
-	    for(size_t i = 0; i < image_num; i++)
-	    {
-	    	for(size_t j = 0; j < top_matches[i].size(); j++)
-	    	{
+	    for (size_t i = 0; i < image_num; i++) {
+	    	for (size_t j = 0; j < top_matches[i].size(); j++) {
 	    		fout1 << i << " " << top_matches[i][j] << '\n';
 	    	}
 	    }

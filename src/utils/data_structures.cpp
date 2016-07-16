@@ -42,7 +42,7 @@ namespace tw
 	{
 		father = new size_t[n];
 		size = n;
-		for(size_t i = 0; i < size; i++)
+		for (size_t i = 0; i < size; i++)
 			father[i] = i;
 	}
 
@@ -53,7 +53,7 @@ namespace tw
 
 	size_t UnionFind::Find(size_t x)
 	{
-		if(x != father[x])
+		if (x != father[x])
 			father[x] = Find(father[x]);	// path compression
 		return father[x];
 	}
@@ -62,7 +62,8 @@ namespace tw
 	{
 		x = Find(x);
 		y = Find(y);
-		if(x == y) return false;
+		if (x == y)
+			return false;
 		father[y] = x;
 		return true;
 	}

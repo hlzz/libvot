@@ -51,8 +51,8 @@ using namespace std;
 
 /* 
 sift_type: 0 - our own sift data format
-           1 - vlfeat sift (in openMVG format)
-           2 - TODO(tianwei): lowe's sift type
+		   1 - vlfeat sift (in openMVG format)
+		   2 - TODO(tianwei): lowe's sift type
 */
 typedef enum benchmark_dataset {
 	BENCHMARK_NO = 0,
@@ -65,56 +65,54 @@ int main(int argc, char **argv)
 {
 	fprintf(stdout, "libvot version: %d.%d.%d\n", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
 	gflags::ParseCommandLineFlags(&argc, &argv, true);
-    if (argc < 3)
-    {
-        printf("Usage: %s <sift_list> <output_dir> [depth] [branch_num] [sift_type] [num_matches] [thread_num]\n", argv[0]);
-        return -1;
-    }
-
-    const char *sift_input_file = argv[1];
-    const char *output_dir = argv[2];
-    std::string output_directory = std::string(output_dir);
-    std::string tree_output = tw::IO::JoinPath(output_directory, std::string("tree.out"));
-    std::string db_output = tw::IO::JoinPath(output_directory, std::string("db.out"));
-    std::string match_output = tw::IO::JoinPath(output_directory, std::string("match.out"));
-    std::string filtered_output = tw::IO::JoinPath(output_directory, std::string("match_pairs"));
-
-    // create folder
-    tw::IO::Mkdir(output_directory);
-
-    // optional parameters
-    int depth = 6;
-    int branch_num = 8;
-    vot::SiftType sift_type = vot::E3D_SIFT;
-    int thread_num = std::thread::hardware_concurrency();
-    int start_id = 0;
-    int num_matches = 100;
-
-    if(argc > 3)
-        depth = atoi(argv[3]);
-    if(argc > 4)
-        branch_num = atoi(argv[4]);
-    if(argc > 5)
-        sift_type = vot::SiftType(atoi(argv[5]));
-    if(argc > 6)
-        num_matches = atoi(argv[6]);
-    if(argc > 7)
-        thread_num = atoi(argv[7]);
-
-    if(!vot::BuildVocabTree(sift_input_file, tree_output.c_str(), depth, branch_num, sift_type, thread_num))
-		return -1;
-    if(!vot::BuildImageDatabase(sift_input_file, tree_output.c_str(), db_output.c_str(), sift_type, start_id, thread_num))
-		return -1;
-    if(!vot::QueryDatabase(db_output.c_str(), sift_input_file, match_output.c_str(), sift_type, thread_num))
-		return -1;
-    if(!vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches))
-		return -1;
-
-	if(FLAGS_benchmark)
+	if (argc < 3)
 	{
+		printf("Usage: %s <sift_list> <output_dir> [depth] [branch_num] [sift_type] [num_matches] [thread_num]\n", argv[0]);
+		return -1;
+	}
+
+	const char *sift_input_file = argv[1];
+	const char *output_dir = argv[2];
+	std::string output_directory = std::string(output_dir);
+	std::string tree_output = tw::IO::JoinPath(output_directory, std::string("tree.out"));
+	std::string db_output = tw::IO::JoinPath(output_directory, std::string("db.out"));
+	std::string match_output = tw::IO::JoinPath(output_directory, std::string("match.out"));
+	std::string filtered_output = tw::IO::JoinPath(output_directory, std::string("match_pairs"));
+
+	// create folder
+	tw::IO::Mkdir(output_directory);
+
+	// optional parameters
+	int depth = 6;
+	int branch_num = 8;
+	vot::SiftType sift_type = vot::E3D_SIFT;
+	int thread_num = std::thread::hardware_concurrency();
+	int start_id = 0;
+	int num_matches = 100;
+
+	if (argc > 3)
+		depth = atoi(argv[3]);
+	if (argc > 4)
+		branch_num = atoi(argv[4]);
+	if (argc > 5)
+		sift_type = vot::SiftType(atoi(argv[5]));
+	if (argc > 6)
+		num_matches = atoi(argv[6]);
+	if (argc > 7)
+		thread_num = atoi(argv[7]);
+
+	if (!vot::BuildVocabTree(sift_input_file, tree_output.c_str(), depth, branch_num, sift_type, thread_num))
+		return -1;
+	if (!vot::BuildImageDatabase(sift_input_file, tree_output.c_str(), db_output.c_str(), sift_type, start_id, thread_num))
+		return -1;
+	if (!vot::QueryDatabase(db_output.c_str(), sift_input_file, match_output.c_str(), sift_type, thread_num))
+		return -1;
+	if (!vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches))
+		return -1;
+
+	if(FLAGS_benchmark) {
 		benchmark_dataset benchmark_flag = (benchmark_dataset) FLAGS_benchmark;
-		switch(benchmark_flag)
-		{
+		switch (benchmark_flag) {
 			case BENCHMARK_OXFORD5K:
 			{
 				std::cout << "[Image Search] Output benchmark files in oxford5k's use.\n";
@@ -125,5 +123,5 @@ int main(int argc, char **argv)
 		}
 	}
 
-    return 0;
+	return 0;
 }
