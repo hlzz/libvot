@@ -65,8 +65,7 @@ int main(int argc, char **argv)
 {
 	fprintf(stdout, "libvot version: %d.%d.%d\n", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
 	gflags::ParseCommandLineFlags(&argc, &argv, true);
-	if (argc < 3)
-	{
+	if (argc < 3) {
 		printf("Usage: %s <sift_list> <output_dir> [depth] [branch_num] [sift_type] [num_matches] [thread_num]\n", argv[0]);
 		return -1;
 	}
