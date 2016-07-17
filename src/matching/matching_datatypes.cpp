@@ -237,8 +237,8 @@ SiftMatcher::SiftMatcher(int max_sift,
     max_sift_(max_sift),
     dist_type_(dist_type),
     feature_dim_(feature_dim),
-	match_device_(match_device),
-	matcher_(nullptr) {}
+    match_device_(match_device),
+    matcher_(nullptr) {}
 
 SiftMatcher::~SiftMatcher()
 {
@@ -430,7 +430,7 @@ float SiftMatcherCPU::GetDescriptorDist(std::vector<float> vec1, std::vector<flo
 // brute force cpu matcher
 int SiftMatcherCPU::GetSiftMatch(int max_match,
                                  int match_buffer[][2],
-								 int mutual_best_match)
+int mutual_best_match)
 {
 	int num_matches = 0;
 	std::vector<float> vec1, vec2;
@@ -499,7 +499,7 @@ SiftMatcherCUDA::~SiftMatcherCUDA()
 
 int SiftMatcherCUDA::GetSiftMatch(int max_match,
                                   int match_buffer[][2],
-								  int mutual_best_match)
+int mutual_best_match)
 {
 	int num_matches = 0;
 
@@ -520,7 +520,7 @@ SiftMatcherGL::~SiftMatcherGL()
 
 int SiftMatcherGL::GetSiftMatch(int max_match,
                                 int match_buffer[][2],
-								int mutual_best_match)
+int mutual_best_match)
 {
 	int num_matches = 0;
 

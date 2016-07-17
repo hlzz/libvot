@@ -73,8 +73,7 @@ int main(int argc, char **argv)
 	FILE *matrix_file = fopen(matrix_filename.c_str(), "w");
 
 	std::vector<point2d> points(MATRIX_SIZE);
-	for(int i = 0; i < MATRIX_SIZE; i++)
-	{
+	for (int i = 0; i < MATRIX_SIZE; i++) {
 		points[i].x = rand() % 1000;
 		points[i].x /= 1000;
 		points[i].y = rand() % 1000;
@@ -82,21 +81,17 @@ int main(int argc, char **argv)
 	}
 
 	Eigen::MatrixXf distance_matrix(MATRIX_SIZE, MATRIX_SIZE);
-	for(int i = 0; i < MATRIX_SIZE; i++)
-	{
+	for (int i = 0; i < MATRIX_SIZE; i++) {
 		distance_matrix(i, i) = 0.0;
-		for(int j = i+1; j < MATRIX_SIZE; j++)
-		{
+		for (int j = i+1; j < MATRIX_SIZE; j++) {
 			distance_matrix(i, j) = EuclideanDistance(points[i], points[j]);
 			distance_matrix(j, i) = distance_matrix(i, j);
 		}
 	}
 
 	// output to the file
-	for(int i = 0; i < MATRIX_SIZE; i++)
-	{
-		for(int j = 0; j < MATRIX_SIZE; j++)
-		{
+	for (int i = 0; i < MATRIX_SIZE; i++) {
+		for (int j = 0; j < MATRIX_SIZE; j++) {
 			cout << distance_matrix(i, j) << " ";
 			fprintf(matrix_file, "%f ", distance_matrix(i, j));
 		}

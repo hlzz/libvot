@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 	if (!vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches))
 		return -1;
 
-	if(FLAGS_benchmark) {
+	if (FLAGS_benchmark) {
 		benchmark_dataset benchmark_flag = (benchmark_dataset) FLAGS_benchmark;
 		switch (benchmark_flag) {
 			case BENCHMARK_OXFORD5K:

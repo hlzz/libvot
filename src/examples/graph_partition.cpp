@@ -43,65 +43,61 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    if(argc < 2)
-    {
-        std::cout << "Usage: " << argv[0] << " <adj_lists_file>\n";
-        exit(1);
-    }
+	if (argc < 2) {
+		std::cout << "Usage: " << argv[0] << " <adj_lists_file>\n";
+		exit(1);
+	}
 
-    const char* adj_lists_file = argv[1];
+	const char* adj_lists_file = argv[1];
 
-    /**
-     *  Case #1: make a undirected graph data
-     */
-    vot::ImageGraph ig(6);
-    ig.addEdge(0, 1, 1.0);
-    ig.addEdge(0, 2, 1.0);
-    ig.addEdge(1, 2, 1.0);
-    ig.addEdge(2, 3, 1.0);
-    ig.addEdge(3, 4, 1.0);
-    ig.addEdge(3, 5, 1.0);
-    ig.addEdge(4, 5, 1.0);
+	/**
+	 *  Case #1: make a undirected graph data
+	 */
+	vot::ImageGraph ig(6);
+	ig.addEdge(0, 1, 1.0);
+	ig.addEdge(0, 2, 1.0);
+	ig.addEdge(1, 2, 1.0);
+	ig.addEdge(2, 3, 1.0);
+	ig.addEdge(3, 4, 1.0);
+	ig.addEdge(3, 5, 1.0);
+	ig.addEdge(4, 5, 1.0);
 
-    std::vector<std::vector<int> > cuts;
-    // Karger's algorithm requires the graph to be a connected component
-    if(ig.numConnectedComponents())
-    {
-        if(!ig.kargerCut(cuts)) return -1;
-        cout << cuts[0].size() << " " << cuts[1].size() << endl;
-        cout << "part1\n";
-        for(int i = 0; i < cuts[0].size(); i++)
-            cout << cuts[0][i] << endl;
-        cout << "part2\n";
-        for(int i = 0; i < cuts[1].size(); i++)
-            cout << cuts[1][i] << endl;
-    }
+	std::vector<std::vector<int> > cuts;
+	// Karger's algorithm requires the graph to be a connected component
+	if (ig.numConnectedComponents()) {
+		if (!ig.kargerCut(cuts)) return -1;
+		cout << cuts[0].size() << " " << cuts[1].size() << endl;
+		cout << "part1\n";
+		for (int i = 0; i < cuts[0].size(); i++)
+			cout << cuts[0][i] << endl;
+		cout << "part2\n";
+		for (int i = 0; i < cuts[1].size(); i++)
+			cout << cuts[1][i] << endl;
+	}
 
-    /**
-     *  Case #2: read graph data from a file
-     */
-    ifstream fin;
-    fin.open(adj_lists_file);
-    int image_num, src, dst;
-    double score;
-    fin >> image_num;
-    vot::ImageGraph large_graph(image_num);
-    while(fin >> src >> dst >> score)
-    {
-        large_graph.addEdge(src, dst, score);
-    }
+	/**
+	 *  Case #2: read graph data from a file
+	 */
+	ifstream fin;
+	fin.open(adj_lists_file);
+	int image_num, src, dst;
+	double score;
+	fin >> image_num;
+	vot::ImageGraph large_graph(image_num);
+	while (fin >> src >> dst >> score) {
+		large_graph.addEdge(src, dst, score);
+	}
 
-    if(large_graph.numConnectedComponents())
-    {
-        large_graph.kargerCut(cuts);
-        cout << cuts[0].size() << " " << cuts[1].size() << endl;
-        cout << "part1\n";
-        for(int i = 0; i < cuts[0].size(); i++)
-            cout << cuts[0][i] << endl;
-        cout << "part2\n";
-        for(int i = 0; i < cuts[1].size(); i++)
-            cout << cuts[1][i] << endl;
-    }
+	if (large_graph.numConnectedComponents()) {
+		large_graph.kargerCut(cuts);
+		cout << cuts[0].size() << " " << cuts[1].size() << endl;
+		cout << "part1\n";
+		for(int i = 0; i < cuts[0].size(); i++)
+			cout << cuts[0][i] << endl;
+		cout << "part2\n";
+		for(int i = 0; i < cuts[1].size(); i++)
+			cout << cuts[1][i] << endl;
+	}
 
-    return 0;
+	return 0;
 }
