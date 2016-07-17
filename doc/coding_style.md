@@ -22,7 +22,11 @@ Specific guidelines are detailed in the following sections.
 
 * Use descriptive names for global variables and functions.
 
+####Source Code Filenames
 * All file names are in lowercase letters, with hyphen ('-') to connect words.
+
+####Header Include Guard
+* VOT_FILE_NAME_H, for example, the include guard of `vocab_tree.h` is `VOT_VOCAB_TREE_H`.
 
 ###Operators and Statements
 * Spaces should be used around assign operators (=, +=, /= and so), one space on each side of it:
