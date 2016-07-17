@@ -39,6 +39,8 @@ add_subdirectory(utils)			# utils has to be added before other modules
 add_subdirectory(gpu)
 # feature lib
 add_subdirectory(feature)
+# multiview lib
+add_subdirectory(multiview)
 # matching lib
 add_subdirectory(matching)
 # the main vocabulary tree directory
