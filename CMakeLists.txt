@@ -25,6 +25,7 @@ option(LIBVOT_BUILD_TESTS "Build libvot tests" ON)
 option(LIBVOT_BUILD_SHARED "Build libvot shared libs" ON)
 option(LIBVOT_BUILD_DOC "Build libvot documentations" ON)
 option(LIBVOT_BUILD_PYTHON "Build libvot with python export" ON)
+option(LIBVOT_USE_CERES "Build libvot with ceres-solver" ON)
 option(LIBVOT_USE_BOOST "Build libvot with Boost" ON)
 option(LIBVOT_USE_OPENCV "Build libvot with OpenCV support" ON)
 option(LIBVOT_USE_CUDA "Build libvot with cuda support" ON)
@@ -41,7 +42,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 # Additional cmake modules
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 # by default build in release mode
@@ -51,7 +52,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 # ================= Configure libvot dependencies =========================
 if(LIBVOT_USE_OPENCV)
-    find_package( OpenCV REQUIRED )
+    find_package(OpenCV REQUIRED)
     if (OpenCV_FOUND)
         include_directories(${OpenCV_INCLUDE_DIRS})
 		add_definitions(-DLIBVOT_USE_OPENCV)
@@ -81,6 +82,19 @@ if(LIBVOT_USE_BOOST)
         remove_definitions(-DLIBVOT_USE_BOOST)
     endif(Boost_FOUND)
 endif()
+
+# Ceres-solver building options
+if(LIBVOT_USE_CERES)
+	find_package(Ceres REQUIRED QUIET)
+	if(Ceres_FOUND)
+		include_directories(${CERES_INCLUDE_DIRS})
+		add_definitions(-DLIBVOT_USE_CERES)
+	elseif(Ceres_FOUND)
+		set(LIBVOT_USE_CERES OFF)
+		remove_definitions(-DLIBVOT_USE_CERES)
+	endif(Ceres_FOUND)
+endif()
+
 # ================= Configure libvot dependencies end =========================
 
 # Specify output bin_path and lib_path

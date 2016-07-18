@@ -20,7 +20,7 @@ using namespace std;
 
 int main( int argc, char** argv )
 {
-	if(argc != 2)
+	if (argc != 2)
 		return -1;
 
 	// ----------    OPENCV feature ------------------
@@ -44,11 +44,10 @@ int main( int argc, char** argv )
 	vlfeat_param.edge_thresh = 10;
 	vlfeat_param.peak_thresh = 2.5;
 	int num_features = vot::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
-	if(!sift_data.SaveSiftFile(feat_filename))
-	{
+	if (!sift_data.SaveSiftFile(feat_filename)) {
 		cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
 		return -1;
 	}
 
-    return 0;
+	return 0;
 }

@@ -21,14 +21,14 @@ public:
 class gps_position
 {
 public:
-    int degrees;
-    int minutes;
-    float seconds;
+	int degrees;
+	int minutes;
+	float seconds;
 	gps_device *device;		// pointer to the device that collect gps data
 	gps_position() {}
-    gps_position(int d, int m, float s, gps_device *dev) :
-        degrees(d), minutes(m), seconds(s), device(dev)
-    {}
+	gps_position(int d, int m, float s, gps_device *dev) :
+	    degrees(d), minutes(m), seconds(s), device(dev)
+	{}
 	const std::string get_device_name() const
 	{
 		return device->name;
@@ -48,9 +48,9 @@ void serialize(Archive & ar, gps_device & g, const unsigned int version)
 template<class Archive>
 void serialize(Archive & ar, gps_position & g, const unsigned int version)
 {
-    ar & g.degrees;
-    ar & g.minutes;
-    ar & g.seconds;
+	ar & g.degrees;
+	ar & g.minutes;
+	ar & g.seconds;
 	if(version > 0)
 		ar & g.device;
 }
@@ -61,35 +61,35 @@ void serialize(Archive & ar, gps_position & g, const unsigned int version)
 BOOST_CLASS_VERSION(gps_position, 1)
 
 int main() {
-    // create and open a character archive for output
-    std::ofstream ofs("filename");
+	// create and open a character archive for output
+	std::ofstream ofs("filename");
 
-    // create class instance
+	// create class instance
 	std::string name = "gps_device";
 	gps_device d(name);
-    const gps_position g(35, 59, 24.567f, &d);
+	const gps_position g(35, 59, 24.567f, &d);
 
-    // save data to archive
-    {
-        boost::archive::text_oarchive oa(ofs);
-        // write class instance to archive
-        oa << g;
-    	// archive and stream closed when destructors are called
-    }
+	// save data to archive
+	{
+		boost::archive::text_oarchive oa(ofs);
+		// write class instance to archive
+		oa << g;
+		// archive and stream closed when destructors are called
+	}
 
-    // ... some time later restore the class instance to its orginal state
-    gps_position newg;
-    {
-        // create and open an archive for input
-        std::ifstream ifs("filename");
-        boost::archive::text_iarchive ia(ifs);
-        // read class state from archive
-        ia >> newg;
-        // archive and stream closed when destructors are called
-    }
+	// ... some time later restore the class instance to its orginal state
+	gps_position newg;
+	{
+		// create and open an archive for input
+		std::ifstream ifs("filename");
+		boost::archive::text_iarchive ia(ifs);
+		// read class state from archive
+		ia >> newg;
+		// archive and stream closed when destructors are called
+	}
 	const std::string device_name = newg.get_device_name();
-	if(device_name != "gps_device")
+	if (device_name != "gps_device")
 		return -1;
 
-    return 0;
+	return 0;
 }

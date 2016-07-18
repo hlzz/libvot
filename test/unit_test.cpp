@@ -109,9 +109,8 @@ TEST(ImageGraph, AddRepeatedEdge)
 
 bool IsXInVector(int x, std::vector<int> &vec)
 {
-	for(int i = 0; i < vec.size(); i++)
-	{
-		if(x == vec[i])
+	for (int i = 0; i < vec.size(); i++) {
+		if (x == vec[i])
 			return true;
 	}
 	return false;
@@ -136,17 +135,16 @@ TEST(ImageGraph, KargerCutSimpleTest)
 	EXPECT_EQ(3, two_parts[0].size());
 	EXPECT_EQ(3, two_parts[1].size());
 	bool flag = true;
-	for(int i = 0; i < node_num; i++)
-	{
-		if(!IsXInVector(i, two_parts[0]) && !IsXInVector(i, two_parts[1]))
+	for (int i = 0; i < node_num; i++) {
+		if (!IsXInVector(i, two_parts[0]) && !IsXInVector(i, two_parts[1]))
 			flag = false;
 	}
-	if(!IsXInVector(0, two_parts[0]))	flag = false;
-	if(!IsXInVector(1, two_parts[0]))	flag = false;
-	if(!IsXInVector(2, two_parts[0]))	flag = false;
-	if(!IsXInVector(3, two_parts[1]))	flag = false;
-	if(!IsXInVector(4, two_parts[1]))	flag = false;
-	if(!IsXInVector(5, two_parts[1]))	flag = false;
+	if (!IsXInVector(0, two_parts[0]))	flag = false;
+	if (!IsXInVector(1, two_parts[0]))	flag = false;
+	if (!IsXInVector(2, two_parts[0]))	flag = false;
+	if (!IsXInVector(3, two_parts[1]))	flag = false;
+	if (!IsXInVector(4, two_parts[1]))	flag = false;
+	if (!IsXInVector(5, two_parts[1]))	flag = false;
 	EXPECT_EQ(true, flag);
 }
 
@@ -209,7 +207,7 @@ typedef std::vector<Desc_T> Descs_T;
 TEST(OpenmvgDescriptor, NONBINARY) {
   	// Create an input series of descriptor
   	Descs_T vec_descs;
-  	for(int i = 0; i < CARD; ++i)  {
+  	for (int i = 0; i < CARD; ++i) {
   		Desc_T desc;
   		for (int j = 0; j < DESC_LENGTH; ++j)
   			desc[j] = i*DESC_LENGTH+j;
@@ -224,8 +222,7 @@ TEST(OpenmvgDescriptor, NONBINARY) {
   	loadDescsFromFile("tempDescs.desc", vec_descs_read);
   	EXPECT_EQ(CARD, vec_descs_read.size());
 
-  	for(int i = 0; i < CARD; ++i) 
-  	{
+  	for (int i = 0; i < CARD; ++i) {
   		for (int j = 0; j < DESC_LENGTH; ++j)
   			EXPECT_EQ(vec_descs[i][j], vec_descs_read[i][j]);
   	}
@@ -234,8 +231,7 @@ TEST(OpenmvgDescriptor, NONBINARY) {
 TEST(OpenmvgDescriptor, BINARY) {
   	// Create an input series of descriptor
   	Descs_T vec_descs;
-  	for(int i = 0; i < CARD; ++i)
-  	{
+  	for (int i = 0; i < CARD; ++i) {
   		Desc_T desc;
   		for (int j = 0; j < DESC_LENGTH; ++j)
   			desc[j] = i*DESC_LENGTH+j;
@@ -250,9 +246,8 @@ TEST(OpenmvgDescriptor, BINARY) {
   	loadDescsFromBinFile("tempDescsBin.desc", vec_descs_read);
   	EXPECT_EQ(CARD, vec_descs_read.size());
 
-  	for(int i = 0; i < CARD; ++i) 
-  	{
-  		for(int j = 0; j < DESC_LENGTH; ++j)
+  	for (int i = 0; i < CARD; ++i)  {
+  		for (int j = 0; j < DESC_LENGTH; ++j)
   			EXPECT_EQ(vec_descs[i][j], vec_descs_read[i][j]);
   	}
 }

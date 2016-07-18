@@ -44,12 +44,10 @@ int main(int argc, char **argv)
 	image_types.push_back(".png");
 	image_types.push_back(".PNG");
 	int i = 0;
-	while(i < image_types.size() && !is_image_exist)
-	{
+	while(i < image_types.size() && !is_image_exist) {
 		sift_imagefile1 = sift_imagefile1_root + image_types[i];
 		sift_imagefile2 = sift_imagefile2_root + image_types[i];
-		if(tw::IO::IsFileExist(sift_imagefile1) && tw::IO::IsFileExist(sift_imagefile2))
-		{
+		if (tw::IO::IsFileExist(sift_imagefile1) && tw::IO::IsFileExist(sift_imagefile2)) {
 			cout << "[sift_match_test] image files found: " << sift_imagefile1 << " and " << sift_imagefile2 << "\n";
 			is_image_exist = true;
 		}
@@ -59,15 +57,12 @@ int main(int argc, char **argv)
 	std::vector<cv::KeyPoint> key_points1, key_points2;
 	cv::Mat desc1, desc2;
 	cv::Mat img_1, img_2;
-	if(is_image_exist)
-	{
+	if (is_image_exist) {
 		img_1 = cv::imread(sift_imagefile1, CV_LOAD_IMAGE_COLOR);
 		img_2 = cv::imread(sift_imagefile2, CV_LOAD_IMAGE_COLOR);
 	}
-	if(FLAGS_opencv_feature)	// generate opencv sift feature from images
-	{
-		if(!is_image_exist)
-		{
+	if (FLAGS_opencv_feature) {		// generate opencv sift feature from images
+		if (!is_image_exist) {
 			std::cerr << "[sift_match_test] image files not exist.\n";
 			return -1;
 		}
@@ -82,9 +77,8 @@ int main(int argc, char **argv)
 		cout << "[sift_match_test] got " << key_points1.size() << " sift1 descriptors\n";
 		cout << "[sift_match_test] got " << key_points2.size() << " sift2 descriptors\n";
 	}
-	else	// read libvot sift file
-	{
-		//// This file doesn't support other sift type
+	else {		// read libvot sift file
+		// This file doesn't support other sift type
 		vot::SiftData sift1, sift2;
 		sift1.ReadSiftFile(sift_file1);
 		sift2.ReadSiftFile(sift_file2);
@@ -100,15 +94,13 @@ int main(int argc, char **argv)
 		// test libvot matching
 		vot::SiftMatchPair match_pair(sift_file1);
 		vot::MatchParam match_param;
-		if(FLAGS_show_matching && is_image_exist)	// show matches
-		{
-			if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param,
+		if (FLAGS_show_matching && is_image_exist) {	// show matches
+			if (!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param,
 			                              sift_imagefile1, sift_imagefile2))
 				return -1;
 		}
-		else	// don't show matches
-		{
-			if(!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
+		else {		// don't show matches
+			if (!vot::PairwiseSiftMatching(sift1, sift2, match_pair, match_param))
 				return -1;
 		}
 	}

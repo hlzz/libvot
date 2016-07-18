@@ -63,6 +63,7 @@ IN THE SOFTWARE.
 #include "multiview/triangulation.h"
 #include "numeric/numeric.h"
 
+#include "ceres/ceres.h"
 #include <iostream>
 #include <cassert>
 
@@ -505,102 +506,101 @@ public:
 	const Mat x_;
 	const Mat y_;
 };
-}	// namespace
 
-//// Termination checking callback used for fundamental estimation.
-//// It finished the minimization as soon as actual average of
-//// symmetric epipolar distance is less or equal to the expected
-//// average value.
-//class TerminationCheckingCallback : public ceres::IterationCallback {
-//public:
-//	TerminationCheckingCallback(const Mat &x1, const Mat &x2,
-//	                            const EstimateFundamentalOptions &options,
-//	                            Mat3 *F)
-//	    : options_(options), x1_(x1), x2_(x2), F_(F) {}
-//
-//	virtual ceres::CallbackReturnType operator()(
-//	        const ceres::IterationSummary& summary)
-//	{
-//		// If the step wasn't successful, there's nothing to do.
-//		if (!summary.step_is_successful) {
-//			return ceres::SOLVER_CONTINUE;
-//		}
-//
-//		// Calculate average of symmetric epipolar distance.
-//		double average_distance = 0.0;
-//		for (int i = 0; i < x1_.cols(); i++) {
-//			average_distance = SymmetricEpipolarDistance(*F_,
-//			                                             x1_.col(i),
-//			                                             x2_.col(i));
-//		}
-//		average_distance /= x1_.cols();
-//
-//		if (average_distance <= options_.expected_average_symmetric_distance) {
-//			return ceres::SOLVER_TERMINATE_SUCCESSFULLY;
-//		}
-//
-//		return ceres::SOLVER_CONTINUE;
-//	}
-//
-//private:
-//	const EstimateFundamentalOptions &options_;
-//	const Mat &x1_;
-//	const Mat &x2_;
-//	Mat3 *F_;
-//};
-//}  // namespace
-//
-///* Fundamental transformation estimation. */
-//bool EstimateFundamentalFromCorrespondences(
-//        const Mat &x1,
-//        const Mat &x2,
-//        const EstimateFundamentalOptions &options,
-//        Mat3 *F)
-//{
-//	// Step 1: Algebraic fundamental estimation.
-//
-//	// Assume algebraic estiation always succeeds,
-//	NormalizedEightPointSolver(x1, x2, F);
-//
-//	LG << "Estimated matrix after algebraic estimation:\n" << *F;
-//
-//	// Step 2: Refine matrix using Ceres minimizer.
-//	ceres::Problem problem;
-//	for (int i = 0; i < x1.cols(); i++) {
-//		FundamentalSymmetricEpipolarCostFunctor
-//		        *fundamental_symmetric_epipolar_cost_function =
-//		        new FundamentalSymmetricEpipolarCostFunctor(x1.col(i),
-//		                                                    x2.col(i));
-//
-//		problem.AddResidualBlock(
-//		            new ceres::AutoDiffCostFunction<
-//		            FundamentalSymmetricEpipolarCostFunctor,
-//		            2,  // num_residuals
-//		            9>(fundamental_symmetric_epipolar_cost_function),
-//		            NULL,
-//		            F->data());
-//	}
-//
-//	// Configure the solve.
-//	ceres::Solver::Options solver_options;
-//	solver_options.linear_solver_type = ceres::DENSE_QR;
-//	solver_options.max_num_iterations = options.max_num_iterations;
-//	solver_options.update_state_every_iteration = true;
-//
-//	// Terminate if the average symmetric distance is good enough.
-//	TerminationCheckingCallback callback(x1, x2, options, F);
-//	solver_options.callbacks.push_back(&callback);
-//
-//	// Run the solve.
-//	ceres::Solver::Summary summary;
-//	ceres::Solve(solver_options, &problem, &summary);
-//
-//	VLOG(1) << "Summary:\n" << summary.FullReport();
-//
-//	LG << "Final refined matrix:\n" << *F;
-//
-//	return summary.IsSolutionUsable();
-//}
+// Termination checking callback used for fundamental estimation.
+// It finished the minimization as soon as actual average of
+// symmetric epipolar distance is less or equal to the expected
+// average value.
+class TerminationCheckingCallback : public ceres::IterationCallback {
+public:
+	TerminationCheckingCallback(const Mat &x1, const Mat &x2,
+	                            const EstimateFundamentalOptions &options,
+	                            Mat3 *F)
+	    : options_(options), x1_(x1), x2_(x2), F_(F) {}
+
+	virtual ceres::CallbackReturnType operator()(
+	        const ceres::IterationSummary& summary)
+	{
+		// If the step wasn't successful, there's nothing to do.
+		if (!summary.step_is_successful) {
+			return ceres::SOLVER_CONTINUE;
+		}
+
+		// Calculate average of symmetric epipolar distance.
+		double average_distance = 0.0;
+		for (int i = 0; i < x1_.cols(); i++) {
+			average_distance = SymmetricEpipolarDistance(*F_,
+			                                             x1_.col(i),
+			                                             x2_.col(i));
+		}
+		average_distance /= x1_.cols();
+
+		if (average_distance <= options_.expected_average_symmetric_distance) {
+			return ceres::SOLVER_TERMINATE_SUCCESSFULLY;
+		}
+
+		return ceres::SOLVER_CONTINUE;
+	}
+
+private:
+	const EstimateFundamentalOptions &options_;
+	const Mat &x1_;
+	const Mat &x2_;
+	Mat3 *F_;
+};
+}  // namespace
+
+/* Fundamental transformation estimation. */
+bool EstimateFundamentalFromCorrespondences(
+        const Mat &x1,
+        const Mat &x2,
+        const EstimateFundamentalOptions &options,
+        Mat3 *F)
+{
+	// Step 1: Algebraic fundamental estimation.
+
+	// Assume algebraic estiation always succeeds,
+	NormalizedEightPointSolver(x1, x2, F);
+
+	std::cout << "Estimated matrix after algebraic estimation:\n" << *F;
+
+	// Step 2: Refine matrix using Ceres minimizer.
+	ceres::Problem problem;
+	for (int i = 0; i < x1.cols(); i++) {
+		FundamentalSymmetricEpipolarCostFunctor
+		        *fundamental_symmetric_epipolar_cost_function =
+		        new FundamentalSymmetricEpipolarCostFunctor(x1.col(i),
+		                                                    x2.col(i));
+
+		problem.AddResidualBlock(
+		            new ceres::AutoDiffCostFunction<
+		            FundamentalSymmetricEpipolarCostFunctor,
+		            2,  // num_residuals
+		            9>(fundamental_symmetric_epipolar_cost_function),
+		            NULL,
+		            F->data());
+	}
+
+	// Configure the solve.
+	ceres::Solver::Options solver_options;
+	solver_options.linear_solver_type = ceres::DENSE_QR;
+	solver_options.max_num_iterations = options.max_num_iterations;
+	solver_options.update_state_every_iteration = true;
+
+	// Terminate if the average symmetric distance is good enough.
+	TerminationCheckingCallback callback(x1, x2, options, F);
+	solver_options.callbacks.push_back(&callback);
+
+	// Run the solve.
+	ceres::Solver::Summary summary;
+	ceres::Solve(solver_options, &problem, &summary);
+
+	std::cout << "Summary:\n" << summary.FullReport();
+
+	std::cout << "Final refined matrix:\n" << *F;
+
+	return summary.IsSolutionUsable();
+}
 
 }	// end of namespace multiview
 } 	// end of namespace vot

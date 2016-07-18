@@ -79,8 +79,6 @@ int test(void)
     size_t a;
     #endif
 }
- 
- 
 /* DO */
 int test(void)
 {
