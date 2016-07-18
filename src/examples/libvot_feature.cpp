@@ -40,6 +40,7 @@ DEFINE_int32(thread_num, -1, "thread num");
 DEFINE_double(edge_thresh, 10, "edge threshold for vlfeat parameter");
 DEFINE_double(peak_thresh, 2.5, "peak threshold for vlfeat parameter");
 
+#ifdef LIBVOT_USE_OPENCV
 void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
                             std::vector<std::string> *feat_filenames,
                             vot::VlFeatParam *vlfeat_param,
@@ -63,6 +64,7 @@ void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
 		cout_mutex->unlock();
 	}
 }
+#endif
 
 int main(int argc, char** argv)
 {

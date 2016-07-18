@@ -202,6 +202,7 @@ struct EstimateFundamentalOptions {
 	double expected_average_symmetric_distance;
 };
 
+#ifdef LIBVOT_USE_CERES
 ///
 /// \brief EstimateFundamentalFromCorrespondences: Fundamental transformation estimation.
 /// This function estimates the fundamental transformation from a list of 2D
@@ -216,6 +217,7 @@ bool EstimateFundamentalFromCorrespondences(const Mat &x1,
                                             const Mat &x2,
                                             const EstimateFundamentalOptions &options,
                                             Mat3 *F);
+#endif
 }	// end of namespace multiview
 }	// end of namespace vot
 

@@ -550,6 +550,7 @@ private:
 };
 }  // namespace
 
+#ifdef LIBVOT_USE_CERES
 /* Fundamental transformation estimation. */
 bool EstimateFundamentalFromCorrespondences(
         const Mat &x1,
@@ -601,6 +602,7 @@ bool EstimateFundamentalFromCorrespondences(
 
 	return summary.IsSolutionUsable();
 }
+#endif
 
 }	// end of namespace multiview
 } 	// end of namespace vot
