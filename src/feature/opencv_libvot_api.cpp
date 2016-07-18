@@ -9,7 +9,8 @@
 #include "utils/global_params.h"
 #include "utils/data_types.h"
 
-namespace vot {
+namespace vot
+{
 bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
                                 cv::Mat &descriptors,
                                 SiftData &sift_data)

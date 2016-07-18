@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Tianwei Shen
+Copyright (c) 2016, Tianwei Shen
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/*! \file clustering.h
- * \brief clustering algorithms, such as k-means
+/*! \file homography.cpp
+ * \brief This is the solver of homography.
+ *
  */
-#ifndef VOT_VOCAB_TREE_CLUSTERING_H
-#define VOT_VOCAB_TREE_CLUSTERING_H
 
-#include "utils/global_params.h"
+#include "homography.h"
 
 namespace vot
 {
-	double Kmeans(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment, int thread_num);
-}	// end of namespace vot
 
-#endif	// VOT_VOCAB_TREE_CLUSTERING_H
+
+} 	// end of namespace vot

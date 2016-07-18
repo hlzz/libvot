@@ -9,7 +9,8 @@
 #include <cmath>
 #include <cstring>
 
-namespace vot {
+namespace vot
+{
 bool Vlfeature2LibvotSift(std::vector<Vlfeature> const & vlfeature_vec,
                           unsigned char const * data,
                           int image_width, int image_height, int num_channel,

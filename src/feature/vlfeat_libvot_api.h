@@ -4,8 +4,8 @@
  *
  * 	It contains some utility functions for the use of vlfeat in libvot
  */
-#ifndef VOT_VLFEAT_LIBVOT_API_H
-#define VOT_VLFEAT_LIBVOT_API_H
+#ifndef VOT_FEATURE_VLFEAT_LIBVOT_API_H
+#define VOT_FEATURE_VLFEAT_LIBVOT_API_H
 
 extern "C" {
 #include <vl/generic.h>
@@ -14,7 +14,8 @@ extern "C" {
 #include "utils/data_types.h"
 #include <string>
 
-namespace vot {
+namespace vot
+{
 /**
  * @brief a parameter struct used in calling vlfeat sift function
  */
@@ -40,4 +41,4 @@ int RunVlFeature(unsigned char *data, int image_width, int image_height, int num
                  SiftData &sift_data, VlFeatParam const & vlfeat_param);
 }	// end of namespace vot
 
-#endif	//VOT_VLFEAT_LIBVOT_API_H
+#endif	//VOT_FEATURE_VLFEAT_LIBVOT_API_H

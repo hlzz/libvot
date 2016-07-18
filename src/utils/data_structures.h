@@ -32,8 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /** \file data_structures.h
  *	\brief data structures used in libvot
  */
-#ifndef VOT_DATA_STRUCTURES_H
-#define VOT_DATA_STRUCTURES_H
+#ifndef VOT_UTILS_DATA_STRUCTURES_H
+#define VOT_UTILS_DATA_STRUCTURES_H
 
 namespace tw 
 {
@@ -54,4 +54,4 @@ namespace tw
 }	// end of namespace tw
 
 
-#endif	//VOT_DATA_STRUCTURES_H
+#endif	//VOT_UTILS_DATA_STRUCTURES_H

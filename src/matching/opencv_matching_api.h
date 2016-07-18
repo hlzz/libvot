@@ -5,8 +5,8 @@
  */
 // Author: Tianwei Shen <shentianweipku@gmail.com>
 
-#ifndef VOT_OPENCV_MATCHING_API_H
-#define VOT_OPENCV_MATCHING_API_H
+#ifndef VOT_MATCHING_OPENCV_MATCHING_API_H
+#define VOT_MATCHING_OPENCV_MATCHING_API_H
 #include "matching_datatypes.h"
 
 #include <opencv2/core/core.hpp>
@@ -15,7 +15,8 @@
 #include <opencv2/nonfree/features2d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-namespace vot {
+namespace vot
+{
 class SiftMatcherOpencv: public SiftMatcher
 {
 public:
@@ -34,4 +35,4 @@ private:
 
 } // end of namespace vot
 
-#endif	// VOT_OPENCV_MATCHING_API_H
+#endif	// VOT_MATCHING_OPENCV_MATCHING_API_H

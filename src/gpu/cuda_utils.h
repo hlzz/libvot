@@ -1,5 +1,5 @@
-#ifndef VOT_CUDA_UTILS_H
-#define VOT_CUDA_UTILS_H
+#ifndef VOT_GPU_CUDA_UTILS_H
+#define VOT_GPU_CUDA_UTILS_H
 
 #include <iostream>
 #include <cstdint>
@@ -7,8 +7,8 @@
 #include <cublas_v2.h>
 #include <cudnn.h>
 
-namespace vot {
-
+namespace vot
+{
 void FatalError(const int lineNumber=0) {
     std::cerr << "FatalError";
     if (lineNumber!=0) std::cerr<<" at LINE "<<lineNumber;
@@ -88,4 +88,4 @@ void checkCUBLAS(const int lineNumber, cublasStatus_t status) {
 
 }	// end of namespace vot
 
-#endif  // VOT_CUDA_UTILS_H
+#endif  // VOT_GPU_CUDA_UTILS_H

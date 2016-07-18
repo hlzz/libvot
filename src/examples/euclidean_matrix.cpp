@@ -48,7 +48,8 @@ using namespace std;
 /**
  * @brief An ad-hoc simple 2d point struct
  */
-namespace {
+namespace
+{
 struct point2d
 {
 	float x,y;

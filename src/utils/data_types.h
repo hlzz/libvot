@@ -2,8 +2,8 @@
 /** \file data_types.h
  *	\brief internal data types (structs and classes) used in libvot
  */
-#ifndef VOT_DATA_TYPES_H
-#define VOT_DATA_TYPES_H
+#ifndef VOT_UTILS_DATA_TYPES_H
+#define VOT_UTILS_DATA_TYPES_H
 
 #include <cstdlib>
 #include <vector>
@@ -333,4 +333,4 @@ private:
 
 }   // end of namespace vot
 
-#endif	// VOT_DATA_TYPES_H
+#endif	// VOT_UTILS_DATA_TYPES_H

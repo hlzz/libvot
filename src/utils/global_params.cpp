@@ -42,7 +42,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using std::cout;
 using std::endl;
 
-namespace vot{
+namespace vot
+{
 
 int GlobalParam::Verbose = 1;
 

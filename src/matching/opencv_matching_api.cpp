@@ -10,7 +10,8 @@
 #include "utils/global_params.h"
 #include "utils/data_types.h"
 
-namespace vot {
+namespace vot
+{
 // ====================================================
 // ---------------- SiftMatcherOpencv class ---------------
 // ====================================================

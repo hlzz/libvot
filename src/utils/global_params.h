@@ -35,14 +35,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * This file contains some global parameters shared by the whole libvot project, such as feature type enum, etc.
  */
 
-#ifndef VOT_GLOBAL_PARAMS_H
-#define VOT_GLOBAL_PARAMS_H
+#ifndef VOT_UTILS_GLOBAL_PARAMS_H
+#define VOT_UTILS_GLOBAL_PARAMS_H
 
 #define DTYPE unsigned char
 #define LTYPE float
 #define FDIM 128
 
-namespace vot{
+namespace vot
+{
 /**
  * @brief global parameters
  */
@@ -77,4 +78,4 @@ void showf(double f);
 void shows(std::string s);
 
 }	// end of namespace vot
-#endif  //VOT_GLOBAL_PARAMS_H
+#endif  // VOT_UTILS_GLOBAL_PARAMS_H

@@ -33,6 +33,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # the third parth libs
 add_subdirectory(third_party)	# third party libs have to be added first
+# numeric module (based on Eigen)
+add_subdirectory(numeric)
 # utility functions
 add_subdirectory(utils)			# utils has to be added before other modules
 # gpu related code

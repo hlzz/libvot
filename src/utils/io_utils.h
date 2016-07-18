@@ -35,8 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * This file contains some utility classes and functions to facilitate file read/write.
  */
 
-#ifndef VOT_IO_UTILS_H
-#define VOT_IO_UTILS_H
+#ifndef VOT_UTILS_IO_UTILS_H
+#define VOT_UTILS_IO_UTILS_H
 
 #include <vector>
 
@@ -85,4 +85,4 @@ namespace tw
 
 }   // end of namespace tw
 
-#endif  // VOT_IO_UTILS_H
+#endif  // VOT_UTILS_IO_UTILS_H

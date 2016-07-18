@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2015, Tianwei Shen
+Copyright (c) 2016, Tianwei Shen
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,48 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-/*! \file clustering.h
- * \brief clustering algorithms, such as k-means
+/*! \file numeric.cpp
+ * \brief This files defines some numeric utility functions.
+ *
  */
-#ifndef VOT_VOCAB_TREE_CLUSTERING_H
-#define VOT_VOCAB_TREE_CLUSTERING_H
 
-#include "utils/global_params.h"
+#include "numeric.h"
 
 namespace vot
 {
-	double Kmeans(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment, int thread_num);
-}	// end of namespace vot
+Mat3 CrossProductMatrix(const Vec3 &x) {
+	Mat3 X;
+	X <<     0, -x(2),  x(1),
+	        x(2),     0, -x(0),
+	        -x(1),  x(0),     0;
+	return X;
+}
 
-#endif	// VOT_VOCAB_TREE_CLUSTERING_H
+void MeanAndVarianceAlongRows(const Mat &A,
+                              Vec *mean_pointer,
+                              Vec *variance_pointer)
+{
+	Vec &mean = *mean_pointer;
+	Vec &variance = *variance_pointer;
+	int n = A.rows();
+	int m = A.cols();
+	mean.resize(n);
+	variance.resize(n);
+
+	for (int i = 0; i < n; ++i) {
+		mean(i) = 0;
+		variance(i) = 0;
+		for (int j = 0; j < m; ++j) {
+			double x = A(i, j);
+			mean(i) += x;
+			variance(i) += x * x;
+		}
+	}
+
+	mean /= m;
+	for (int i = 0; i < n; ++i) {
+		variance(i) = variance(i) / m - Square(mean(i));
+	}
+}
+
+} 	// end of namespace vot

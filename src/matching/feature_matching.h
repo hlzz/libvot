@@ -4,12 +4,13 @@
  */
 // Author: Tianwei Shen <shentianweipku@gmail.com>
 
-#ifndef VOT_FEATURE_MATCHING_H
-#define VOT_FEATURE_MATCHING_H
+#ifndef VOT_MATCHING_FEATURE_MATCHING_H
+#define VOT_MATCHING_FEATURE_MATCHING_H
 
 #include <string>
 
-namespace vot {
+namespace vot
+{
 class SiftData;
 class SiftMatchPair;
 class MatchParam;
@@ -27,4 +28,4 @@ bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match
                           std::string imagefile1 = "", std::string imagefile2 = "");
 }	// end of namespace vot
 
-#endif	// VOT_FEATURE_MATCHING_H
+#endif	// VOT_MATCHING_FEATURE_MATCHING_H

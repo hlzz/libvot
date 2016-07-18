@@ -4,8 +4,8 @@
  */
 // Author: Tianwei Shen <shentianweipku@gmail.com>
 
-#ifndef VOT_MATCHING_DATATYPES_H
-#define VOT_MATCHING_DATATYPES_H
+#ifndef VOT_MATCHING_MATCHING_DATATYPES_H
+#define VOT_MATCHING_MATCHING_DATATYPES_H
 
 #include <iostream>
 #include <Eigen/Dense>
@@ -13,7 +13,8 @@
 #include "utils/data_types.h"
 #include "utils/io_utils.h"
 
-namespace vot {
+namespace vot
+{
 /**
  * @brief Match parameters
  */
@@ -303,4 +304,4 @@ private:
 };
 }	// end of namespace vot
 
-#endif	// VOT_MATCHING_DATATYPES_H
+#endif	// VOT_MATCHING_MATCHING_DATATYPES_H

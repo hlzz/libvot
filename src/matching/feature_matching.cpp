@@ -11,7 +11,8 @@
 #include "utils/data_types.h"
 #include "utils/io_utils.h"
 
-namespace vot {
+namespace vot
+{
 bool PairwiseSiftMatching(SiftData &sift1, SiftData &sift2, SiftMatchPair &match_pair, MatchParam &match_param,
                           std::string imagefile1, std::string imagefile2)
 {
