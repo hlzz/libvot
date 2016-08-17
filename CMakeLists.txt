@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)  # newest gflags needs 2.8.12
 
-project(libvot)
+project(libvot CXX)
 
 # Disable in-source build
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})

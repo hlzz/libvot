@@ -45,12 +45,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 using std::cout;
 using std::endl;
 
-float l2sq(DTYPE *a, DTYPE *b, int dim)
+float l2sq(const DTYPE *a, const DTYPE *b, int dim)
 {
-    float dist = 0.0;
+    float dist = 0.f;
     for(int i = 0; i < dim; i++)
     {
-        float d = (float)a[i] - (float)b[i];
+        const float d = (float)a[i] - (float)b[i];
         dist += d*d;
     }
     return dist;
@@ -156,7 +156,7 @@ namespace vot
         {
             std::cout << "[VocabTree Build] Begin Build Vocabulary Tree ...\n";
             std::cout << "[VocabTree Build] with depth " << dep << " and branch number " << bf << ".\n";
-            std::cout << "[VocabTree Build] Approxiamately " << (float)sizeof(DTYPE) * dim * pow(bf, dep+1)/(1024 * 1024) 
+            std::cout << "[VocabTree Build] Approximatively " << (float)sizeof(DTYPE) * dim * pow(bf, dep+1)/(1024 * 1024) 
                       << "mb memory will be used to load the tree.\n";
         }
 
@@ -430,7 +430,7 @@ namespace vot
 
         // write header parameters
         char is_internal;
-		size_t a, b, c, d, e;
+        size_t a, b, c, d, e;
         a = fread(&branch_num, sizeof(int), 1, f);
         b = fread(&depth, sizeof(int), 1, f);
         c = fread(&dim, sizeof(int), 1, f);
@@ -653,7 +653,7 @@ namespace vot
     //////////////////////////////////////////////////////////////////////////////
     void MultiAddImage(TreeNode *root, 
                        float *scores, 
-                       DTYPE *v, 
+                       const DTYPE *v, 
                        size_t image_index, 
                        int num_feature,
                        int branch_num, 
@@ -670,21 +670,17 @@ namespace vot
 
     double VocabTree::AddImage2Tree(size_t image_index, tw::SiftData &sift, int thread_num)
     {
-        float *q = new float [num_leaves];
-        for(size_t i = 0; i < num_leaves; i++)
-        {
-            q[i] = 0.0;
-        }
+        std::vector<float> q(num_leaves, 0.f);
 
-        int sift_num = sift.getFeatureNum();
-        DTYPE *v = sift.getDesPointer();
+        const int sift_num = sift.getFeatureNum();
+        const DTYPE *v = sift.getDesPointer();
         
         size_t off = 0;
         if(thread_num == 1)     // single-thread version
         {
             for(int i = 0; i < sift_num; i++)
             {
-                root->DescendFeature(q, v+off, image_index, branch_num, dim, true);
+                root->DescendFeature(&q[0], v+off, image_index, branch_num, dim, true);
                 off += dim;
             }
         }
@@ -697,14 +693,13 @@ namespace vot
                 int thread_feature_num = sift_num / thread_num;
                 if(i == thread_num - 1)
                     thread_feature_num = sift_num - (thread_num - 1) * thread_feature_num;
-                threads.push_back(std::thread(MultiAddImage, root, q, v+off, image_index, thread_feature_num, branch_num, dim, true));
+                threads.push_back(std::thread(MultiAddImage, root, &q[0], v+off, image_index, thread_feature_num, branch_num, dim, true));
                 off += dim * thread_feature_num;
             }
             std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
         }
 
         database_image_num++;
-        delete [] q;
         return 0;
 
         // (optional) return the image vector magnitude (unnormalized)
@@ -721,7 +716,7 @@ namespace vot
         // }
     }
 
-    size_t TreeInNode::DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    size_t TreeInNode::DescendFeature(float *q, const DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
     {
         int best_idx = 0;
         float min_distance = std::numeric_limits<float>::max();
@@ -739,11 +734,11 @@ namespace vot
         }
 
 
-        size_t ret = children[best_idx]->DescendFeature(q, v, image_index, branch_num, dim, add);
+        const size_t ret = children[best_idx]->DescendFeature(q, v, image_index, branch_num, dim, add);
         return ret;
     }
 
-    size_t TreeLeafNode::DescendFeature(float *q, DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
+    size_t TreeLeafNode::DescendFeature(float *q, const DTYPE *v, size_t image_index, int branch_num, int dim, bool add)
     {
         add_lock.lock();
         q[id] += weight;
@@ -860,12 +855,7 @@ namespace vot
 
     bool VocabTree::NormalizeDatabase(size_t start_id, size_t image_num)
     {
-        std::vector<float> database_mag(image_num);
-        database_mag.resize(image_num);
-        for(size_t i = 0; i < image_num; i++)
-        {
-            database_mag[i] = 0;
-        }
+        std::vector<float> database_mag(image_num, 0.f);
 
         root->ComputeDatabaseMagnitude(branch_num, dis_type, start_id, database_mag);
         // TODO(tianwei): figure out what is the proper way of normalizing the vocabulary tree
@@ -878,9 +868,9 @@ namespace vot
         }
 
         for(size_t i = 0; i < image_num; i++)
-		{
-			std::cout << "[NormalizeDatabase] Normalized image #" << start_id+i <<
-			             " vector magnitude " << database_mag[i] << std::endl;
+        {
+          std::cout << "[NormalizeDatabase] Normalized image #" << start_id+i <<
+                       " vector magnitude " << database_mag[i] << std::endl;
         }
         return root->NormalizeDatabase(branch_num, start_id, database_mag);
     }
@@ -897,7 +887,7 @@ namespace vot
 
     bool TreeLeafNode::ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_t start_id, std::vector<float> &database_mag)
     {
-        size_t len = inv_list.size();
+        const size_t len = inv_list.size();
         for(size_t i = 0; i < len; i++)
         {
             size_t index = inv_list[i].index - start_id;
@@ -1049,11 +1039,11 @@ namespace vot
     {
         if(q[id] == 0.0)
             return true;
-        size_t len = inv_list.size();
+        const size_t len = inv_list.size();
 
         for(int i = 0; i < len; i++)
         {
-            size_t idx = inv_list[i].index;
+            const size_t idx = inv_list[i].index;
             switch(dt)
             {
                 case L1:
