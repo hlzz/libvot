@@ -243,12 +243,12 @@ public:
         npoint_ = cardDesc;
 
         //TODO(tianwei): restoring location data (since it's useless for now, fill it with 0)
-        lp_ = new LTYPE [npoint_ * nLocDim_];          
+        lp_ = new LTYPE [npoint_ * nLocDim_];
         for(size_t i = 0; i < npoint_ * nLocDim_; i++)
             lp_[i] = 0;
 
         //restoring descriptor data
-        dp_ = new DTYPE [npoint_ * nDesDim_];          
+        dp_ = new DTYPE [npoint_ * nDesDim_];
         fileIn.read((char*)dp_, VALUE::static_size*sizeof(typename VALUE::bin_type)*npoint_);
         bool bOk = !fileIn.bad();
         fileIn.close();
