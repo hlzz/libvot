@@ -14,7 +14,6 @@
 #include <cassert>
 
 #include "global_params.h"
-#include "openmvg_descriptor.hpp"
 
 namespace tw
 {
@@ -226,11 +225,7 @@ public:
     {
         assert(sizeof(T) == sizeof(DTYPE) && N == FDIM && 
             "Internal and external feature parameters are not consistent\n");
-        typedef std::vector<openMVG::Descriptor<T, N>> DescriptorsT;
-        typedef typename DescriptorsT::value_type VALUE;
-        DescriptorsT vec_desc;
 
-        vec_desc.clear();
         std::ifstream fileIn(szFileName.c_str(), std::ios::in | std::ios::binary);
         if(!fileIn.is_open())
         {
@@ -249,7 +244,7 @@ public:
 
         //restoring descriptor data
         dp_ = new DTYPE [npoint_ * nDesDim_];
-        fileIn.read((char*)dp_, VALUE::static_size*sizeof(typename VALUE::bin_type)*npoint_);
+        fileIn.read((char*)dp_, N*sizeof(T)*npoint_);
         bool bOk = !fileIn.bad();
         fileIn.close();
 
