@@ -46,24 +46,4 @@ namespace vot{
 
 int GlobalParam::Verbose = 1;
 
-void showi(int i)
-{
-	cout << i << endl;
-}
-
-void showd(double d)
-{
-	cout << d << endl;
-}
-
-void showf(float f)
-{
-	cout << f << endl;
-}
-
-void shows(std::string s)
-{
-	cout << s << endl;
-}
-
 }	// end of namespace vot

@@ -8,8 +8,7 @@
 #include "gtest/gtest.h"
 #include "image_graph/image_graph.h"
 #include "utils/data_types.h"
-#include "utils/openmvg_descriptor.hpp"
-	
+
 // -------------------------------------------------------- //
 // 															//
 //					test image_graph.h 						//
@@ -200,66 +199,11 @@ TEST(ImageGraph, QueryExpansion)
 //		test openmvg_descriptor.h and data_types.h 			//
 // 															//
 // -------------------------------------------------------- //
-static const int CARD = 12;
-static const int DESC_LENGTH = 128;
-typedef unsigned char DescType;
-typedef openMVG::Descriptor<DescType, DESC_LENGTH> Desc_T;
-typedef std::vector<Desc_T> Descs_T;
-
-TEST(OpenmvgDescriptor, NONBINARY) {
-  	// Create an input series of descriptor
-  	Descs_T vec_descs;
-  	for(int i = 0; i < CARD; ++i)  {
-  		Desc_T desc;
-  		for (int j = 0; j < DESC_LENGTH; ++j)
-  			desc[j] = i*DESC_LENGTH+j;
-  		vec_descs.push_back(desc);
-  	}
-
-  	//Save them to a file
-  	saveDescsToFile("tempDescs.desc", vec_descs);
-
-  	//Read the saved data and compare to input (to check write/read IO)
-  	Descs_T vec_descs_read;
-  	loadDescsFromFile("tempDescs.desc", vec_descs_read);
-  	EXPECT_EQ(CARD, vec_descs_read.size());
-
-  	for(int i = 0; i < CARD; ++i) 
-  	{
-  		for (int j = 0; j < DESC_LENGTH; ++j)
-  			EXPECT_EQ(vec_descs[i][j], vec_descs_read[i][j]);
-  	}
-}
-
-TEST(OpenmvgDescriptor, BINARY) {
-  	// Create an input series of descriptor
-  	Descs_T vec_descs;
-  	for(int i = 0; i < CARD; ++i)
-  	{
-  		Desc_T desc;
-  		for (int j = 0; j < DESC_LENGTH; ++j)
-  			desc[j] = i*DESC_LENGTH+j;
-  		vec_descs.push_back(desc);
-  	}
-
-  	//Save them to a file
-  	saveDescsToBinFile("tempDescsBin.desc", vec_descs);
-
-  	//Read the saved data and compare to input (to check write/read IO)
-  	Descs_T vec_descs_read;
-  	loadDescsFromBinFile("tempDescsBin.desc", vec_descs_read);
-  	EXPECT_EQ(CARD, vec_descs_read.size());
-
-  	for(int i = 0; i < CARD; ++i) 
-  	{
-  		for(int j = 0; j < DESC_LENGTH; ++j)
-  			EXPECT_EQ(vec_descs[i][j], vec_descs_read[i][j]);
-  	}
-}
 
 TEST(DataTypes, ReadOpenmvgDesc)
 {
+	typedef unsigned char DescType;
 	vot::SiftData s1;
-	bool res = s1.ReadOpenmvgDesc<DescType, 128>("tempDescsBin.desc");
+	const bool res = s1.ReadOpenmvgDesc<DescType, 128>("tempDescsBin.desc");
 	EXPECT_EQ(true, res);
 }

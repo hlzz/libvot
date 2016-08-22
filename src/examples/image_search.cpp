@@ -77,6 +77,7 @@ int main(int argc, char **argv)
 	std::string db_output = tw::IO::JoinPath(output_directory, std::string("db.out"));
 	std::string match_output = tw::IO::JoinPath(output_directory, std::string("match.out"));
 	std::string filtered_output = tw::IO::JoinPath(output_directory, std::string("match_pairs"));
+	const std::string svg_adjacency_matrix = tw::IO::JoinPath(output_directory, std::string("adjacency_matrix.svg"));
 
 	// create folder
 	tw::IO::Mkdir(output_directory);
@@ -106,7 +107,7 @@ int main(int argc, char **argv)
 		return -1;
 	if (!vot::QueryDatabase(db_output.c_str(), sift_input_file, match_output.c_str(), sift_type, thread_num))
 		return -1;
-	if (!vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches))
+	if(!vot::FilterMatchList(sift_input_file, match_output.c_str(), filtered_output.c_str(), num_matches, svg_adjacency_matrix.c_str()))
 		return -1;
 
 	if (FLAGS_benchmark) {

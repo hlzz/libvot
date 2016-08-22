@@ -92,8 +92,8 @@ int main(int argc, char **argv)
 		// prepare opencv matching
 		vot::LibvotSift2OpencvKeyPoints(sift1, key_points1, desc1);
 		vot::LibvotSift2OpencvKeyPoints(sift2, key_points2, desc2);
-		assert(key_points1.size() == desc1.rows());
-		assert(key_points2.size() == desc2.rows());
+		assert(key_points1.size() == desc1.rows);
+		assert(key_points2.size() == desc2.rows);
 		cout << "[sift_match_test] Convert " << key_points1.size() << " sift1 descriptors\n";
 		cout << "[sift_match_test] Convert " << key_points2.size() << " sift2 descriptors\n";
 

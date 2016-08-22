@@ -17,7 +17,9 @@
 #include "utils/io_utils.h"
 #include "utils/global_params.h"
 #include "utils/data_types.h"
+#ifdef LIBVOT_USE_OPENCV
 #include "feature/opencv_libvot_api.h"
+#endif //LIBVOT_USE_OPENCV
 #include "feature/vlfeat_libvot_api.h"
 
 extern "C" {
@@ -47,6 +49,7 @@ void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
                             int num_images,
                             std::mutex *cout_mutex)
 {
+#ifdef LIBVOT_USE_OPENCV
 	for (size_t i = first_index; i < first_index + num_images; i++) {
 		const cv::Mat input = cv::imread((*image_filenames)[i], CV_LOAD_IMAGE_COLOR);
 		vot::SiftData sift_data;
@@ -62,6 +65,9 @@ void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
 		     << " features) to " <<  (*feat_filenames)[i] << " (" << i << "/" << image_filenames->size() << ")\n";
 		cout_mutex->unlock();
 	}
+#else
+	cout << "[MultiVlfeatSiftExtract] Currently we use opencv to read images, no opencv support found.\n";
+#endif
 }
 
 int main(int argc, char** argv)

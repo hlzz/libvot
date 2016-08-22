@@ -70,11 +70,5 @@ enum SiftType
 	OPENMVG_FEAT = 1	//!< the sift data structure used in openmvg
 };
 
-// some debug functions
-void showi(int i);
-void showd(double d);
-void showf(double f);
-void shows(std::string s);
-
 }	// end of namespace vot
 #endif  //VOT_GLOBAL_PARAMS_H

@@ -42,17 +42,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "vocab_tree.h"
 #include "clustering.h"
 
+#include <Eigen/Dense>
+
 using std::cout;
 using std::endl;
 
-float l2sq(DTYPE *a, DTYPE *b, int dim)
+inline float l2sq(const DTYPE *a, const DTYPE *b)
 {
-	float dist = 0.0;
-	for (int i = 0; i < dim; i++) {
-		float d = (float)a[i] - (float)b[i];
-		dist += d*d;
-	}
-	return dist;
+	typedef Eigen::Matrix<DTYPE, 1, FDIM> MatrixType;
+	typedef Eigen::Map<const MatrixType> MapTypeConst;		// a read-only map
+
+	MapTypeConst a_map(a, FDIM);
+	MapTypeConst b_map(b, FDIM);
+	return (a_map.cast<float>() - b_map.cast<float>()).squaredNorm();
 }
 
 namespace vot
@@ -148,7 +150,7 @@ bool VocabTree::BuildTree(size_t num_keys, int dim_, int dep, int bf, DTYPE **p,
 	if (GlobalParam::Verbose) {
 		std::cout << "[VocabTree Build] Begin Build Vocabulary Tree ...\n";
 		std::cout << "[VocabTree Build] with depth " << dep << " and branch number " << bf << ".\n";
-		std::cout << "[VocabTree Build] Approxiamately " << (float)sizeof(DTYPE) * dim * pow(bf, dep+1)/(1024 * 1024)
+		std::cout << "[VocabTree Build] Approximately " << (float)sizeof(DTYPE) * dim * pow(bf, dep+1)/(1024 * 1024)
 		          << "mb memory will be used to load the tree.\n";
 	}
 
@@ -658,7 +660,7 @@ size_t TreeInNode::DescendFeature(float *q, DTYPE *v, size_t image_index, int br
 	float min_distance = std::numeric_limits<float>::max();
 	for (int i = 0; i < branch_num; i++) {
 		if (children[i] != NULL) {
-			float curr_dist = l2sq(v, children[i]->des, dim);
+			float curr_dist = l2sq(v, children[i]->des);
 			if (curr_dist < min_distance) {
 				min_distance = curr_dist;
 				best_idx = i;
