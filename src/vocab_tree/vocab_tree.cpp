@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <limits>
 #include <thread>
 #include <algorithm>
+#include <numeric>
 
 #include "vocab_tree.h"
 #include "clustering.h"
