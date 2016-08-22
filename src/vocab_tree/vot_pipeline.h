@@ -54,7 +54,8 @@ namespace vot
 bool BuildVocabTree(const char *sift_list,
                     const char *output_filename,
                     int depth = 6, int branch_num = 8,
-                    SiftType sift_type = E3D_SIFT, int thread_num = 1);
+                    SiftType sift_type = E3D_SIFT,
+                    int thread_num = 1);
 
 ///
 /// \brief BuildImageDatabase: build a image database with pre-trained vocabulary tree
@@ -86,7 +87,8 @@ bool BuildImageDatabase(const char *sift_list,
 bool QueryDatabase(const char *image_db,
                    const char *query_sift_list,
                    const char *match_output,
-                   SiftType sift_type = E3D_SIFT, int thread_num = 1);
+                   SiftType sift_type = E3D_SIFT,
+                   int thread_num = 1);
 
 ///
 /// \brief FilterMatchList: filter output match file and output TOP-k rank lists
@@ -94,9 +96,10 @@ bool QueryDatabase(const char *image_db,
 /// \param match_list: the file path of the output match file
 /// \param output: the output top-k matched pairs
 /// \param num_matches: the number top-k images
+/// \param output_adjacency_svg_list: the file path to the svg output adjacency list
 /// \return true if success
 ///
-bool FilterMatchList(const char *sift_list, const char *match_list, const char *output, size_t num_matches);
+bool FilterMatchList(const char *sift_list, const char *match_list, const char *output, size_t num_matches, const char * output_adjacency_svg_list = nullptr);
 
 }
 
