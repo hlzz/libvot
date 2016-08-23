@@ -96,7 +96,7 @@ public:
 	void showInfo() const
 	{
 		std::cout << first << " " << second << " ";
-		switch(flag) {
+		switch (flag) {
 			case OUTLIER: std::cout << "OUTLIER\n"; break;
 			case HINLIER: std::cout << "HINLIER\n"; break;
 			case FINLIER: std::cout << "FINLIER\n"; break;
