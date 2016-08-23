@@ -43,6 +43,7 @@ endif()
 # Additional cmake modules
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -pipe -march=native -mtune=native -mfpmath=sse")
 
 # by default build in release mode
 if(NOT CMAKE_BUILD_TYPE)

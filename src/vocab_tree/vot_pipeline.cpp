@@ -59,9 +59,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define MAX_ARRAY_SIZE 8388608  // 2^23
 
-namespace vot
+namespace
 {
-    /** Random sample "sample_num" number of numbers from [0, 1, ... , total] (total >= sample_num)*/
+	/** Random sample "sample_num" number of numbers from [0, 1, ... , total] (total >= sample_num)*/
 	std::vector<size_t> RandomSample(size_t total, size_t sample_num)
 	{
 		std::vector<size_t> total_numbers(total, 0);
@@ -113,13 +113,16 @@ namespace vot
 			svgFileStream << svgStream.closeSvgFile().str();
 		}
 	}
+}
 
+namespace vot
+{
 	bool BuildVocabTree(const char *sift_list,
 						const char *output_filename,
 						int depth, int branch_num,
 						SiftType sift_type, int thread_num)
 	{
-    	// read sift filenames, get the total number of sift keys, and allocate memory
+		// read sift filenames, get the total number of sift keys, and allocate memory
 		std::vector<std::string> sift_filenames;
 		tw::IO::ExtractLines(sift_list, sift_filenames);
 		size_t siftfile_num = sift_filenames.size();
@@ -323,8 +326,8 @@ namespace vot
 				return scores[i0] > scores[i1];
 			});
 			match_file_mutex->lock();
-		    for (size_t j = 0; j < db_image_num; j++)
-		    	fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j], scores[indexed_scores[j]]);
+			for (size_t j = 0; j < db_image_num; j++)
+				fprintf(match_file, "%zd %zd %0.4f\n", i, indexed_scores[j], scores[indexed_scores[j]]);
 			match_file_mutex->unlock();
 		}
 	}
@@ -334,13 +337,13 @@ namespace vot
 					   const char *match_output,
 					   SiftType sift_type, int thread_num)
 	{
-	    // read tree and image database
+		// read tree and image database
 		vot::VocabTree *tree = new vot::VocabTree();
 		tree->ReadTree(image_db);
 		std::cout << "[VocabMatch] Successfully read vocabulary tree (with image database) file " << image_db << std::endl;
 		tree->Show();
 
-	    // read query image sift data
+		// read query image sift data
 		std::vector<std::string> sift_filenames;
 		tw::IO::ExtractLines(query_sift_list, sift_filenames);
 		size_t siftfile_num = sift_filenames.size();
@@ -349,7 +352,7 @@ namespace vot
 		if (match_file == NULL) {
 			std::cout << "[VocabMatch] Fail to open the match file.\n";
 		}
-	    size_t db_image_num = tree->database_image_num;
+		size_t db_image_num = tree->database_image_num;
 		if (thread_num == 1) {
 			std::vector<float> scores(db_image_num);
 			std::vector<size_t> indexed_scores(db_image_num);
@@ -500,10 +503,8 @@ namespace vot
 			AdjacencyMatrixToSVG(image_num, adjacency_matrix, output_adjacency_svg_list);
 
 			// Export top matches
-			for(size_t i = 0; i < image_num; i++)
-			{
-				for(const size_t & j : top_matches[i])
-				{
+			for (size_t i = 0; i < image_num; i++) {
+				for (const size_t & j : top_matches[i]) {
 					fout1 << i << " " << j << '\n';
 				}
 			}
