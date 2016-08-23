@@ -139,8 +139,7 @@ namespace vot
 
 		std::cout << "[Build Tree] Reading sift (type " << (int)sift_type << ") files...\n";
 		for (size_t i = 0; i < sample_size; i++) {
-			switch (sift_type)
-			{
+			switch (sift_type) {
 				case E3D_SIFT:
 				{
 					std::string file_type = tw::IO::SplitPathExt(sift_filenames[i]).second;
@@ -255,8 +254,7 @@ namespace vot
 		tree.SetConstantWeight();
 		for (size_t i = 0; i < siftfile_num; ++i) {
 			SiftData sift_data;
-			switch(sift_type)
-			{
+			switch(sift_type) {
 				case E3D_SIFT:
 				{
 					if(sizeof(DTYPE) == 1)		// unsigned char
@@ -364,8 +362,7 @@ namespace vot
 
 				// read sift data
 				SiftData sift_data;
-				switch(sift_type)
-				{
+				switch(sift_type) {
 					case E3D_SIFT:
 					{
 						if(sizeof(DTYPE) == 1)

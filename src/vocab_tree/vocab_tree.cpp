@@ -60,18 +60,18 @@ inline float l2sq(const DTYPE *a, const DTYPE *b)
 namespace vot
 {
 /** VocabTree Class Implementation */
-VocabTree::VocabTree():database_image_num(0), num_nodes(0), dis_type(L1), root(NULL) {}
+VocabTree::VocabTree():database_image_num(0), num_nodes(0), dis_type(L1), root(nullptr) {}
 
 VocabTree::VocabTree(int depth_, int branch_num_, int dim_, DistanceType dis_type_):
     branch_num(branch_num_), depth(depth_), dim(dim_), dis_type(dis_type_), num_nodes(0) {};
 
-VocabTree::~VocabTree() {root = NULL;}  // do nothing since root is undetermined
+VocabTree::~VocabTree() {root = nullptr;}  // do nothing since root is undetermined
 
 TreeInNode::~TreeInNode()
 {
-	if (children != NULL) {
+	if (children != nullptr) {
 		delete [] children;
-		children = NULL;
+		children = nullptr;
 	}
 }
 
@@ -90,7 +90,7 @@ TreeLeafNode::~TreeLeafNode()
 //////////////////////////////////////////////////////////////////////////////
 bool VocabTree::ClearTree()
 {
-	if (root != NULL) {
+	if (root != nullptr) {
 		root->ClearNode(branch_num);
 	}
 
@@ -101,7 +101,7 @@ bool VocabTree::ClearTree()
 bool TreeInNode::ClearNode(int bf)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			children[i]->ClearNode(bf);
 	}
 	delete this;
@@ -117,7 +117,7 @@ bool TreeLeafNode::ClearNode(int bf)
 bool TreeInNode::ClearScores(int bf)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL) {
+		if (children[i] != nullptr) {
 			children[i]->ClearScores(bf);
 		}
 	}
@@ -156,7 +156,7 @@ bool VocabTree::BuildTree(size_t num_keys, int dim_, int dep, int bf, DTYPE **p,
 
 	double *means = new double [branch_num * dim];
 	int *assign = new int [num_keys];
-	if (means == NULL || assign == NULL) {
+	if (means == nullptr || assign == nullptr) {
 		std::cout << "[VocabTree Build] Error allocating memory in K-means\n";
 		return false;
 	}
@@ -179,7 +179,7 @@ bool VocabTree::BuildTree(size_t num_keys, int dim_, int dep, int bf, DTYPE **p,
 
 void MultiRecursiveBuild(TreeNode *children, size_t num_keys, int dim, int depth, int depth_curr, int bf, DTYPE **p, double *means, int *assign, int sub_thread_num)
 {
-	if (children != NULL) {
+	if (children != nullptr) {
 		children->RecursiveBuild(num_keys, dim, depth, depth_curr, bf, p, means, assign, sub_thread_num);
 	}
 }
@@ -229,7 +229,7 @@ bool TreeInNode::RecursiveBuild(size_t num_keys, int dim, int depth, int depth_c
 			}
 		}
 		else {
-			children[i] = NULL;
+			children[i] = nullptr;
 		}
 	}
 
@@ -260,7 +260,7 @@ bool TreeInNode::RecursiveBuild(size_t num_keys, int dim, int depth, int depth_c
 	if (thread_num == 1 || thread_num < bf) {     // single-thread
 		size_t offset = 0;
 		for (int i = 0; i < bf; i++) {
-			if (children[i] != NULL) {
+			if (children[i] != nullptr) {
 				children[i]->RecursiveBuild(counts[i], dim, depth, depth_curr+1, bf, p+offset, means, assign+offset, thread_num);
 			}
 			offset += counts[i];
@@ -313,10 +313,10 @@ bool TreeLeafNode::RecursiveBuild(size_t num_keys, int dim, int depth, int depth
 
 bool VocabTree::WriteTree(const char *filename) const
 {
-	if (root == NULL)
+	if (root == nullptr)
 		return false;
 	FILE *f = fopen(filename, "wb");
-	if (f == NULL) {
+	if (f == nullptr) {
 		std::cout << "[VocabTree] Error opening file " << filename << " for writing tree\n" << std::endl;
 		return false;
 	}
@@ -343,7 +343,7 @@ bool TreeInNode::WriteNode(FILE *f, int branch_num, int dim) const
 	fwrite(&is_internal, sizeof(char), 1, f);
 	fwrite(des, sizeof(DTYPE), dim, f);
 	for (int i = 0; i < branch_num; i++) {
-		if (children[i] == NULL) {
+		if (children[i] == nullptr) {
 			has_children[i] = 0;
 		}
 		else {
@@ -355,7 +355,7 @@ bool TreeInNode::WriteNode(FILE *f, int branch_num, int dim) const
 
 	// recursively write children's information
 	for (int i = 0; i < branch_num; i++) {
-		if (children[i] != NULL) {
+		if (children[i] != nullptr) {
 			children[i]->WriteNode(f, branch_num, dim);
 		}
 	}
@@ -384,10 +384,10 @@ bool TreeLeafNode::WriteNode(FILE *f, int branch_num, int dim) const
 // Read a vocabulary tree
 bool VocabTree::ReadTree(const char *filename)
 {
-	if(root != NULL)
+	if (root != nullptr)
 		ClearTree();
 	FILE *f = fopen(filename, "rb");
-	if (f == NULL) {
+	if (f == nullptr) {
 		std::cout << "[ReadTree] Error opening file " << filename << " for reading tree\n" << std::endl;
 		return false;
 	}
@@ -438,7 +438,7 @@ bool TreeInNode::ReadNode(FILE *f, int branch_num, int dim)
 	children = new TreeNode *[branch_num];
 	for (int i = 0; i < branch_num; i++) {
 		if (has_children[i] == 0) {
-			children[i] = NULL;
+			children[i] = nullptr;
 		}
 		else {
 			char is_internal;
@@ -510,7 +510,7 @@ size_t TreeInNode::CountNodes(int branch_num) const
 {
 	size_t num_nodes = 0;
 	for (int i = 0; i < branch_num; i++) {
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			num_nodes += children[i]->CountNodes(branch_num);
 	}
 	return num_nodes + 1;
@@ -522,7 +522,7 @@ size_t TreeInNode::CountLeaves(int branch_num) const
 {
 	size_t num_leaves = 0;
 	for (int i = 0; i < branch_num; i++) {
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			num_leaves += children[i]->CountLeaves(branch_num);
 	}
 	return num_leaves;
@@ -561,12 +561,12 @@ bool TreeInNode::Compare(TreeNode *in, int branch_num, int dim) const
 	}
 
 	for (int i = 0; i < branch_num; i++) {
-		if (children[i] == NULL) {
-			if (other_node->children[i] != NULL)
+		if (children[i] == nullptr) {
+			if (other_node->children[i] != nullptr)
 				return false;
 		}
 		else {
-			if (other_node->children[i] == NULL)
+			if (other_node->children[i] == nullptr)
 				return false;
 			children[i]->Compare(other_node->children[i], branch_num, dim);
 		}
@@ -659,7 +659,7 @@ size_t TreeInNode::DescendFeature(float *q, DTYPE *v, size_t image_index, int br
 	int best_idx = 0;
 	float min_distance = std::numeric_limits<float>::max();
 	for (int i = 0; i < branch_num; i++) {
-		if (children[i] != NULL) {
+		if (children[i] != nullptr) {
 			float curr_dist = l2sq(v, children[i]->des);
 			if (curr_dist < min_distance) {
 				min_distance = curr_dist;
@@ -699,7 +699,7 @@ double TreeInNode::ComputeImageVectorMagnitude(int bf, DistanceType dt)
 	double dist = 0.0;
 	for (int i = 0; i < bf; i++)
 	{
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			dist += children[i]->ComputeImageVectorMagnitude(bf, dt);
 	}
 	return dist;
@@ -720,7 +720,7 @@ double TreeLeafNode::ComputeImageVectorMagnitude(int bf, DistanceType dt)
 
 bool VocabTree::SetConstantWeight()
 {
-	if (root != NULL) {
+	if (root != nullptr) {
 		root->SetConstantWeight(branch_num);
 	}
 	return true;
@@ -729,7 +729,7 @@ bool VocabTree::SetConstantWeight()
 bool TreeInNode::SetConstantWeight(int bf)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL) {
+		if (children[i] != nullptr) {
 			children[i]->SetConstantWeight(bf);
 		}
 	}
@@ -744,7 +744,7 @@ bool TreeLeafNode::SetConstantWeight(int bf)
 
 bool VocabTree::ComputeTFIDFWeight(size_t image_num)
 {
-	if (root != NULL)
+	if (root != nullptr)
 		root->ComputeTFIDFWeight(branch_num, image_num);
 	return true;
 }
@@ -752,7 +752,7 @@ bool VocabTree::ComputeTFIDFWeight(size_t image_num)
 bool TreeInNode::ComputeTFIDFWeight(int bf, size_t n)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			children[i]->ComputeTFIDFWeight(bf, n);
 	}
 	return true;
@@ -802,7 +802,7 @@ bool VocabTree::NormalizeDatabase(size_t start_id, size_t image_num)
 bool TreeInNode::ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_t start_id, std::vector<float> &database_mag)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			children[i]->ComputeDatabaseMagnitude(bf, dis_type, start_id, database_mag);
 	}
 	return true;
@@ -832,7 +832,7 @@ bool TreeLeafNode::ComputeDatabaseMagnitude(int bf, DistanceType dis_type, size_
 bool TreeInNode::NormalizeDatabase(int bf, size_t start_id, std::vector<float> &database_mag)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			children[i]->NormalizeDatabase(bf, start_id, database_mag);
 	}
 	return true;
@@ -907,7 +907,7 @@ size_t VocabTree::IndexLeaves()
 bool TreeInNode::IndexLeaves(int bf)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 			children[i]->IndexLeaves(bf);
 	}
 	return true;
@@ -922,7 +922,7 @@ bool TreeLeafNode::IndexLeaves(int bf)
 bool TreeInNode::FillQueryVector(float *q, int bf, float normalize)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL) {
+		if (children[i] != nullptr) {
 			children[i]->FillQueryVector(q, bf, normalize);
 		}
 	}
@@ -938,7 +938,7 @@ bool TreeLeafNode::FillQueryVector(float *q, int bf, float normalize)
 bool TreeInNode::ScoreQuery(float *q, int bf, DistanceType dt, float *scores)
 {
 	for (int i = 0; i < bf; i++) {
-		if (children[i] != NULL) {
+		if (children[i] != nullptr) {
 			children[i]->ScoreQuery(q, bf, dt, scores);
 		}
 	}
