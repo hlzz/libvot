@@ -223,6 +223,9 @@ public:
 			lp_[i] = 0;
 
 		//restoring descriptor data
+		dp_ = new DTYPE [npoint_ * nDesDim_];
+		fileIn.read((char*)dp_, N*sizeof(T)*npoint_);
+
 		bool bOk = !fileIn.bad();
 		fileIn.close();
 
