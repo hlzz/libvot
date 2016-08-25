@@ -50,7 +50,7 @@ using namespace std;
 
 bool MatchJump(int state, int tolerance)
 {
-	if(state >= tolerance)
+	if (state >= tolerance)
 		return true;
 	else
 		return false;
@@ -58,8 +58,7 @@ bool MatchJump(int state, int tolerance)
 
 int main(int argc, char **argv)
 {
-	if(argc < 4)
-	{
+	if (argc < 4) {
 		printf("Usage: %s <sift_file> <groud_truth_match> <match_file> [query_expansion_level] [qe_inlier_threshold]\n", argv[0]);
 		printf("Each line of the ground_truth_match file consists of a 5-tuple of the form <pmatch, fmatch, hmatch, index1, index2>\n");
 		printf("Each line of the match_file conssits of a 2-tuple of the form <index1, index2>\n");
@@ -72,9 +71,9 @@ int main(int argc, char **argv)
 	int query_level = 2;
 	int qe_inlier_thresh = 200;
 
-	if(argc == 5)
+	if (argc == 5)
 		query_level = atoi(argv[4]);
-	if(argc == 6)
+	if (argc == 6)
 		qe_inlier_thresh = atoi(argv[5]);
 
 	const int inlier_thresh = 20;
@@ -90,8 +89,7 @@ int main(int argc, char **argv)
 
 	// read ground truth match file
 	ifstream fin(ground_truth_match);
-	if(!fin.is_open())
-	{
+	if (!fin.is_open()) {
 		cout << "Failed to open the ground truth match\n";
 		return -1;
 	}
@@ -99,26 +97,22 @@ int main(int argc, char **argv)
 	size_t index1, index2;
 	int nmatch, finlier, hinlier;
 	size_t ground_truth_count = 0;
-	while(!fin.eof())
-	{
+	while (!fin.eof()) {
 		std::getline(fin, line);
-		if(line == "")
+		if (line == "")
 			continue;
 		std::stringstream ss;
 		ss << line;
 		ss >> nmatch >> finlier >> hinlier >> index1 >> index2;
 
-		if(index1 > image_num || index2 > image_num)
-		{
+		if (index1 > image_num || index2 > image_num) {
 			cout << "Error: invalid index pair, exit...\n";
 			return -1;
 		}
 
-		if(index1 < index2) // note that index1 < index2 in the first place since we only do match when index1 < index2
-		{
+		if (index1 < index2) { 	// note that index1 < index2 in the first place since we only do match when index1 < index2
 			// fill in the ground truth match matrix
-			if(finlier > inlier_thresh)
-			{
+			if (finlier > inlier_thresh) {
 				vot::LinkEdge temp(index1, index2, 0.0, nmatch, finlier);
 				true_matches[index1].push_back(temp);
 				ground_truth_count++;
@@ -136,15 +130,13 @@ int main(int argc, char **argv)
 	vector<vector<size_t> > rank_list;
 	rank_list.resize(image_num);
 	ifstream fin1(match_file);
-	if(!fin1.is_open())
-	{
+	if (!fin1.is_open()) {
 		cout << "Failed to open the match file\n";
 		return -1;
 	}
-	while(!fin1.eof())
-	{
+	while (!fin1.eof()) {
 		std::getline(fin1, line);
-		if(line == "")
+		if (line == "")
 			continue;
 		std::stringstream ss;
 		ss << line;
@@ -159,40 +151,33 @@ int main(int argc, char **argv)
 	vocab_matches.resize(image_num);
 
 	// select the useful first layer connection
-	for(int i = 0; i < image_num; i++)
-	{
+	for (int i = 0; i < image_num; i++) {
 		int jump_state = 0;     // a state related to whether to jump of out the current match
-		for(int j = 0; j < rank_list[i].size(); j++)
-		{
+		for (int j = 0; j < rank_list[i].size(); j++) {
 			// if the previous one is a true match, then continue; Otherwise stop matching for this image
 			int index1 = i, index2 = rank_list[i][j];
-			if(index1 == index2) continue;
-			if(index2 < index1)
-			{
+			if (index1 == index2) continue;
+			if (index2 < index1) {
 				std::swap(index1, index2);
 			}
 			std::unordered_set<int>::iterator it = vocab_matches[index1].find(index2);
-			if(it == vocab_matches[index1].end())   // this pair (index1, index2) hasn't been matched
-			{
+			if (it == vocab_matches[index1].end()) {	// this pair (index1, index2) hasn't been matched
 				vocab_matches[index1].insert(index2);
 				match_count++;
 				// this searches in the ground-truth match list, which simulates the matching process
 				int k = 0;
-				for(; k < true_matches[index1].size(); k++)
-				{
-					if(true_matches[index1][k].dst == index2)
-					{
+				for (; k < true_matches[index1].size(); k++) {
+					if (true_matches[index1][k].dst == index2) {
 						hit_count++;
 						image_graph.addEdgeu(true_matches[index1][k]);
 						jump_state = 0;
 						break;
 					}
 				}
-				if(k == true_matches[index1].size())     // no match for this image pair
-				{
+				if (k == true_matches[index1].size()) {   	// no match for this image pair
 					jump_state++;
 				}
-				if(MatchJump(jump_state,3))
+				if (MatchJump(jump_state,3))
 					break;
 			}
 		}
@@ -205,29 +190,22 @@ int main(int argc, char **argv)
 	cout << "precision / recall: " << precision << " " << recall << "\n";
 
 	// iterative query expansion
-	for(int iter = 0; iter < 2; iter++)
-	{
-
+	for (int iter = 0; iter < 2; iter++) {
 		vector<vector<vot::LinkEdge> > expansion_lists;
 		image_graph.queryExpansion(expansion_lists, query_level, qe_inlier_thresh);
 
 		// recompute precision and recall after query expansion
-		for(int i = 0; i < image_num; i++)
-		{
-			for(int j = 0; j < expansion_lists[i].size(); j++)
-			{
+		for (int i = 0; i < image_num; i++) {
+			for (int j = 0; j < expansion_lists[i].size(); j++) {
 				int index1 = i, index2 = expansion_lists[i][j].dst;
-				if(index1 > index2)
+				if (index1 > index2)
 					std::swap(index1, index2);
 				std::unordered_set<int>::iterator it = vocab_matches[index1].find(index2);
-				if(it == vocab_matches[index1].end())
-				{
+				if (it == vocab_matches[index1].end()) {
 					vocab_matches[index1].insert(index2);
 					match_count++;
-					for(int k = 0; k < true_matches[index1].size(); k++)
-					{
-						if(true_matches[index1][k].dst == index2)
-						{
+					for (int k = 0; k < true_matches[index1].size(); k++) {
+						if (true_matches[index1][k].dst == index2) {
 							hit_count++;
 							image_graph.addEdgeu(true_matches[index1][k]);
 							break;
@@ -246,32 +224,24 @@ int main(int argc, char **argv)
 	ofstream fout("match_pairs_file");
 	ofstream fout1("expansion_add");
 	ofstream fout2("expansion_true");
-	if(!fout.is_open())
-	{
+	if (!fout.is_open()) {
 		std::cout << "[MatchFile] Error opening file for writing\n" << std::endl;
 		return -1;
 	}
-	for(int i = 0; i < image_num; i++)
-	{
-		for(int j = i+1; j < image_num; j++)
-		{
+	for (int i = 0; i < image_num; i++) {
+		for (int j = i+1; j < image_num; j++) {
 			std::unordered_set<int>::iterator it = vocab_matches[i].find(j);
-			if(it != vocab_matches[i].end())
-			{
+			if (it != vocab_matches[i].end()) {
 				fout << sift_filenames[i] << " " << sift_filenames[j] << endl;
 				int k = 0;
-				for(k = 0; k < rank_list[i].size(); k++)
-				{
-					if(j == rank_list[i][k])
+				for (k = 0; k < rank_list[i].size(); k++) {
+					if (j == rank_list[i][k])
 						break;
 				}
-				if(k == rank_list[i].size())        // not in the rank_list
-				{
+				if (k == rank_list[i].size()) {			// not in the rank_list
 					fout1 << sift_filenames[i] << " " << sift_filenames[j] << endl;
-					for(int l = 0; l < true_matches[i].size(); l++)
-					{
-						if(j == true_matches[i][l].dst) // is a true match
-						{
+					for (int l = 0; l < true_matches[i].size(); l++) {
+						if (j == true_matches[i][l].dst) {	// is a true match
 							fout2 << sift_filenames[i] << " " << sift_filenames[j] << " " << true_matches[i][l].g_match << endl;
 							break;
 						}

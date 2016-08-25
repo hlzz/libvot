@@ -202,8 +202,8 @@ TEST(ImageGraph, QueryExpansion)
 
 TEST(DataTypes, ReadOpenmvgDesc)
 {
-  typedef unsigned char DescType;
-	tw::SiftData s1;
+	typedef unsigned char DescType;
+	vot::SiftData s1;
 	const bool res = s1.ReadOpenmvgDesc<DescType, 128>("tempDescsBin.desc");
 	EXPECT_EQ(true, res);
 }

@@ -21,9 +21,25 @@ addons:
     build_command_prepend: "mkdir build_coverity; cd build_coverity; cmake .."
     build_command:   "make -j4"
     branch_pattern: coverity_scan
+  apt:
+    sources:
+      - boost-latest
+      - ubuntu-toolchain-r-test 
+    packages:
+      - libboost-all-dev
+      - python-dev
+      - libboost-python-dev
 
-before_install: scripts/travis-ci_update.sh
+notifications:
+    # Emails are sent to the committers' git-configured email address
+    email:
+        on_failure: always
 
-install: scripts/travis-ci_install_deps.sh
+before_install: 
+    - scripts/travis-ci_update.sh
 
-script: scripts/travis-ci_install.sh
+install: 
+    - scripts/travis-ci_install_deps.sh
+
+script: 
+    - scripts/travis-ci_install.sh

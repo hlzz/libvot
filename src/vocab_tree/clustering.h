@@ -32,14 +32,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /*! \file clustering.h
  * \brief clustering algorithms, such as k-means
  */
-#ifndef CLUSTERING_HEADER
-#define CLUSTERING_HEADER
+#ifndef VOT_CLUSTERING_H
+#define VOT_CLUSTERING_H
 
 #include "utils/global_params.h"
 
-namespace tw
+namespace vot
 {
 	double Kmeans(size_t num, int dim, int k, DTYPE **p, double *means, int *assignment, int thread_num);
-}
+}	// end of namespace vot
 
-#endif	//CLUSTERING_HEADER
+#endif	//VOT_CLUSTERING_H

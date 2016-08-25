@@ -1,3 +1,9 @@
+# install gcc because of c++11 support
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+sudo apt-get update -qq
+if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+
 # sudo add-apt-repository "deb http://ppa.launchpad.net/alexei.colin/opencv/ubuntu precise main" -y
 sudo add-apt-repository -y ppa:philip5/extra
 sudo apt-get install autoconf automake libtool unzip
@@ -21,3 +27,29 @@ sudo make install
 
 # return to the root directory
 cd ../../
+
+# install CUDA 7.5 and cuDNN v5
+CUDA_REPO_PKG=cuda-repo-ubuntu1404_7.5-18_amd64.deb
+wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/$CUDA_REPO_PKG
+sudo dpkg -i $CUDA_REPO_PKG
+rm $CUDA_REPO_PKG
+
+ML_REPO_PKG=nvidia-machine-learning-repo_4.0-2_amd64.deb
+wget http://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1404/x86_64/$ML_REPO_PKG
+sudo dpkg -i $ML_REPO_PKG
+
+# update package lists
+sudo apt-get -y update
+
+# install packages
+CUDA_PKG_VERSION="7-5"
+CUDA_VERSION="7.5"
+sudo apt-get install -y --no-install-recommends \
+cuda-core-$CUDA_PKG_VERSION \
+cuda-cudart-dev-$CUDA_PKG_VERSION \
+cuda-cublas-dev-$CUDA_PKG_VERSION \
+cuda-curand-dev-$CUDA_PKG_VERSION
+# manually create CUDA symlink
+sudo ln -s /usr/local/cuda-$CUDA_VERSION /usr/local/cuda
+
+sudo apt-get install -y --no-install-recommends libcudnn5-dev

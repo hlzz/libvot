@@ -35,8 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * This file contains some global parameters shared by the whole libvot project, such as feature type enum, etc.
  */
 
-#ifndef GLOBAL_PARAMS_HEADER
-#define GLOBAL_PARAMS_HEADER
+#ifndef VOT_GLOBAL_PARAMS_H
+#define VOT_GLOBAL_PARAMS_H
 
 #define DTYPE unsigned char
 #define LTYPE float
@@ -71,4 +71,4 @@ enum SiftType
 };
 
 }	// end of namespace vot
-#endif  //HEADER_GLOBAL_PARAMS
+#endif  //VOT_GLOBAL_PARAMS_H

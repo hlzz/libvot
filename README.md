@@ -12,7 +12,7 @@
 ###[中文简介](doc/README_Chinese.md)
 
 ##Introduction
-*libvot* is a fast implementation of vocabulary tree, which is an algorithm widely used in image retrieval and computer vision. It usually comprises three components to build a image retrieval system using vocabulary tree: build a k-means tree using sift descriptors from images, register images into the database, query images against the database. In this library, we use C++11 standard multi-thread library to accelerate the computation, which achieves fast and accurate image retrieval performance. Currently this library is under active development for research purpose. If you find this repository useful, please star it to let me know. :)
+*libvot* is a fast implementation of vocabulary tree, which is an algorithm widely used in image retrieval and computer vision. It usually comprises three components to build a image retrieval system using vocabulary tree: build a k-means tree using sift descriptors from images, register images into the database, query images against the database. In this library, we use C++11 standard multi-thread library to accelerate the computation, which achieves fast and accurate image retrieval performance. Currently this library is under active development for both research and production. If you find this repository useful, please star it to let me know. :)
 
 ##Installation
 The build system of libvot is based on [CMake](http://cmake.org). To take full advantages of the new features in C++11, we require the version of CMake to be 2.8.12 or above. Current we have tested our project under Linux (Ubuntu 14.04, CentOS 7) and MacOS (10.10) using gcc. The common steps to build the library are:
@@ -32,7 +32,13 @@ On Unix-like systems with GNU Make as the build tool, the following sequence of 
     $ cmake ..
     $ make && make test
 
-Optional dependencies include *OpenCV*, but it is not required to run the core functions in *libvot*.
+#### Optional Dependencies
+* Boost (>1.55), for serialization, python-binding, etc.
+* OpenCV (>2.4), for feature detector and general utilities for image processing.
+* NVIDIA's Cuda Toolkit 7.5, for GPU-related code.
+* NVIDIA's cuDNNv5 for CUDA 7.5, for the deep learning module.
+
+See the [installation](doc/installation.md) guide for details.
 
 ##First try
 Suppose `$LIBVOT_ROOT` represents the root directory of libvot, and it is successfully compiled in `build` subdirectory. You can use `./libvot_feature <image_list>` to first generate a set of descriptor files and use them as inputs to `image_search`. For example, you have some target .jpg image files to generate sift files. Just `cd` into that directory, prepare the `image_list`, and generate sift files in the same directory as the image files:
@@ -61,7 +67,7 @@ The [homepage](http://hlzz.github.io/libvot/) of libvot is hosted by github-page
 
 ## Contributing
 We are working toward the next major release (0.2.0). 
-If you are interested in contributing, please have a look at [Roadmap.md](Roadmap.md). 
+If you are interested in contributing, please have a look at [Roadmap.md](doc/Roadmap.md) and our [Coding style](doc/coding_style.md). 
 All types of contributions, including documentation, testing, and new features are welcomed and appreciated.
 
 ##License
@@ -70,6 +76,6 @@ The BSD 3-Clause License
 ##Contact and Donation
 For inquiries and suggestions, please send your emails to <tshenaa@ust.hk>.
 
-If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/campaigns/30901). Thanks
+If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/campaigns/30901). Thanks!
 
 <a href='https://pledgie.com/campaigns/30901'><img alt='Click here to lend your support to: Open-Source Image Retrieval Project and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30901.png?skin_name=chrome' border='0' ></a>

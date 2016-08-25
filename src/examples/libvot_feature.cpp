@@ -44,19 +44,17 @@ DEFINE_double(peak_thresh, 2.5, "peak threshold for vlfeat parameter");
 
 void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
                             std::vector<std::string> *feat_filenames,
-                            tw::VlFeatParam *vlfeat_param,
+                            vot::VlFeatParam *vlfeat_param,
                             int first_index,
                             int num_images,
                             std::mutex *cout_mutex)
 {
-	for(size_t i = first_index; i < first_index + num_images; i++)
-	{
 #ifdef LIBVOT_USE_OPENCV
+	for (size_t i = first_index; i < first_index + num_images; i++) {
 		const cv::Mat input = cv::imread((*image_filenames)[i], CV_LOAD_IMAGE_COLOR);
-		tw::SiftData sift_data;
-		int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, *vlfeat_param);
-		if(!sift_data.SaveSiftFile((*feat_filenames)[i]))
-		{
+		vot::SiftData sift_data;
+		int num_features = vot::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, *vlfeat_param);
+		if (!sift_data.SaveSiftFile((*feat_filenames)[i])) {
 			cout_mutex->lock();
 			cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
 			cout_mutex->unlock();
@@ -66,24 +64,23 @@ void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
 		cout << "[Extract Feature] Save sift data (" << num_features
 		     << " features) to " <<  (*feat_filenames)[i] << " (" << i << "/" << image_filenames->size() << ")\n";
 		cout_mutex->unlock();
+	}
 #else
 	cout << "[MultiVlfeatSiftExtract] Currently we use opencv to read images, no opencv support found.\n";
 #endif
-	}
 }
 
 int main(int argc, char** argv)
 {
 	char c_program_usage[50], c_program_version[20];
-	sprintf(c_program_usage, "Usage: %s <image_list>", argv[0]);
-	sprintf(c_program_version, "%d.%d.%d", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
+	snprintf(c_program_usage, 50, "Usage: %s <image_list>", argv[0]);
+	snprintf(c_program_version, 20, "%d.%d.%d", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
 	string program_usage(c_program_usage), program_version(c_program_version);
 	gflags::SetVersionString(program_version);
 	gflags::SetUsageMessage(program_usage);		// this has to appear before ParseCommandLineFlags
 	gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-	if(argc != 2)
-	{
+	if (argc != 2) {
 		cout << "Input argument error, use '--help' to see the usage" << endl;
 		cout << program_usage << endl;
 		return -1;
@@ -95,10 +92,8 @@ int main(int argc, char** argv)
 	const int image_ext_num = 18;
 	const string image_ext[image_ext_num] = {"JPG", "JPEG", "PNG", "TIFF", "BMP", "PPM", "PGM", "PNM", "GIF",
 	                                         "jpg", "jpeg", "png", "tiff", "bmp", "ppm", "pgm", "pnm", "gif"};
-	for(int i = 0; i < image_ext_num; i++)
-	{
-		if(image_list_ext == image_ext[i])
-		{
+	for (int i = 0; i < image_ext_num; i++) {
+		if (image_list_ext == image_ext[i]) {
 			cerr << "[Extract Feature] " << argv[0] << " takes a image filename list as input, convert image to list!\n";
 			exit(-1);
 		}
@@ -111,27 +106,23 @@ int main(int argc, char** argv)
 	feat_filenames.resize(num_images);
 
 	// process output_folder flags
-	if(FLAGS_output_folder != "")
-	{
+	if (FLAGS_output_folder != "") {
 		cout << "[Extract Feature] Output folder: " << FLAGS_output_folder << endl;
 		tw::IO::Mkdir(FLAGS_output_folder);
-		for(int i = 0; i < num_images; i++)
-		{
+		for (int i = 0; i < num_images; i++) {
 			feat_filenames[i] = tw::IO::SplitPath(image_filenames[i]).second;
 			feat_filenames[i] = tw::IO::SplitPathExt(feat_filenames[i]).first + ".sift";
 			feat_filenames[i] = tw::IO::JoinPath(FLAGS_output_folder, feat_filenames[i]);
 		}
 	}
-	else
-	{
+	else {
 		cout << "[Extract Feature] Output folder: output to the same folder as the input files.\n";
-		for(int i = 0; i < num_images; i++)
+		for (int i = 0; i < num_images; i++)
 			feat_filenames[i] = tw::IO::SplitPathExt(image_filenames[i]).first + ".sift";
 	}
 
 	// process thread number
-	if(FLAGS_thread_num == -1)		// default, use multi-thread
-	{
+	if(FLAGS_thread_num == -1) {			// default, use multi-thread
 		FLAGS_thread_num = std::thread::hardware_concurrency();		// one single thread would take about 3g memory to process sift
 		size_t memory_size = tw::IO::GetAvailMem() / (1024*1024);	// convert to mb
 		int available_thread_num = memory_size/(3 * 1024);
@@ -140,8 +131,7 @@ int main(int argc, char** argv)
 		std::cout << "[Extract Feature] Available memory: " << memory_size <<
 		             " / thread number: " << FLAGS_thread_num << "\n";
 	}
-	else
-	{
+	else {
 		const int max_thread_num = std::thread::hardware_concurrency();
 		const int min_thread_num = 1;
 		if (FLAGS_thread_num < min_thread_num || FLAGS_thread_num > max_thread_num)
@@ -150,14 +140,12 @@ int main(int argc, char** argv)
 	}
 
 #ifdef LIBVOT_USE_OPENCV
-	switch (FLAGS_feature_type)
-	{
+	switch (FLAGS_feature_type) {
 		case vot::LIBVOT_FEATURE_TYPE::OPENCV_SIFT:
 		{
 			cout << "[Extract Feature] Compute SIFT features using opencv sift\n";
 			cv::SiftDescriptorExtractor cv_sift_detector;
-			for(int i = 0; i < num_images; i++)
-			{
+			for (int i = 0; i < num_images; i++) {
 				// load the image in BGR format
 				const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
 
@@ -165,11 +153,11 @@ int main(int argc, char** argv)
 				cv::Mat sift_descriptors;
 				cv_sift_detector.detect(input, cv_keypoints);
 				cv_sift_detector.compute(input, cv_keypoints, sift_descriptors);
-				tw::SiftData sift_data;
-				tw::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
 
-				if(!sift_data.SaveSiftFile(feat_filenames[i]))
-				{
+				vot::SiftData sift_data;
+				vot::OpencvKeyPoints2libvotSift(cv_keypoints, sift_descriptors, sift_data);
+
+				if (!sift_data.SaveSiftFile(feat_filenames[i])) {
 					cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
 					exit(-1);
 				}
@@ -180,41 +168,36 @@ int main(int argc, char** argv)
 		}
 		case vot::LIBVOT_FEATURE_TYPE::VLFEAT_SIFT:
 		{
-			if(FLAGS_thread_num == 1)		// single thread version
-			{
+			if (FLAGS_thread_num == 1) {		// single thread version
 				cout << "[Extract Feature] Compute SIFT features using vlfeat sift\n";
-				tw::VlFeatParam vlfeat_param;
+				vot::VlFeatParam vlfeat_param;
 				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
 				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
-				for(int i = 0; i < num_images; i++)
-				{
+				for (int i = 0; i < num_images; i++) {
 					const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
-					tw::SiftData sift_data;
-					int num_features = tw::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
-					if(!sift_data.SaveSiftFile(feat_filenames[i]))
-					{
+					vot::SiftData sift_data;
+					int num_features = vot::RunVlFeature(input.data, input.cols, input.rows, 3, sift_data, vlfeat_param);
+					if (!sift_data.SaveSiftFile(feat_filenames[i])) {
 						cerr << "[Extract Feature] sift_data.SaveSiftFile error.\n";
 						return -1;
 					}
 					cout << "[Extract Feature] Save sift data (" << num_features
-					<< " features) to " <<  feat_filenames[i] << " (" << i << "/" << num_images << ")\n";
+					     << " features) to " <<  feat_filenames[i] << " (" << i << "/" << num_images << ")\n";
 				}
 			}
-			else 		// multi-thread
-			{
+			else { 			// multi-thread
 				cout << "[Extract Feature] Compute SIFT features using vlfeat sift (multi-thread)\n";
 				std::vector<std::thread> threads;
 				std::mutex cout_mutex;
 
-				tw::VlFeatParam vlfeat_param;
+				vot::VlFeatParam vlfeat_param;
 				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
 				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
 
 				size_t off = 0;
-				for(int i = 0; i < FLAGS_thread_num; i++)
-				{
+				for (int i = 0; i < FLAGS_thread_num; i++) {
 					size_t thread_image = num_images / FLAGS_thread_num;
-					if(i == FLAGS_thread_num - 1)
+					if (i == FLAGS_thread_num - 1)
 						thread_image = num_images - (FLAGS_thread_num - 1) * thread_image;
 
 					threads.push_back(std::thread(MultiVlfeatSiftExtract,

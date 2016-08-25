@@ -4,20 +4,23 @@
  *
  * 	It contains Some utility functions for the use of opencv in libvot
  */
-#ifndef OPENCV_LIBVOT_API_H
-#define OPENCV_LIBVOT_API_H
+#ifndef VOT_OPENCV_LIBVOT_API_H
+#define VOT_OPENCV_LIBVOT_API_H
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/nonfree/nonfree.hpp>
+#include <opencv2/nonfree/features2d.hpp>
 
-namespace tw  {
+namespace vot {
 class SiftData;
 
 bool OpencvKeyPoints2libvotSift(std::vector<cv::KeyPoint> &key_points,
                                 cv::Mat &descriptors,
-                                tw::SiftData &sift_data);
+                                SiftData &sift_data);
 
+bool LibvotSift2OpencvKeyPoints(SiftData &sift_data,
+                                std::vector<cv::KeyPoint> &key_points,
+                                cv::Mat &descriptors);
 }	// end of namespace tw
 
-#endif
+#endif	//VOT_OPENCV_LIBVOT_API_H

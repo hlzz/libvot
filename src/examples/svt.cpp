@@ -46,10 +46,8 @@ using namespace Eigen;
 float Fnorm(Eigen::MatrixXf &f)
 {
 	float norm = 0;
-	for(int i = 0; i < f.rows(); i++)
-	{
-		for(int j = 0; j < f.cols(); j++)
-		{
+	for (int i = 0; i < f.rows(); i++) {
+		for (int j = 0; j < f.cols(); j++) {
 			norm += f(i, j) * f(i, j);
 		}
 	}
@@ -59,10 +57,8 @@ float Fnorm(Eigen::MatrixXf &f)
 double Fnorm(Eigen::MatrixXd &d)
 {
 	double norm = 0;
-	for(int i = 0; i < d.rows(); i++)
-	{
-		for(int j = 0; j < d.cols(); j++)
-		{
+	for (int i = 0; i < d.rows(); i++) {
+		for (int j = 0; j < d.cols(); j++) {
 			norm += d(i, j) * d(i, j);
 		}
 	}
@@ -73,10 +69,8 @@ double Fnorm(Eigen::MatrixXd &d)
 Eigen::MatrixXd MatrixProjection(Eigen::MatrixXd &d, std::vector<std::vector<int> > sample_set)
 {
 	Eigen::MatrixXd pd = Eigen::MatrixXd::Constant(d.rows(), d.cols(), 0);
-	for(int i = 0; i < d.rows(); i++)
-	{
-		for(int j = 0; j < sample_set[i].size(); j++)
-		{
+	for (int i = 0; i < d.rows(); i++) {
+		for (int j = 0; j < sample_set[i].size(); j++) {
 			pd(i, sample_set[i][j]) = d(i, sample_set[i][j]);
 		}
 	}
@@ -85,8 +79,7 @@ Eigen::MatrixXd MatrixProjection(Eigen::MatrixXd &d, std::vector<std::vector<int
 
 int main(int argc, char ** argv)
 {
-	if(argc != 2)
-	{
+	if (argc != 2) {
 		cout << "Usage: " << argv[0] << " <mat_file>\n";
 		exit(-1);
 	}
@@ -97,13 +90,11 @@ int main(int argc, char ** argv)
 	tw::IO::ExtractLines(mat_file, mat_string);
 	int mat_size = mat_string.size();
 	MatrixXd input_mat = MatrixXd::Constant(mat_size, mat_size, 0);
-	for(int i = 0; i < mat_size; i++)
-	{
+	for (int i = 0; i < mat_size; i++) {
 		stringstream ss;
 		ss << mat_string[i];
 		float temp;
-		for(int j = 0; j < mat_size; j++)
-		{
+		for (int j = 0; j < mat_size; j++) {
 			ss >> temp;
 			input_mat(i, j) = temp;
 		}
@@ -118,31 +109,24 @@ int main(int argc, char ** argv)
 	// sample without replacement
 	default_random_engine e(0);
 	uniform_int_distribution<int> uni_rand(0, mat_size-1);
-	for(int i = 0; i < mat_size; i++)
-	{
-		for(int j = 0; j < sample_size; j++)
-		{
+	for (int i = 0; i < mat_size; i++) {
+		for (int j = 0; j < sample_size; j++) {
 			int curr_sample = uni_rand(e);
 			int k;
-			for(k = 0; k < j; k++)
-			{
-				if(curr_sample == sample_set[i][k])
-				{
+			for (k = 0; k < j; k++) {
+				if (curr_sample == sample_set[i][k]) {
 					j--; k = -1;
 					break;
 				}
 			}
-			if(k != -1)
-			{
+			if (k != -1) {
 				sample_set[i].push_back(curr_sample);
 			}
 		}
 	}
 
-	for(int i = 0; i < mat_size; i++)
-	{
-		for(int j = 0; j < sample_set[i].size(); j++)
-		{
+	for (int i = 0; i < mat_size; i++) {
+		for (int j = 0; j < sample_set[i].size(); j++) {
 			sample_mat(i, sample_set[i][j]) = input_mat(i, sample_set[i][j]);
 		}
 	}
@@ -157,17 +141,14 @@ int main(int argc, char ** argv)
 	MatrixXd Y = k0 * step_size * sample_mat;
 	MatrixXd X;
 	double stop_threshold = 1e-4;
-	for(int i = 0; i < max_iter; i++)
-	{
+	for (int i = 0; i < max_iter; i++) {
 		JacobiSVD<MatrixXd> svd(Y, ComputeThinU | ComputeThinV);
 		MatrixXd U = svd.matrixU();
 		MatrixXd V = svd.matrixV();
 		VectorXd singular_vector = svd.singularValues();
 		MatrixXd S = MatrixXd::Constant(mat_size, mat_size, 0);
-		for(int i = 0; i < mat_size; i++)
-		{
-			if(singular_vector[i] > tau)
-			{
+		for (int i = 0; i < mat_size; i++) {
+			if (singular_vector[i] > tau) {
 				S(i, i) = singular_vector[i] - tau;
 			}
 		}
@@ -178,17 +159,14 @@ int main(int argc, char ** argv)
 		MatrixXd residual_proj = MatrixProjection(residual_mat, sample_set);
 		double error = Fnorm(residual_proj);
 		double sample_mat_norm = Fnorm(sample_mat);
-		if(error / sample_mat_norm < stop_threshold)
-		{
+		if (error / sample_mat_norm < stop_threshold) {
 			cout << "break at iter " << i << endl;
 			break;
 		}
 
 		// refresh Y
-		for(int i = 0; i < sample_mat.rows(); i++)
-		{
-			for(int j = 0; j < sample_set[i].size(); j++)
-			{
+		for (int i = 0; i < sample_mat.rows(); i++) {
+			for (int j = 0; j < sample_set[i].size(); j++) {
 				Y(i, sample_set[i][j]) = Y(i, sample_set[i][j]) + step_size * (sample_mat(i, sample_set[i][j]) - X(i, sample_set[i][j]));
 			}
 		}
@@ -199,17 +177,13 @@ int main(int argc, char ** argv)
 	float max_error = 0;
 	float error_bound = 10;
 	int within_bound_count = 0;
-	for(int i = 0; i < mat_size; i++)
-	{
-		for(int j = 0; j < mat_size; j++)
-		{
+	for (int i = 0; i < mat_size; i++) {
+		for (int j = 0; j < mat_size; j++) {
 			completion_error += (X(i, j) - input_mat(i, j)) * (X(i, j) - input_mat(i, j));
-			if(max_error < abs(X(i, j) - input_mat(i, j)) )
-			{
+			if (max_error < abs(X(i, j) - input_mat(i, j)) ) {
 				max_error = abs(X(i, j) - input_mat(i, j));
 			}
-			if(abs(X(i, j) - input_mat(i, j)) < error_bound)
-			{
+			if (abs(X(i, j) - input_mat(i, j)) < error_bound) {
 				within_bound_count++;
 			}
 		}

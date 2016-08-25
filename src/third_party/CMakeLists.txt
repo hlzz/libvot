@@ -1,5 +1,6 @@
 add_subdirectory(vlfeat)
 add_subdirectory(gflags)
+add_subdirectory(vectorGraphics)
 
 # gtest framework
 if(LIBVOT_BUILD_TESTS)
