@@ -38,6 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef VOT_IO_UTILS_H
 #define VOT_IO_UTILS_H
 
+#include <iostream>
 #include <vector>
 
 namespace tw 
@@ -82,6 +83,21 @@ namespace tw
 		static bool Mkdir(const std::string path);      //!< make a directory
         static size_t GetAvailMem();                    //!< return the total availbale memory that can be used 
     };
+
+	/**
+	 * @brief PrintStringVector: a handy debugging function to print first 'num' element of a vector.
+	 * @param strings: the vector to be printed.
+	 * @param num: the number of elements to be printed.
+	 */
+	template <class TYPE>
+	void PrintVector(std::vector<TYPE> &vec, int num)
+	{
+		int print_lines = vec.size() > num ? num : vec.size();
+		for (int i = 0; i < print_lines; i++) {
+			std::cout << vec[i] << std::endl;
+		}
+		return;
+	}
 
 }   // end of namespace tw
 
