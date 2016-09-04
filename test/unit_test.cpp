@@ -193,17 +193,3 @@ TEST(ImageGraph, QueryExpansion)
 	EXPECT_EQ(2, expansion_lists[3].size());
 	EXPECT_EQ(3, expansion_lists[4].size());
 }
-
-// -------------------------------------------------------- //
-// 															//
-//		test openmvg_descriptor.h and data_types.h 			//
-// 															//
-// -------------------------------------------------------- //
-
-TEST(DataTypes, ReadOpenmvgDesc)
-{
-	typedef unsigned char DescType;
-	vot::SiftData s1;
-	const bool res = s1.ReadOpenmvgDesc<DescType, 128>("tempDescsBin.desc");
-	EXPECT_EQ(true, res);
-}
