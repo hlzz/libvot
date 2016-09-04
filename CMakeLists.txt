@@ -114,8 +114,10 @@ include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 # use the built-in gflags include directory, defined in gflags CMakefile
 # set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
 # include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
-set(GFLAGS_LIBRARY gflags)
+set(GFLAGS_LIBRARY gflags_extern)
 add_definitions(-DLIBVOT_USE_GFLAGS)
+set(GLOG_LIBRARY glog_extern)
+add_definitions(-DLIBVOT_USE_GLOG)
 
 # output include directories for debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
