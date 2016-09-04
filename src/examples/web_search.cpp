@@ -53,7 +53,7 @@ DEFINE_bool(output_filename, true, "Output image name instead of image index");
 
 int main(int argc, char **argv)
 {
-	gflags::ParseCommandLineFlags(&argc, &argv, true);
+	google::ParseCommandLineFlags(&argc, &argv, true);
 	if (argc < 4) {
 		printf("Usage: %s <input_sift_file> <db_image_list> <db_path> "
 		       "[--output_folder <output_folder>] [num_matches <num_matches>]\n", argv[0]);

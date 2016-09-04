@@ -27,7 +27,7 @@ DEFINE_bool(show_matching, true, "show matching using opencv::imshow");
 
 int main(int argc, char **argv)
 {
-	gflags::ParseCommandLineFlags(&argc, &argv, true);
+	google::ParseCommandLineFlags(&argc, &argv, true);
 	if (argc != 3)
 		return -1;
 	string sift_file1 = string(argv[1]);

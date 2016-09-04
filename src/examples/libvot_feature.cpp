@@ -76,9 +76,9 @@ int main(int argc, char** argv)
 	snprintf(c_program_usage, 50, "Usage: %s <image_list>", argv[0]);
 	snprintf(c_program_version, 20, "%d.%d.%d", LIBVOT_VERSION_MAJOR, LIBVOT_VERSION_MINOR, LIBVOT_VERSION_PATCH);
 	string program_usage(c_program_usage), program_version(c_program_version);
-	gflags::SetVersionString(program_version);
-	gflags::SetUsageMessage(program_usage);		// this has to appear before ParseCommandLineFlags
-	gflags::ParseCommandLineFlags(&argc, &argv, true);
+	google::SetVersionString(program_version);
+	google::SetUsageMessage(program_usage);		// this has to appear before ParseCommandLineFlags
+	google::ParseCommandLineFlags(&argc, &argv, true);
 
 	if (argc != 2) {
 		cout << "Input argument error, use '--help' to see the usage" << endl;
@@ -220,6 +220,6 @@ int main(int argc, char** argv)
 	return -1;
 #endif
 
-	gflags::ShutDownCommandLineFlags();
+	google::ShutDownCommandLineFlags();
 	return 0;
 }
