@@ -11,6 +11,3 @@ else
     sudo apt-get update -qq
     sudo apt-get install cmake
 fi
-
-# export python for pyvot
-export CPLUS_INCLUDE_PATH="$CPLUS_INCLUDE_PATH:/usr/include/python2.7"
