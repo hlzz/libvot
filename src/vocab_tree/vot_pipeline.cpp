@@ -148,9 +148,11 @@ namespace vot
 						return false;
 					}
 					if (sizeof(DTYPE) == 1)
-						sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]);
+                        if (!sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]))
+                            return false;
 					else
-						sift_data[i].ReadChar2DTYPE(sift_filenames[siftfile_samples[i]]);
+                        if (!sift_data[i].ReadChar2DTYPE(sift_filenames[siftfile_samples[i]]))
+                            return false;
 					break;
 				}
 				case OPENMVG_FEAT:
