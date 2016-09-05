@@ -131,16 +131,21 @@ public:
 	bool ReadSiftMatchPair(FILE *file);
 
 	// Helper functions
-	inline const std::string & fileName1() const;
-	inline std::string & fileName1();
-	inline const std::string & fileNmae2() const;
-	inline std::string & fileNmae2();
-	inline const int & numMatches() const;
-	inline int & numMatches();
-	inline const int & hInlierNumMatches() const;
-	inline int & hInlierNumMatches();
-	inline const int & fInlierNumMatches() const;
-	inline int & fInlierNumMatches();
+	inline const std::string & fileName1() const { return filename1_; }
+	inline std::string & fileName1() { return filename1_; }
+	inline const std::string & fileName2() const { return filename2_; }
+	inline std::string & fileName2() { return filename2_; }
+	inline const int & numMatches() const { return nmatch_; }
+	inline int & numMatches() { return nmatch_; }
+
+	//!< Homography inlier number of matches
+	inline const int & hInlierNumMatches() const { return homography_inlier_num_; }
+	inline int & hInlierNumMatches() { return homography_inlier_num_; }
+
+	//!< Fundamental matrix_ inlier number of matches
+	inline const int & fInlierNumMatches() const { return fundamental_inlier_num_; }
+	inline int & fInlierNumMatches() { return fundamental_inlier_num_; }
+
 	const FeatureMatchPair* matchPairs() const;
 	FeatureMatchPair* matchPairs();
 	void showInfo() const;

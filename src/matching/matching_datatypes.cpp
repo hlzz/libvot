@@ -175,18 +175,6 @@ void SiftMatchPair::showInfo() const
 }
 
 // Helper functions
-inline const std::string & SiftMatchPair::fileName1() const { return filename1_; }
-inline std::string & SiftMatchPair::fileName1() { return filename1_; }
-inline const std::string & SiftMatchPair::fileNmae2() const { return filename2_; }
-inline std::string & SiftMatchPair::fileNmae2() { return filename2_; }
-inline const int & SiftMatchPair::numMatches() const { return nmatch_; }
-inline int & SiftMatchPair::numMatches() { return nmatch_; }
-
-inline const int & SiftMatchPair::hInlierNumMatches() const { return homography_inlier_num_; } //!< Homography inlier number of matches
-inline int & SiftMatchPair::hInlierNumMatches() { return homography_inlier_num_; }
-inline const int & SiftMatchPair::fInlierNumMatches() const { return fundamental_inlier_num_; }//!< Fundamental matrix_ inlier number of matches
-inline int & SiftMatchPair::fInlierNumMatches() { return fundamental_inlier_num_; }
-
 const FeatureMatchPair* SiftMatchPair::matchPairs() const { return match_pairs_; }
 FeatureMatchPair* SiftMatchPair::matchPairs() { return match_pairs_; }
 
