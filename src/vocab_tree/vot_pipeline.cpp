@@ -147,12 +147,14 @@ namespace vot
 						std::cout << "[Build Tree] Wrong sift type, should match 'sift'\n";
 						return false;
 					}
-					if (sizeof(DTYPE) == 1)
-                        if (!sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]))
-                            return false;
-					else
-                        if (!sift_data[i].ReadChar2DTYPE(sift_filenames[siftfile_samples[i]]))
-                            return false;
+					if (sizeof(DTYPE) == 1) {
+						if (!sift_data[i].ReadSiftFile(sift_filenames[siftfile_samples[i]]))
+							return false;
+					}
+					else {
+						if (!sift_data[i].ReadChar2DTYPE(sift_filenames[siftfile_samples[i]]))
+							return false;
+					}
 					break;
 				}
 				case OPENMVG_FEAT:
