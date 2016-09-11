@@ -41,7 +41,7 @@ add_subdirectory(matching)
 # the main vocabulary tree directory
 add_subdirectory(vocab_tree)
 # the image graph directory
-add_subdirectory(image_graph)
+add_subdirectory(graph)
 # the executable files
 add_subdirectory(examples)
 # benchmark related files

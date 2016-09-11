@@ -6,7 +6,7 @@
 
 #include "vocab_tree/vot_pipeline.h"
 #include "gtest/gtest.h"
-#include "image_graph/image_graph.h"
+#include "graph/image_graph.h"
 #include "utils/data_types.h"
 
 // -------------------------------------------------------- //

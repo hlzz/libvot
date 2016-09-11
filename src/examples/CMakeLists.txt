@@ -13,13 +13,13 @@ target_link_libraries(image_search ${CMAKE_THREAD_LIBS_INIT} vot_vocabtree vot_u
 install (TARGETS image_search DESTINATION bin CONFIGURATIONS Release)
 
 # graph_partition
-add_executable(graph_partition graph_partition.cpp ../image_graph/image_graph.cpp)
+add_executable(graph_partition graph_partition.cpp ../graph/image_graph.cpp)
 set_property(TARGET graph_partition PROPERTY CXX_STANDARD 11)
 set_property(TARGET graph_partition PROPERTY CXX_STANDARD_REQUIRED on)
 target_link_libraries(graph_partition ${CMAKE_THREAD_LIBS_INIT} vot_utils)
 install (TARGETS graph_partition DESTINATION bin CONFIGURATIONS Release)
 
-add_executable(query_expansion query_expansion.cpp ../utils/io_utils.cpp ../image_graph/image_graph.cpp
+add_executable(query_expansion query_expansion.cpp ../utils/io_utils.cpp ../graph/image_graph.cpp
 ../utils/data_structures.cpp)
 set_property(TARGET query_expansion PROPERTY CXX_STANDARD 11)
 set_property(TARGET query_expansion PROPERTY CXX_STANDARD_REQUIRED on)

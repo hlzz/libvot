@@ -39,7 +39,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <cassert>
 #include "io_utils.h"
-#include "../image_graph/image_graph.h"
 
 // defines for file IO manipulation
 #if defined(__WIN32__) || defined(_MSC_VER)
@@ -92,9 +91,6 @@ template void free_2d<float>(float ***array, float *data);
 
 template double* allocate_2d<double>(double ***array, int row, int col);
 template void free_2d<double>(double ***array, double *data);
-
-template vot::LinkEdge* allocate_2d<vot::LinkEdge>(vot::LinkEdge ***array, int row, int col);
-template void free_2d<vot::LinkEdge>(vot::LinkEdge ***array, vot::LinkEdge *data);
 
 template <class charType>
 void IO::TrimLeft(std::basic_string<charType> & str, const char* chars2remove)

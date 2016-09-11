@@ -14,7 +14,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
 
 set(UNIT_TEST_SOURCES
 unit_test.cpp 
-../src/image_graph/image_graph.cpp 
+../src/graph/image_graph.cpp 
 ../src/utils/data_structures.cpp
 ../src/vocab_tree/vot_pipeline.cpp
 ../src/vocab_tree/clustering.cpp

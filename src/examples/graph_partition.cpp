@@ -36,7 +36,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include "image_graph/image_graph.h"
+#include "graph/image_graph.h"
 #include "utils/io_utils.h"
 
 using namespace std;
