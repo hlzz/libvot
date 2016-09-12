@@ -37,19 +37,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace tw 
 {
-	/** @brief Union-find data structure, used in various graph algorithms
-	 */
-	class UnionFind 
-	{
-	public:
-		UnionFind(size_t n);
-		~UnionFind();
-		size_t Find(size_t x);
-		bool UnionSet(size_t x, size_t y);
+/** @brief Union-find data structure, used in various graph algorithms
+*/
+class UnionFind
+{
+public:
+	UnionFind(size_t n);
+	~UnionFind();
+	size_t Find(size_t x);
+	bool UnionSet(size_t x, size_t y);
 
-		size_t *father;
-		size_t size;
-	};
+	size_t *father;
+	size_t set_num;
+	size_t size;
+};
 
 }	// end of namespace tw
 

@@ -38,34 +38,35 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace tw
 {
-	UnionFind::UnionFind(size_t n)
-	{
-		father = new size_t[n];
-		size = n;
-		for (size_t i = 0; i < size; i++)
-			father[i] = i;
-	}
+UnionFind::UnionFind(size_t n)
+{
+	father = new size_t[n];
+	size = n;
+	set_num = n;
+	for(size_t i = 0; i < size; i++)
+		father[i] = i;
+}
 
-	UnionFind::~UnionFind()
-	{
-		delete [] father;
-	}
+UnionFind::~UnionFind()
+{
+	delete [] father;
+}
 
-	size_t UnionFind::Find(size_t x)
-	{
-		if (x != father[x])
-			father[x] = Find(father[x]);	// path compression
-		return father[x];
-	}
-	
-	bool UnionFind::UnionSet(size_t x, size_t y)
-	{
-		x = Find(x);
-		y = Find(y);
-		if (x == y)
-			return false;
-		father[y] = x;
-		return true;
-	}
+size_t UnionFind::Find(size_t x)
+{
+	if(x != father[x])
+		father[x] = Find(father[x]);	// path compression
+	return father[x];
+}
+
+bool UnionFind::UnionSet(size_t x, size_t y)
+{
+	x = Find(x);
+	y = Find(y);
+	if(x == y) return false;	// already in the same set
+	father[y] = x;		// append y to x sets
+	set_num--;
+	return true;
+}
 
 }	// end of namespace tw
