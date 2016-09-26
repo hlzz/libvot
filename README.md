@@ -70,6 +70,20 @@ We are working toward the next major release (0.2.0).
 If you are interested in contributing, please have a look at [Roadmap.md](doc/Roadmap.md) and our [Coding style](doc/coding_style.md). 
 All types of contributions, including documentation, testing, and new features are welcomed and appreciated.
 
+## References
+If you find this library useful for your research, please cite 
+```
+@inproceedings{shen2016graph,  
+  title={Graph-Based Consistent Matching for Structure-from-Motion},  
+  author={Shen, Tianwei and Zhu, Siyu and Fang, Tian and Zhang, Runze and Quan, Long},  
+  booktitle={European Conference on Computer Vision},  
+  pages={139--155},  
+  year={2016},  
+  organization={Springer}  
+}
+```
+*Note: The image retrieval part of the above research depends on libvot. The functioning graph matching algorithm is in preparation and is planned to be merged into the master branch. For an early preview and implementation details, please send your request to <tshenaa@ust.hk>.*
+
 ##License
 The BSD 3-Clause License
 

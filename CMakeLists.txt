@@ -27,8 +27,8 @@ option(LIBVOT_BUILD_DOC "Build libvot documentations" ON)
 option(LIBVOT_BUILD_PYTHON "Build libvot with python export" OFF)
 option(LIBVOT_USE_BOOST "Build libvot with Boost" ON)
 option(LIBVOT_USE_OPENCV "Build libvot with OpenCV support" ON)
-option(LIBVOT_USE_CUDA "Build libvot with cuda support" ON)
-option(LIBVOT_USE_CUDNN "Build libvot with cuda and cuDNN" ON)
+option(LIBVOT_USE_CUDA "Build libvot with cuda support" OFF)
+option(LIBVOT_USE_CUDNN "Build libvot with cuda and cuDNN" OFF)
 
 # ==============================================================================
 # set compiler options, output all warnings
