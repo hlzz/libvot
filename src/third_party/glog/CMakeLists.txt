@@ -1,6 +1,6 @@
 set(INC src ../gflags/src)
 include_directories(src)
-include_directories(../gflags/src)
+include_directories(BEFORE ../gflags/src)
 
 set(SRC
 	src/logging.cc
