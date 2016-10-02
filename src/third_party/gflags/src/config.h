@@ -13,19 +13,23 @@
 /* #undef OS_WINDOWS */
 
 // Define if you have the <stdint.h> header file.
-#define HAVE_STDINT_H
+// Define to 1 to suppress redefinition warning in glog
+#define HAVE_STDINT_H 1
 
 // Define if you have the <sys/types.h> header file.
-#define HAVE_SYS_TYPES_H
+// Define to 1 to suppress redefinition warning in glog
+#define HAVE_SYS_TYPES_H 1
 
 // Define if you have the <inttypes.h> header file.
-#define HAVE_INTTYPES_H
+// Define to 1 to suppress redefinition warning in glog
+#define HAVE_INTTYPES_H 1
 
 // Define if you have the <sys/stat.h> header file.
 #define HAVE_SYS_STAT_H
 
 // Define if you have the <unistd.h> header file.
-#define HAVE_UNISTD_H
+// Define to 1 to suppress redefinition warning in glog
+#define HAVE_UNISTD_H 1
 
 // Define if you have the <fnmatch.h> header file.
 #define HAVE_FNMATCH_H

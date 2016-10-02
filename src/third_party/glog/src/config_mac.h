@@ -23,7 +23,7 @@
 #define HAVE_GLOB_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#define HAVE_INTTYPES_H 1
+//#define HAVE_INTTYPES_H 1
 
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 /* #undef HAVE_LIBPTHREAD */
@@ -74,7 +74,7 @@
 /* #undef HAVE_SIGALTSTACK */
 
 /* Define to 1 if you have the <stdint.h> header file. */
-#define HAVE_STDINT_H 1
+//#define HAVE_STDINT_H 1
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H
@@ -101,7 +101,7 @@
 #define HAVE_SYS_TIME_H
 
 /* Define to 1 if you have the <sys/types.h> header file. */
-#define HAVE_SYS_TYPES_H 1
+//#define HAVE_SYS_TYPES_H 1
 
 /* Define to 1 if you have the <sys/ucontext.h> header file. */
 #define HAVE_SYS_UCONTEXT_H 1
@@ -113,7 +113,7 @@
 /* #undef HAVE_UCONTEXT_H */
 
 /* Define to 1 if you have the <unistd.h> header file. */
-#define HAVE_UNISTD_H 1
+//#define HAVE_UNISTD_H 1
 
 /* Define to 1 if you have the <unwind.h> header file. */
 #define HAVE_UNWIND_H 1
