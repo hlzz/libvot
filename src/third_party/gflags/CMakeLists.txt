@@ -1,5 +1,3 @@
-set(INC src src/gflags)
-
 INCLUDE_DIRECTORIES(src)
 INCLUDE_DIRECTORIES(src/gflags)
 
@@ -22,4 +20,4 @@ if(WIN32)
     	src/windows_port.h)
 endif()
 
-add_library(${GFLAGS_LIBRARY} ${INC} ${SRC})
+add_library(${GFLAGS_LIBRARY} ${SRC})

@@ -1,4 +1,3 @@
-set(INC src ../gflags/src)
 include_directories(src)
 include_directories(BEFORE ../gflags/src)
 
@@ -32,8 +31,6 @@ if(WIN32)
 		src/windows/glog/log_severity.h
 		src/windows/port.h
 		src/windows/config.h)
-	list(APPEND INC
-		src/windows)
 else()
 	list(APPEND SRC
 		src/demangle.cc
@@ -47,4 +44,4 @@ else()
 		src/symbolize.h)
 endif()
 
-add_library(${GLOG_LIBRARY} ${INC} ${SRC})
+add_library(${GLOG_LIBRARY} ${SRC})
