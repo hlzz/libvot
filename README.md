@@ -1,20 +1,17 @@
-#libvot - A C++11 multi-thread library for image retrieval
+# libvot - A C++11 multi-thread library for image retrieval
 
 [![Join the chat at https://gitter.im/hlzz/libvot](https://badges.gitter.im/hlzz/libvot.svg)](https://gitter.im/hlzz/libvot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=master)](https://travis-ci.org/hlzz/libvot) 
 [![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=feature)](https://travis-ci.org/hlzz/libvot) 
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
-<a href="https://scan.coverity.com/projects/hlzz-libvot">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/8983/badge.svg"/>
-</a>
+[![CoverityScan](https://scan.coverity.com/projects/8983/badge.svg)](https://scan.coverity.com/projects/hlzz-libvot)
 [![todofy badge](https://todofy.org/b/hlzz/libvot/master)](https://todofy.org/r/hlzz/libvot/master)
-###[中文简介](doc/README_Chinese.md)
+### [中文简介](doc/README_Chinese.md)
 
-##Introduction
+## Introduction
 *libvot* is a fast implementation of vocabulary tree, which is an algorithm widely used in image retrieval and computer vision. It usually comprises three components to build a image retrieval system using vocabulary tree: build a k-means tree using sift descriptors from images, register images into the database, query images against the database. In this library, we use C++11 standard multi-thread library to accelerate the computation, which achieves fast and accurate image retrieval performance. Currently this library is under active development for both research and production. If you find this repository useful, please star it to let me know. :)
 
-##Installation
+## Installation
 The build system of libvot is based on [CMake](http://cmake.org). To take full advantages of the new features in C++11, we require the version of CMake to be 2.8.12 or above. Current we have tested our project under Linux (Ubuntu 14.04, CentOS 7) and MacOS (10.10) using gcc. The common steps to build the library are:
 
 1. Extract source files.
@@ -32,6 +29,8 @@ On Unix-like systems with GNU Make as the build tool, the following sequence of 
     $ cmake ..
     $ make && make test
 
+Besides, *libvot* supports docker, the popular container technology. You can pull the latest auto-build [here](https://hub.docker.com/r/hlzz/libvot/). If you encounter any problem building this software on a clean OS, [Dockerfile](Dockerfile) is a minimum ubuntu configuration and a good reference.
+
 #### Optional Dependencies
 * Boost (>1.55), for serialization, python-binding, etc.
 * OpenCV (>2.4), for feature detector and general utilities for image processing.
@@ -40,7 +39,7 @@ On Unix-like systems with GNU Make as the build tool, the following sequence of 
 
 See the [installation](doc/installation.md) guide for details.
 
-##First try
+## First try
 Suppose `$LIBVOT_ROOT` represents the root directory of libvot, and it is successfully compiled in `build` subdirectory. You can use `./libvot_feature <image_list>` to first generate a set of descriptor files and use them as inputs to `image_search`. For example, you have some target .jpg image files to generate sift files. Just `cd` into that directory, prepare the `image_list`, and generate sift files in the same directory as the image files:
 
     $ ls -d $PWD/*.jpg > image_list
@@ -84,10 +83,10 @@ If you find this library useful for your research, please cite
 ```
 *Note: The image retrieval part of the above research depends on libvot. The functioning graph matching algorithm is in preparation and is planned to be merged into the master branch. For an early preview and implementation details, please send your request to <tshenaa@ust.hk>.*
 
-##License
+## License
 The BSD 3-Clause License
 
-##Contact and Donation
+## Contact and Donation
 For inquiries and suggestions, please send your emails to <tshenaa@ust.hk>.
 
 If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/campaigns/30901). Thanks!
