@@ -97,6 +97,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(LIBVOT_INCLUDES
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/third_party
+    ${CMAKE_SOURCE_DIR}/src/third_party/gflags/src
+    ${CMAKE_SOURCE_DIR}/src/third_party/glog/src
     ${CMAKE_SOURCE_DIR}/src/vocab_tree
     ${CMAKE_SOURCE_DIR}/src/utils
     ${CMAKE_SOURCE_DIR}/src/feature

@@ -39,8 +39,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <thread>
 #include <mutex>
 
-#include "third_party/gflags/src/gflags/gflags.h"
-#include "third_party/glog/src/glog/logging.h"
+#include "gflags/gflags.h"
+#include "glog/logging.h"
 
 // libvot includes
 #include "libvot_config.h"

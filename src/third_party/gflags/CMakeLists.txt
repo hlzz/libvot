@@ -20,4 +20,6 @@ if(WIN32)
     	src/windows_port.h)
 endif()
 
+find_package(Threads)
 add_library(${GFLAGS_LIBRARY} ${SRC})
+target_link_libraries(${GFLAGS_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})

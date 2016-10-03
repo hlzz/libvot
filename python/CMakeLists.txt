@@ -2,20 +2,21 @@
 find_package(Boost 1.53 REQUIRED python QUIET)
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIR})
-elseif(Boost_FOUND)
+else(Boost_FOUND)
     message(STATUS "Could not locate Boost-python, disabling python export.")
     return()
 endif(Boost_FOUND)
 
 # find python libs
 FIND_PACKAGE(PythonLibs QUIET)
-if (PythonLibs_FOUND)
+if(PythonLibs_FOUND)
     include_directories(${PYTHON_INCLUDE_DIRS})
-elseif(PythonLibs_FOUND)
+    message(STATUS "Found python libs : " ${PYTHON_INCLUDE_DIRS})
+else(PythonLibs_FOUND)
     message(STATUS "Could not locate python module, disabling python export.")
-    set(LIBVOT_BUILD_PYTHON OFF)
+    set(LIBVOT_BUILD_PYTHON OFF PARENT_SCOPE)
     return()
-endif (PythonLibs_FOUND)
+endif(PythonLibs_FOUND)
 
 # config libvot-python source code
 file(GLOB_RECURSE PYVOT_SOURCE ${PROJECT_SOURCE_DIR}/python/*.cpp)

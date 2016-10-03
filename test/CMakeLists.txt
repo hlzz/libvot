@@ -4,10 +4,6 @@
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-# include gflags
-set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
-include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
-
 # set output built test executables back to RUNTIME_OUTPUT_DIRECTORY,
 # which is different from src, so that add_test can find them
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RUNTIME_OUTPUT_DIRECTORY})
