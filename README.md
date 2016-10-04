@@ -29,15 +29,17 @@ On Unix-like systems with GNU Make as the build tool, the following sequence of 
     $ cmake ..
     $ make && make test
 
-Besides, *libvot* supports docker, the popular container technology. You can pull the latest auto-build [here](https://hub.docker.com/r/hlzz/libvot/). If you encounter any problem building this software on a clean OS, [Dockerfile](Dockerfile) is a minimum ubuntu configuration and a good reference.
 
-#### Optional Dependencies
+### Optional Dependencies
 * Boost (>1.55), for serialization, python-binding, etc.
 * OpenCV (>2.4), for feature detector and general utilities for image processing.
 * NVIDIA's Cuda Toolkit 7.5, for GPU-related code.
 * NVIDIA's cuDNNv5 for CUDA 7.5, for the deep learning module.
 
 See the [installation](doc/installation.md) guide for details.
+
+### Docker Installation
+Besides, *libvot* supports docker installation. [Docker](https://www.docker.com/) is a system to build self-contained versions of a Linux operating system running on your machine. You can pull the latest auto-build [here](https://hub.docker.com/r/hlzz/libvot/). If you encounter any problem building this software on a clean linux OS, [Dockerfile](Dockerfile) is a minimum ubuntu configuration and a good reference.
 
 ## First try
 Suppose `$LIBVOT_ROOT` represents the root directory of libvot, and it is successfully compiled in `build` subdirectory. You can use `./libvot_feature <image_list>` to first generate a set of descriptor files and use them as inputs to `image_search`. For example, you have some target .jpg image files to generate sift files. Just `cd` into that directory, prepare the `image_list`, and generate sift files in the same directory as the image files:
