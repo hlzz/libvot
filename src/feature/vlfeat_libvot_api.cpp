@@ -62,10 +62,101 @@ bool Vlfeature2LibvotSift(std::vector<Vlfeature> const & vlfeature_vec,
 	return true;
 }
 
-void VlFeatureDetection(unsigned char const * data,
-                        std::vector<Vlfeature> & vlfeature_vec,
+void VlCovariantDetection(unsigned char const *data,
+                          std::vector<Vlfeature> &vlfeature_vec,
+                          int image_width, int image_height,
+                          VlFeatParam const &vlfeat_param)
+{
+	// Copy image data
+	vl_sift_pix *fdata =(vl_sift_pix*)malloc(image_width * image_height * sizeof(vl_sift_pix));
+	for (int q = 0; q < image_width * image_height; ++q) {
+		fdata[q] = (float)data[q];
+	}
+
+	// create a detector object
+	VlCovDet *covdet = vl_covdet_new(VL_COVDET_METHOD_HESSIAN);
+	// set various parameters (optional)
+	vl_covdet_set_first_octave(covdet, 0);
+	//vl_covdet_set_octave_resolution(covdet, octaveResolution);
+	if (vlfeat_param.peak_thresh > 0)
+		vl_covdet_set_peak_threshold(covdet, vlfeat_param.peak_thresh);
+	if (vlfeat_param.edge_thresh > 0)
+		vl_covdet_set_edge_threshold(covdet, vlfeat_param.edge_thresh);
+	//vl_covdet_set_target_num_features(covdet, target_num_features);
+	//vl_covdet_set_use_adaptive_suppression(covdet, use_adaptive_suppression);
+
+	// process the image and run the detector
+	vl_covdet_put_image(covdet, fdata, image_width, image_height);
+	vl_covdet_detect(covdet);
+
+	// drop features outside the image boundary (set margin to be 1 using recommended default)
+	vl_covdet_drop_features_outside(covdet, 1);
+	// compute the affine shape of the features
+	vl_covdet_extract_affine_shape(covdet);
+	// compute the orientation of the features
+	vl_covdet_extract_orientations(covdet);
+
+	// get feature descriptors
+	vl_size numFeatures = vl_covdet_get_num_features(covdet);
+	VlCovDetFeature const *feature = (VlCovDetFeature const *)vl_covdet_get_features(covdet);
+	//std::cout << feature[0].frame.a11 << " " << feature[0].frame.a12 << " " << feature[0].frame.a22 << " " << feature[0].frame.a21 << std::endl;
+	VlSiftFilt *sift = vl_sift_new(16, 16, 1, 3, 0);
+	vl_index i;
+	vl_size dimension = 128;
+	vl_index patchResolution = 15;
+	double patchRelativeExtent = 7.5;
+	double patchRelativeSmoothing = 1;
+	vl_size patchSide = 2 * patchResolution + 1;
+	double patchStep = (double)patchRelativeExtent / patchResolution;
+	std::vector<float> desc(dimension * numFeatures);
+	std::vector<float> patch(patchSide * patchSide);
+	std::vector<float> patchXY(2 * patchSide * patchSide);
+
+	if (vlfeat_param.magnif > 0)
+		vl_sift_set_magnif(sift, vlfeat_param.magnif);
+
+	for (i = 0; i < (signed)numFeatures; ++i) {
+		Vlfeature vlfeature;
+		vlfeature.x = feature[i].frame.x;
+		vlfeature.y = feature[i].frame.y;
+		vlfeature.scale = feature[i].laplacianScaleScore;
+		vlfeature.orientation = feature[i].orientationScore;
+
+		vl_covdet_extract_patch_for_frame(covdet, &patch[0],
+		        patchResolution, patchRelativeExtent,
+		        patchRelativeSmoothing, feature[i].frame);
+
+		vl_imgradient_polar_f(&patchXY[0], &patchXY[1],
+		        2, 2 * patchSide,
+		        &patch[0], patchSide, patchSide, patchSide);
+
+		vl_sift_calc_raw_descriptor(sift, &patchXY[0],
+		        &desc[dimension * i], (int)patchSide, (int)patchSide,
+		        (double)(patchSide - 1) / 2, (double)(patchSide - 1) / 2,
+		        (double)patchRelativeExtent / (3.0 * (4 + 1) / 2) / patchStep,
+		        VL_PI / 2);
+
+		for (int k = 0; k < 128; ++k) {
+			vlfeature.descr[k] = (desc[dimension * i + k] < 0.5) ? desc[dimension * i + k] : 0.5;
+		}
+
+		vlfeature_vec.push_back(vlfeature);
+	}
+	// release resource
+	vl_sift_delete(sift);
+	vl_covdet_delete(covdet);
+	if (fdata) {
+		free(fdata);
+		fdata = nullptr;
+	}
+
+	return;
+}
+
+void VlFeatureDetection(unsigned char const *data,
+                        std::vector<Vlfeature> &vlfeature_vec,
                         int image_width, int image_height,
-                        VlFeatParam const & vlfeat_param)
+                        VlFeatParam const &vlfeat_param)
 {
 	// Copy image data
 	vl_sift_pix * fdata =(vl_sift_pix*)malloc(image_width * image_height * sizeof(vl_sift_pix));
@@ -146,7 +237,7 @@ void VlFeatureDetection(unsigned char const * data,
 }
 
 int RunVlFeature(unsigned char *data, int image_width, int image_height, int num_channel,
-                 SiftData &sift_data, VlFeatParam const & vlfeat_param)
+                 SiftData &sift_data, VlFeatParam const &vlfeat_param)
 {
 	unsigned char *gray_data = nullptr;
 	if (num_channel == 3) {      	//rgb images, convert to greyscale
@@ -162,7 +253,17 @@ int RunVlFeature(unsigned char *data, int image_width, int image_height, int num
 	}
 
 	std::vector<Vlfeature> vlfeature_vec;
-	VlFeatureDetection(gray_data, vlfeature_vec, image_width, image_height, vlfeat_param);
+	switch (vlfeat_param.feature_type) {
+		case LIBVOT_FEATURE_TYPE::VLFEAT_SIFT:
+			VlFeatureDetection(gray_data, vlfeature_vec, image_width, image_height, vlfeat_param);
+			break;
+		case LIBVOT_FEATURE_TYPE::VLFEAT_COVDET:
+			VlCovariantDetection(gray_data, vlfeature_vec, image_width, image_height, vlfeat_param);
+			break;
+		default:
+			std::cerr << "[VlFeature] Unsupported feature type!\n";
+			return -1;
+	}
 
 	if (vlfeature_vec.size() == 0) {
 		std::cout << "[VlFeature] Fail to detect feature points.\n";

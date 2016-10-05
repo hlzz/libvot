@@ -67,10 +67,14 @@ extern "C" {
 using namespace std;
 
 DEFINE_string(output_folder, "", "feature output folder, the same as the input folder if not specified");
-DEFINE_int32(feature_type, 0, "feature type, 0 for opencv sift, 1 for vlfeat sift");
+DEFINE_int32(feature_type, 0, "feature type:"
+                              "0 for opencv sift, "
+                              "1 for vlfeat sift, "
+                              "2 for vlfeat covdet detector with sift descriptor");
 DEFINE_int32(thread_num, -1, "thread num");
 DEFINE_double(edge_thresh, 10, "edge threshold for vlfeat parameter");
 DEFINE_double(peak_thresh, 2.5, "peak threshold for vlfeat parameter");
+DEFINE_double(magnif, 3.0, "magnification factor for vlfeat parameter");
 
 #ifdef LIBVOT_USE_OPENCV
 void MultiVlfeatSiftExtract(std::vector<std::string> *image_filenames,
@@ -204,6 +208,13 @@ int main(int argc, char** argv)
 	}
 
 #ifdef LIBVOT_USE_OPENCV
+	// parameter for vlfeat
+	vot::VlFeatParam vlfeat_param;
+	vlfeat_param.edge_thresh = FLAGS_edge_thresh;
+	vlfeat_param.peak_thresh = FLAGS_peak_thresh;
+	vlfeat_param.magnif = FLAGS_magnif;
+	vlfeat_param.feature_type = vot::LIBVOT_FEATURE_TYPE(FLAGS_feature_type);
+
 	switch (FLAGS_feature_type) {
 		case vot::LIBVOT_FEATURE_TYPE::OPENCV_SIFT:
 		{
@@ -249,12 +260,10 @@ int main(int argc, char** argv)
 			break;
 		}
 		case vot::LIBVOT_FEATURE_TYPE::VLFEAT_SIFT:
+		case vot::LIBVOT_FEATURE_TYPE::VLFEAT_COVDET:
 		{
 			if (FLAGS_thread_num == 1) {		// single thread version
 				LOG(INFO) << "[Extract Feature] Compute SIFT features using vlfeat sift\n";
-				vot::VlFeatParam vlfeat_param;
-				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
-				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
 				for (int i = 0; i < num_images; i++) {
 					const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
 					vot::SiftData sift_data;
@@ -271,10 +280,6 @@ int main(int argc, char** argv)
 				LOG(INFO) << "[Extract Feature] Compute SIFT features using vlfeat sift (multi-thread)\n";
 				std::vector<std::thread> threads;
 				std::mutex cout_mutex;
-
-				vot::VlFeatParam vlfeat_param;
-				vlfeat_param.edge_thresh = FLAGS_edge_thresh;
-				vlfeat_param.peak_thresh = FLAGS_peak_thresh;
 
 				size_t off = 0;
 				for (int i = 0; i < FLAGS_thread_num; i++) {

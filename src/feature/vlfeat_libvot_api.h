@@ -8,10 +8,12 @@
 #define VOT_VLFEAT_LIBVOT_API_H
 
 extern "C" {
-#include <vl/generic.h>
-#include <vl/sift.h>
+#include "vl/generic.h"
+#include "vl/sift.h"
+#include "vl/covdet.h"
 }
 #include "utils/data_types.h"
+#include "utils/global_params.h"
 #include <string>
 
 namespace vot {
@@ -19,10 +21,11 @@ namespace vot {
  * @brief a parameter struct used in calling vlfeat sift function
  */
 struct VlFeatParam {
-	VlFeatParam () : edge_thresh(-1), peak_thresh(-1), magnif(-1) {}
+	VlFeatParam () : edge_thresh(-1), peak_thresh(-1), magnif(-1), feature_type(OPENCV_SIFT) {}
 	double edge_thresh;
 	double peak_thresh;
 	double magnif;
+	LIBVOT_FEATURE_TYPE feature_type;
 };
 
 /**

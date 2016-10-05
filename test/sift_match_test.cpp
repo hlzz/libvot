@@ -52,6 +52,7 @@ int main(int argc, char **argv)
 		{
 			cout << "[sift_match_test] image files found: " << sift_imagefile1 << " and " << sift_imagefile2 << "\n";
 			is_image_exist = true;
+			break;
 		}
 		i++;
 	}

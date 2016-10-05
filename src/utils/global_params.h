@@ -59,6 +59,7 @@ enum LIBVOT_FEATURE_TYPE
 {
 	OPENCV_SIFT = 0,	//!< opencv sift feature type
 	VLFEAT_SIFT = 1,	//!< vlfeat sift feature type
+	VLFEAT_COVDET = 2,	//!< vlfeat covariant detector (affine adaptation) with sift detector
 };
 
 /**
