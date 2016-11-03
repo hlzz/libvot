@@ -5,7 +5,6 @@
 [![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=feature)](https://travis-ci.org/hlzz/libvot) 
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 [![CoverityScan](https://scan.coverity.com/projects/8983/badge.svg)](https://scan.coverity.com/projects/hlzz-libvot)
-[![todofy badge](https://todofy.org/b/hlzz/libvot/master)](https://todofy.org/r/hlzz/libvot/master)
 ### [中文简介](doc/README_Chinese.md)
 
 ## Introduction
