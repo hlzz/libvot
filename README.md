@@ -23,13 +23,13 @@ The build system of libvot is based on [CMake](http://cmake.org). To take full a
 On Unix-like systems with GNU Make as the build tool, the following sequence of commands can be used to compile the source code.
 
     $ cd libvot
-    $ git submodule init & git submodule update  
     $ mkdir build && cd build
     $ cmake ..
     $ make && make test
 
 
 ### Optional Dependencies
+* gflags, glog (Required) and gtest, if test is enable.
 * Boost (>1.55), for serialization, python-binding, etc.
 * OpenCV (>2.4), for feature detector and general utilities for image processing.
 * NVIDIA's Cuda Toolkit 7.5, for GPU-related code.
