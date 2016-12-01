@@ -193,3 +193,8 @@ TEST(ImageGraph, QueryExpansion)
 	EXPECT_EQ(2, expansion_lists[3].size());
 	EXPECT_EQ(3, expansion_lists[4].size());
 }
+
+int main(int argc, char **argv) {
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+}

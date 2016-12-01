@@ -22,8 +22,7 @@ unit_test.cpp
 add_executable(unit_test ${UNIT_TEST_SOURCES})
 set_property(TARGET unit_test PROPERTY CXX_STANDARD 11)
 set_property(TARGET unit_test PROPERTY CXX_STANDARD_REQUIRED ON)
-target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(unit_test gtest_main)
+target_link_libraries(unit_test ${CMAKE_THREAD_LIBS_INIT} ${GTEST_LIBRARIES})
 add_test(unit_test unit_test)
 
 # tests related to opencv
