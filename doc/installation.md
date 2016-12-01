@@ -10,12 +10,17 @@ Boost is a set of powerful C++ libraries. However, it also has a huge code base 
 * [Unix Variants](http://www.boost.org/doc/libs/1_61_0/more/getting_started/unix-variants.html)
 * [Windows](http://www.boost.org/doc/libs/1_55_0/more/getting_started/windows.html)
 
-Note that if you would like to build the python export, you also need to install `boost-python`. On Mac, boost and boost-python can be easily installed via brew:
+Note that if you would like to build the python export, you also need to install `boost-python`. On Mac, boost and boost-python can be easily installed via `brew`:
 
 ```bash
 brew update
 brew install boost
 brew install boost-python --with-python
+```
+On Linux, specifically ubuntu, you can use `apt-get`:
+
+```bash
+sudo apt-get install libboost-all-dev
 ```
 
 ### Optional: OpenCV (>2.4)
