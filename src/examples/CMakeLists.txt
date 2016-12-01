@@ -5,7 +5,7 @@ find_package(Threads REQUIRED)
 add_executable(image_search image_search.cpp)
 set_property(TARGET image_search PROPERTY CXX_STANDARD 11)
 set_property(TARGET image_search PROPERTY CXX_STANDARD_REQUIRED on)
-target_link_libraries(image_search ${CMAKE_THREAD_LIBS_INIT} vot_vocabtree vot_utils ${GFLAGS_LIBRARY})
+target_link_libraries(image_search ${CMAKE_THREAD_LIBS_INIT} vot_vocabtree vot_utils ${GFLAGS_LIBRARIES})
 install (TARGETS image_search DESTINATION bin CONFIGURATIONS Release)
 
 # graph_partition
@@ -45,12 +45,12 @@ install (TARGETS euclidean_matrix DESTINATION bin CONFIGURATIONS Release)
 add_executable(web_search web_search.cpp)
 set_property(TARGET web_search PROPERTY CXX_STANDARD 11)
 set_property(TARGET web_search PROPERTY CXX_STANDARD_REQUIRED on)
-target_link_libraries(web_search vot_utils vot_vocabtree ${GFLAGS_LIBRARY})
+target_link_libraries(web_search vot_utils vot_vocabtree ${GFLAGS_LIBRARIES})
 install (TARGETS web_search DESTINATION bin CONFIGURATIONS Release)
 
 # using vlfeat feature in libvot
 add_executable(libvot_feature libvot_feature.cpp)
-target_link_libraries(libvot_feature ${GFLAGS_LIBRARY} ${GLOG_LIBRARY} vot_feature vot_utils)
+target_link_libraries(libvot_feature ${GFLAGS_LIBRARIES} ${GLOG_LIBRARY} vot_feature vot_utils)
 target_include_directories(libvot_feature PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>
   $<INSTALL_INTERFACE:include>)

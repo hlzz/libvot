@@ -41,7 +41,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 # Additional cmake modules
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/scripts/cmake)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g -pipe -march=native -mtune=native -mfpmath=sse")
 
@@ -97,8 +97,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(LIBVOT_INCLUDES
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/third_party
-    ${CMAKE_SOURCE_DIR}/src/third_party/gflags/src
-    ${CMAKE_SOURCE_DIR}/src/third_party/glog/src
     ${CMAKE_SOURCE_DIR}/src/vocab_tree
     ${CMAKE_SOURCE_DIR}/src/utils
     ${CMAKE_SOURCE_DIR}/src/feature
@@ -112,13 +110,12 @@ set(VLFEAT_INCLUDE_DIRS
 set(VLFEAT_LIBRARY vlfeat)
 include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 
-# Setup gflags for command line tools
-# use the built-in gflags include directory, defined in gflags CMakefile
-# set(GFLAGS_INCLUDE_DIR ${CMAKE_BINARY_DIR}/src/third_party/gflags/include)
-# include_directories(BEFORE ${GFLAGS_INCLUDE_DIR})
-set(GFLAGS_LIBRARY gflags_extern)
+# Setup gflags and glog
+find_package(gflags REQUIRED)
+include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
 add_definitions(-DLIBVOT_USE_GFLAGS)
-set(GLOG_LIBRARY glog_extern)
+message("-- Found gflags lib: " ${GFLAGS_LIBRARIES})
+find_package(glog REQUIRED)
 add_definitions(-DLIBVOT_USE_GLOG)
 
 # output include directories for debug

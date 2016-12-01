@@ -1,14 +1,5 @@
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
-# ==============================================================================
-# Check that submodule have been initialized and updated
-# ==============================================================================
-if(NOT EXISTS ${PROJECT_SOURCE_DIR}/src/third_party/gtest/googletest)
-    message(FATAL_ERROR
-        "\n Submodule gtest is missing, please update your repository:\n"
-        "  > git submodule update -i\n")
-endif()
-
 # ================= Set policy ======================================
 if(POLICY CMP0042)
     cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH is enabled by default.
