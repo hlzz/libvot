@@ -3,6 +3,21 @@
 Installing libvot requires minimal efforts. To use its full functionality, you need to install some additional dependencies.
 
 ## Additional Dependencies
+### Required: gflags, glog and glog (if test is enabled)
+*gflags* is a handy library to parse command-line options. *glog* is a logging utility. Together with *gtest*, a unit test suite, they are made public by google to facilitate the development of modern C++ software.  
+To install them on Mac:
+
+```bash
+brew update
+brew glog gflags gtest
+```
+
+To install them on Linux (e.g. ubuntu):
+
+```bash
+sudo apt-get install glog gflags gtest
+```
+
 ### Optional: Boost (>1.55)
 
 Boost is a set of powerful C++ libraries. However, it also has a huge code base and takes a long time to build. If you haven't done so, you can consult the following pages for your platform:
