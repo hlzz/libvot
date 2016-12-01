@@ -110,11 +110,9 @@ set(VLFEAT_INCLUDE_DIRS
 set(VLFEAT_LIBRARY vlfeat)
 include_directories(BEFORE ${VLFEAT_INCLUDE_DIRS})
 
-# Setup gflags and glog
+# Setup gflags and glog (Required)
 find_package(gflags REQUIRED)
-include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
 add_definitions(-DLIBVOT_USE_GFLAGS)
-message("-- Found gflags lib: " ${GFLAGS_LIBRARIES})
 find_package(glog REQUIRED)
 add_definitions(-DLIBVOT_USE_GLOG)
 
