@@ -136,8 +136,9 @@ add_subdirectory(src)
 
 # Test source code
 if(LIBVOT_BUILD_TESTS)
-	find_package(gtest REQUIRED)
     enable_testing()
+	find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
 	add_subdirectory(test)
 endif(LIBVOT_BUILD_TESTS)
 
