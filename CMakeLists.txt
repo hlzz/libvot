@@ -116,6 +116,10 @@ add_definitions(-DLIBVOT_USE_GFLAGS)
 find_package(glog REQUIRED)
 add_definitions(-DLIBVOT_USE_GLOG)
 
+# Setup eigen3
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 # output include directories for debug
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	message(STATUS "INCLUDE_DIRECTORIES:")
@@ -136,9 +140,9 @@ add_subdirectory(src)
 
 # Test source code
 if(LIBVOT_BUILD_TESTS)
-    enable_testing()
-	find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
+        enable_testing()
+        find_package(GTest REQUIRED)
+        include_directories(${GTEST_INCLUDE_DIRS})
 	add_subdirectory(test)
 endif(LIBVOT_BUILD_TESTS)
 
