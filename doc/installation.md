@@ -15,7 +15,7 @@ brew glog gflags gtest
 To install them on Linux (e.g. ubuntu):
 
 ```bash
-sudo apt-get install glog gflags gtest
+sudo apt-get install libgoogle-glog-dev libgflags-dev libgtest-dev
 ```
 
 ### Optional: Boost (>1.55)
