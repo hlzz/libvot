@@ -18,6 +18,8 @@ To install them on Linux (e.g. ubuntu):
 sudo apt-get install libgoogle-glog-dev libgflags-dev libgtest-dev
 ```
 
+Note: However, `apt-get` mysteriously doesn't install gtest lib even if you run `sudo apt-get install libgtest-dev`. To make things work, you have to manually build gtest from source (apt-get does ship source code in `/usr/src/gtest`). See this [post](https://askubuntu.com/questions/145887/why-no-library-files-installed-for-google-test?newreg=b9a4644b541d4d99aac52be1822d9b2b) for details.
+
 ### Optional: Boost (>1.55)
 
 Boost is a set of powerful C++ libraries. However, it also has a huge code base and takes a long time to build. If you haven't done so, you can consult the following pages for your platform:
