@@ -12,7 +12,7 @@ sudo apt-get update -qq
 
 # OpenCV dependencies - Details available at: http://docs.opencv.org/trunk/doc/tutorials/introduction/linux_install/linux_install.html
 sudo apt-get install -y build-essential
-sudo apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+sudo apt-get install -y cmake git libgtk2.0-dev pkg-config libavcodec-dev libav-tools libavformat-dev libswscale-dev libavutil-dev 
 sudo apt-get install -y python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
 
 # clone the latest opencv repo in github
