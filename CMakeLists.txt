@@ -66,6 +66,8 @@ endif()
 # configure cuda and cuDNN
 set(CUDA_LINKER_LIBS "")
 include(scripts/cmake/Cuda.cmake)
+# fix issue #14: cannot find -lopencv_dep_cudart
+set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 
 # Boost building option
 if(LIBVOT_USE_BOOST)
