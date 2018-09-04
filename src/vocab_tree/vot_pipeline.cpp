@@ -47,6 +47,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <thread>
 #include <mutex>
 #include <numeric>
+#include <functional>
 
 #include "vot_pipeline.h"
 #include "vocab_tree.h"

@@ -41,6 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdlib>
 #include <thread>
 #include <algorithm>
+#include <functional>
 
 #include "clustering.h"
 
