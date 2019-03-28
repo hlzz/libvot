@@ -15,7 +15,7 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/highgui/highgui.hpp"
-#include "opencv2/nonfree/features2d.hpp"
+#include "opencv2/features2d.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #endif
 
@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 			return -1;
 		}
 
-		cv::SiftDescriptorExtractor cv_sift_extractor;
+		cv::DescriptorExtractor cv_sift_extractor;
 		cv_sift_extractor.detect(img_1, key_points1);
 		cv_sift_extractor.compute(img_1, key_points1, desc1);
 		cv_sift_extractor.detect(img_2, key_points2);

@@ -38,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <vector>
 #include <thread>
 #include <mutex>
-
+#include <functional>
 #include "gflags/gflags.h"
 #include "glog/logging.h"
 
@@ -60,7 +60,7 @@ extern "C" {
 #ifdef LIBVOT_USE_OPENCV
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include <opencv2/nonfree/features2d.hpp>
+#include <opencv2/features2d.hpp>
 #else
 #endif
 
@@ -103,7 +103,7 @@ void MultiOpencvSiftExtract(std::vector<std::string> *image_filenames,
                             int num_images)
 {
 	size_t end_index = first_index + num_images;
-	cv::SiftDescriptorExtractor cv_sift_detector;
+	cv::DescriptorExtractor cv_sift_detector;
 	for (size_t i = first_index; i < end_index; i++) {
 		// load the image in BGR format
 		const cv::Mat input = cv::imread((*image_filenames)[i], CV_LOAD_IMAGE_COLOR);
@@ -220,7 +220,7 @@ int main(int argc, char** argv)
 		{
 			if (FLAGS_thread_num == 1) {
 				LOG(INFO) << "[Extract Feature] Compute SIFT features using opencv sift\n";
-				cv::SiftDescriptorExtractor cv_sift_detector;
+				cv::DescriptorExtractor cv_sift_detector;
 				for (int i = 0; i < num_images; i++) {
 					// load the image in BGR format
 					const cv::Mat input = cv::imread(image_filenames[i], CV_LOAD_IMAGE_COLOR);
