@@ -2,7 +2,6 @@
 
 [![Join the chat at https://gitter.im/hlzz/libvot](https://badges.gitter.im/hlzz/libvot.svg)](https://gitter.im/hlzz/libvot?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=master)](https://travis-ci.org/hlzz/libvot) 
-[![Build Status](https://travis-ci.org/hlzz/libvot.svg?branch=feature)](https://travis-ci.org/hlzz/libvot) 
 [![License](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 [![CoverityScan](https://scan.coverity.com/projects/8983/badge.svg)](https://scan.coverity.com/projects/hlzz-libvot)
 ### [中文简介](doc/README_Chinese.md)
@@ -87,9 +86,5 @@ If you find this library useful for your research, please cite
 ## License
 The BSD 3-Clause License
 
-## Contact and Donation
+## Contact
 For inquiries and suggestions, please send your emails to <tshenaa@ust.hk>.
-
-If you would like to support this project, you can contribute to this project, or make a donation via [pledgie](https://pledgie.com/campaigns/30901). Thanks!
-
-<a href='https://pledgie.com/campaigns/30901'><img alt='Click here to lend your support to: Open-Source Image Retrieval Project and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/30901.png?skin_name=chrome' border='0' ></a>
