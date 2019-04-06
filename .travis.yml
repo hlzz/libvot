@@ -27,6 +27,9 @@ addons:
       - ubuntu-toolchain-r-test 
     packages:
       - libboost1.55-all-dev
+      - libeigen3-dev
+      - libgflags-dev
+      - libgtest-dev
       - python-dev
       - libboost-python1.55-dev
 
